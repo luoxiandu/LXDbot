@@ -21,6 +21,18 @@ class DB:
         self.conn.commit()
         return
 
+    def getprice(self, item):
+        cur = self.conn.cursor()
+        r = cur.execute("SELECT price FROM prices WHERE name=?", (item,))
+        price = r.fetchone()[0]
+        return price
+
+    def setprice(self, item, price):
+        cur = self.conn.cursor()
+        cur.execute("REPLACE INTO prices VALUES (?, ?)", (item, price))
+        self.conn.commit()
+        return
+
     def addgamepass(self, gamepassList):
         cur = self.conn.cursor()
         for gp in gamepassList:
@@ -37,16 +49,25 @@ class DB:
         cur = self.conn.cursor()
         r = cur.execute("SELECT * FROM gamepass WHERE sold=0 LIMIT 1")
         gp = r.fetchone()
-        gp = {
-            'id': gp[0],
-            'email': gp[1],
-            'emailpassword': gp[2],
-            'steam': gp[3],
-            'steampassword': gp[4]
-        }
-        cur.execute("UPDATE gamepass SET sold=1 WHERE id=?", (gp['id'],))
-        self.conn.commit()
-        return gp
+        if not gp:
+            return None
+        else:
+            gp = {
+                'id': gp[0],
+                'email': gp[1],
+                'emailpassword': gp[2],
+                'steam': gp[3],
+                'steampassword': gp[4]
+            }
+            cur.execute("UPDATE gamepass SET sold=1 WHERE id=?", (gp['id'],))
+            self.conn.commit()
+            return gp
+
+    def checkgamepass(self):
+        cur = self.conn.cursor()
+        r = cur.execute("SELECT count(*) FROM gamepass WHERE sold=0")
+        gpamount = r.fetchone()
+        return gpamount[0]
 
     # amo以分为单位的整数，切记切记
     def deposit(self, acc, amo):
@@ -66,5 +87,29 @@ class DB:
 
     def cost(self, acc, amo):
         cur = self.conn.cursor()
+        r = cur.execute("SELECT balance FROM account WHERE QQ=?", (acc,))
+        balance = r.fetchone()
+        if not balance:
+            return False
+        else:
+            balance = balance[0]
+            if balance >= amo:
+                balance -= amo
+                cur.execute("UPDATE account SET balance=? WHERE QQ=?", (balance, acc))
+                self.conn.commit()
+                return True
+            else:
+                return False
+
+    def getbalance(self, acc):
+        cur = self.conn.cursor()
+        r = cur.execute("SELECT balance FROM account WHERE QQ=?", (acc,))
+        balance = r.fetchone()
+        if not balance:
+            return None
+        else:
+            return balance[0]
+
+
 
 
