@@ -37,15 +37,13 @@ class AlipaySvr:
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
         entrance.click()
         # self.browser.refresh()
-        print('刷新一次')
-        if self.browser.title == '':
+        if self.browser.title == '登录 - 支付宝':
             pass
 
     # 未完工
     def review(self):
-        self.browser.get("https://consumeprod.alipay.com/record/advanced.htm")
         top_orderno = self.browser.find_element_by_xpath("//a[@id='J-tradeNo-1']").get_attribute('title')
-        last_seen_orderno = self.__db__.getvar('last_seen_orderno')
+        last_seen_orderno = self.__db__.getvar('Alipay_last_seen_orderno')
         if top_orderno != last_seen_orderno:  # 有新订单
             if last_seen_orderno:
                 past_toporder = self.browser.find_element_by_xpath("//a[@title=" + last_seen_orderno + "]")  # 获取上次订单位置
@@ -53,7 +51,7 @@ class AlipaySvr:
                 past_toporder = None
 
             print(last_seen_orderno)
-            self.__db__.setvar('last_seen_orderno', top_orderno)  # 订单检测完成
+            self.__db__.setvar('Alipay_last_seen_orderno', top_orderno)  # 订单检测完成
         else:
             return
 
