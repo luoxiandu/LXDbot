@@ -31,6 +31,7 @@ class AlipaySvr:
         # 设置定时刷新
         self.__scheduler__ = BackgroundScheduler()
         self.__scheduler__.add_job(self.mainloop_handler, 'interval', seconds=60)
+        self.__scheduler__.start()
 
     def mainloop_handler(self):
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
