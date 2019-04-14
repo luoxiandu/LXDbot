@@ -2,7 +2,7 @@ from nonebot import on_command, CommandSession
 import json, urllib.request
 
 
-@on_command('getRockstarStatus', aliases=('服务器状态', 'R星服务器状态', '游戏服务器状态'), only_to_me=False)
+@on_command('getRockstarStatus', aliases=('服务器状态', 'R星服务器状态', '游戏服务器状态', '服务状态'), only_to_me=False)
 async def getRockstarStatus(session:CommandSession):
     result = json.loads(urllib.request.urlopen("https://support.rockstargames.com/services/status.json?tz=Asia/Shanghai").read())
     try:
