@@ -65,7 +65,7 @@ class AlipaySvr:
         inpkwd.clear()
         inpkwd.send_keys(orderid)
         btnsubmit.click()
-        self.browser.implicitly_wait(10)
+        self.browser.implicitly_wait(2)
         try:
             result = self.browser.find_element_by_xpath("//tr[@id='J-item-1']/td[@class='amount']/span").text
         except NoSuchElementException:
