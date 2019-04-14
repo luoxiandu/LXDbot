@@ -21,7 +21,7 @@ class AlipaySvr:
         self.browser.get("https://personalweb.alipay.com/portal/i.htm")
         self.browser.implicitly_wait(500)
         self.username = self.browser.find_element_by_xpath("//a[@seed='account-zhangh-myalipay-v1']").text  # 检测登录
-        print(self.username)
+        print('支付宝 ' + self.username + ' 登录成功！')
         time.sleep(5)  # 别那么快
         # btnrecordmore = self.browser.find_element_by_xpath("//a[@seed='i-record-more']")
         # btnrecordmore.click()  # 转到交易记录页(新版)
@@ -33,7 +33,10 @@ class AlipaySvr:
         self.__scheduler__.add_job(self.mainloop_handler, 'interval', seconds=60)
 
     def mainloop_handler(self):
-        self.browser.refresh()
+        entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
+        entrance.click()
+        # self.browser.refresh()
+        print('刷新一次')
         if self.browser.title == '':
             pass
 
