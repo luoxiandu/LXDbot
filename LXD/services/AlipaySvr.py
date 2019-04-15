@@ -108,7 +108,10 @@ class AlipaySvr:
         last_seen_tradeNostr = self.__db__.getvar('Alipay_last_seen_orderno')
         if top_tradeNostr != last_seen_tradeNostr:  # 有新订单
             for item in self.browser.find_elements_by_xpath("//table[@id='tradeRecordsIndex']/tbody/tr"):
-                memo = item.find_element_by_xpath(".//p[@class='consume-title']/a").text
+                try:
+                    memo = item.find_element_by_xpath(".//p[@class='consume-title']/a").text
+                except NoSuchElementException:
+                    memo = item.find_element_by_xpath(".//p[@class='consume-title']").text
                 print(memo)
                 tradeNostr = item.find_element_by_xpath("./td[contains(@class,'tradeNo')]/p").text
                 print(tradeNostr)
