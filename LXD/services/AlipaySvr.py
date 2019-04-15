@@ -25,6 +25,7 @@ class AlipaySvr:
         self.browser = webdriver.Firefox(firefox_profile=self.__FirefoxProfile__)
         # 初始化支付宝网页
         self.browser.get("https://personalweb.alipay.com/portal/i.htm")
+        self.login('18715707081', 'zeiliu06')
         self.browser.implicitly_wait(500)
         self.username = self.browser.find_element_by_xpath("//a[@seed='account-zhangh-myalipay-v1']").text  # 检测登录
         print('支付宝 ' + self.username + ' 登录成功！')
@@ -38,6 +39,28 @@ class AlipaySvr:
         self.__scheduler__ = AsyncIOScheduler()
         self.__mainloop_job__ = self.__scheduler__.add_job(self.mainloop_handler, 'interval', seconds=60)
         self.__scheduler__.start()
+
+    def __del__(self):
+        self.browser.quit()
+
+    def login(self, username, password):
+        entrance = self.browser.find_element_by_xpath("//li[@data-status='show_login']")
+        userinput = self.browser.find_element_by_xpath("//input[@id='J-input-user']")
+        pwdinput = self.browser.find_element_by_xpath("//input[@id='password_rsainput']")
+        smt = self.browser.find_element_by_xpath("//input[@id='J-login-btn']")
+        time.sleep(random.random())
+        entrance.click()
+        time.sleep(random.random())
+        userinput.clear()
+        time.sleep(random.random())
+        userinput.send_keys(username)
+        time.sleep(random.random())
+        pwdinput.clear()
+        time.sleep(random.random())
+        pwdinput.send_keys(password)
+        time.sleep(random.random())
+        smt.click()
+        return
 
     async def mainloop_handler(self):
         time.sleep(random.random())
