@@ -52,7 +52,7 @@ async def checkGamePass(session:CommandSession):
 
 @on_command('setGamePassPrice', aliases=('设置黑号价格', '设置账号价格'), privileged=SUPERUSER)
 async def setGamePassPrice(session:CommandSession):
-    price = float(session.current_arg_text)
+    price = eval(session.current_arg_text.strip())
     db.setprice('GamePass', int(price * 100))
     await session.finish('设置成功完成')
 
