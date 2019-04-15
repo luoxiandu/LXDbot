@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import time
+import re
 
 
 class AlipaySvr:
@@ -43,7 +44,7 @@ class AlipaySvr:
         entrance.click()
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
-        # 开始判断账单是否正常
+        # 判断页面是否正常
         if self.browser.title == '登录 - 支付宝':
             self.__mainloop_job__.pause()
             scrshot = self.browser.get_screenshot_as_base64()
@@ -72,19 +73,39 @@ class AlipaySvr:
                 await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             self.__mainloop_job__.resume()
             pass
+        # 进行review
+        self.review()
 
-    # 未完工
+    # 监测订单信息
     def review(self):
-        top_orderno = self.browser.find_element_by_xpath("//a[@id='J-tradeNo-1']").get_attribute('title')
-        last_seen_orderno = self.__db__.getvar('Alipay_last_seen_orderno')
-        if top_orderno != last_seen_orderno:  # 有新订单
-            if last_seen_orderno:
-                past_toporder = self.browser.find_element_by_xpath("//a[@title=" + last_seen_orderno + "]")  # 获取上次订单位置
-            else:
-                past_toporder = None
-
-            print(last_seen_orderno)
-            self.__db__.setvar('Alipay_last_seen_orderno', top_orderno)  # 订单检测完成
+        top_tradeNostr = self.browser.find_element_by_xpath("//tr[@id='J-item-1']/td[@class='tradeNo']/p").text
+        # top_orderno = self.browser.find_element_by_xpath("//a[@id='J-tradeNo-1']").get_attribute('title')
+        last_seen_tradeNostr = self.__db__.getvar('Alipay_last_seen_orderno')
+        if top_tradeNostr != last_seen_tradeNostr:  # 有新订单
+            for item in self.browser.find_elements_by_xpath("//table[@id='tradeRecordsIndex']/tr"):
+                memo = item.find_element_by_xpath("./p[@class='memo-info']").text
+                tradeNostr = item.find_element_by_xpath("./td[@class='tradeNo']/p").text
+                if last_seen_tradeNostr:
+                    if tradeNostr == last_seen_tradeNostr:
+                        break
+                tradeNO = re.search(r"流水号:\d+", tradeNostr)
+                if tradeNO:
+                    tradeNO = tradeNO.group().strip('流水号:')
+                else:
+                    continue
+                amount = repr(item.find_element_by_xpath("./td[@class='amount']/span").text)  # 字符串转换
+                amount = int(amount * 100)  # 单位换算
+                print(tradeNO)
+                print(memo)
+                print(amount)
+                self.__db__.saveAlipayTradeNo({
+                    'tradeNo': tradeNO,
+                    'memo': memo,
+                    'amount': amount
+                })
+            print(last_seen_tradeNostr)
+            self.__db__.setvar('Alipay_last_seen_orderno', top_tradeNostr)  # 订单检测完成
+            return
         else:
             return
 
