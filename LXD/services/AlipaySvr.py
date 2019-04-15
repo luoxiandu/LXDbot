@@ -6,7 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import time
 
 
@@ -33,14 +33,17 @@ class AlipaySvr:
         # 打开数据库
         self.__db__ = DB()
         # 设置定时刷新
-        self.__scheduler__ = BackgroundScheduler()
+        self.__scheduler__ = AsyncIOScheduler()
         self.__mainloop_job__ = self.__scheduler__.add_job(self.mainloop_handler, 'interval', seconds=60)
         self.__scheduler__.start()
 
     async def mainloop_handler(self):
+        # 刷新页面
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
         entrance.click()
         # self.browser.refresh()
+        self.browser.implicitly_wait(5)
+        # 开始判断账单是否正常
         if self.browser.title == '登录 - 支付宝':
             self.__mainloop_job__.pause()
             scrshot = self.browser.get_screenshot_as_base64()
