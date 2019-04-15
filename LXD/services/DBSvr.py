@@ -134,6 +134,12 @@ class DB:
                 'used': trade[3]
             }
 
+    def useAlipayTradeNo(self, tradeNo):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE AlipayOrders SET used=1 WHERE tradeNo=?", (tradeNo,))
+        self.conn.commit()
+        return
+
 
 
 
