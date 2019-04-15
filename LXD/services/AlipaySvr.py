@@ -1,3 +1,4 @@
+import nonebot
 from selenium import webdriver
 from LXD.services.DBSvr import DB
 from selenium.common.exceptions import NoSuchElementException
@@ -14,30 +15,59 @@ class AlipaySvr:
     username = ""
     __db__ = None
     __scheduler__ = None
+    __FirefoxProfile__ = "data/FirefoxProfile"
+    __QQbot__ = nonebot.get_bot()
+    __mainloop_job__ = None
 
     def __init__(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox(firefox_profile=self.__FirefoxProfile__)
         # 初始化支付宝网页
         self.browser.get("https://personalweb.alipay.com/portal/i.htm")
         self.browser.implicitly_wait(500)
         self.username = self.browser.find_element_by_xpath("//a[@seed='account-zhangh-myalipay-v1']").text  # 检测登录
         print('支付宝 ' + self.username + ' 登录成功！')
         time.sleep(5)  # 别那么快
-        # btnrecordmore = self.browser.find_element_by_xpath("//a[@seed='i-record-more']")
-        # btnrecordmore.click()  # 转到交易记录页(新版)
-        self.browser.get("https://consumeprod.alipay.com/record/advanced.htm")  # 转到交易记录页
+        entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")  # 模拟点击跳转记录页
+        entrance.click()
+        # self.browser.get("https://consumeprod.alipay.com/record/advanced.htm")  # 转到交易记录页
         # 打开数据库
         self.__db__ = DB()
         # 设置定时刷新
         self.__scheduler__ = BackgroundScheduler()
-        self.__scheduler__.add_job(self.mainloop_handler, 'interval', seconds=60)
+        self.__mainloop_job__ = self.__scheduler__.add_job(self.mainloop_handler, 'interval', seconds=60)
         self.__scheduler__.start()
 
-    def mainloop_handler(self):
+    async def mainloop_handler(self):
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
         entrance.click()
         # self.browser.refresh()
         if self.browser.title == '登录 - 支付宝':
+            self.__mainloop_job__.pause()
+            scrshot = self.browser.get_screenshot_as_base64()
+            msg = {
+                'type': 'image',
+                'data': {
+                    'file': 'base64://' + scrshot
+                }
+            }
+            for uid in [91637225, 1158395892]:
+                await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
+                await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+            self.__mainloop_job__.resume()
+            pass
+        if self.browser.title == '':
+            self.__mainloop_job__.pause()
+            scrshot = self.browser.get_screenshot_as_base64()
+            msg = {
+                'type': 'image',
+                'data': {
+                    'file': 'base64://' + scrshot
+                }
+            }
+            for uid in [916327225, 1158395892]:
+                await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
+                await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+            self.__mainloop_job__.resume()
             pass
 
     # 未完工
