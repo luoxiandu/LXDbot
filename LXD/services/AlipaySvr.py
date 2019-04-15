@@ -86,7 +86,9 @@ class AlipaySvr:
         if top_tradeNostr != last_seen_tradeNostr:  # 有新订单
             for item in self.browser.find_elements_by_xpath("//table[@id='tradeRecordsIndex']/tbody/tr"):
                 memo = item.find_element_by_xpath(".//p[@class='consume-title']/a").text
+                print(memo)
                 tradeNostr = item.find_element_by_xpath("./td[contains(@class,'tradeNo')]/p").text
+                print(tradeNostr)
                 if last_seen_tradeNostr:
                     if tradeNostr == last_seen_tradeNostr:
                         break
@@ -96,11 +98,10 @@ class AlipaySvr:
                     tradeNO = tradeNO.group().strip('流水号:')
                 else:
                     continue
-                amount = repr(item.find_element_by_xpath("./td[@class='amount']/span").text)  # 字符串转换
-                amount = int(amount * 100)  # 单位换算
                 print(tradeNO)
-                print(memo)
+                amount = repr(item.find_element_by_xpath("./td[@class='amount']/span").text)  # 字符串转换
                 print(amount)
+                amount = int(amount * 100)  # 单位换算
                 self.__db__.saveAlipayTradeNo({
                     'tradeNo': tradeNO,
                     'memo': memo,
