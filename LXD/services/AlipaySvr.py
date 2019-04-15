@@ -90,7 +90,8 @@ class AlipaySvr:
                 if last_seen_tradeNostr:
                     if tradeNostr == last_seen_tradeNostr:
                         break
-                tradeNO = re.search(r"流水号:\d+", tradeNostr)
+                restr = r"流水号:\d+"
+                tradeNO = re.search(restr, tradeNostr)
                 if tradeNO:
                     tradeNO = tradeNO.group().strip('流水号:')
                 else:
