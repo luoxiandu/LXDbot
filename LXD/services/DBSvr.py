@@ -110,6 +110,30 @@ class DB:
         else:
             return balance[0]
 
+    def saveAlipayTradeNo(self, trade):
+        cur = self.conn.cursor()
+        cur.execute("INSERT INTO AlipayOrders(tradeNo, amount, memo, used)  VALUES (?, ?, ?, 0)", (
+            trade['tradeNo'],
+            trade['amount'],
+            trade['memo']
+        ))
+        self.conn.commit()
+        return
+
+    def getAlipayTradeNo(self, tradeNo):
+        cur = self.conn.cursor()
+        r = cur.execute("SELECT * FROM AlipayOrders WHERE tradeNo=?", (tradeNo,))
+        trade = r.fetchone()
+        if not trade:
+            return None
+        else:
+            return {
+                'tradeNo': trade[0],
+                'amount': trade[1],
+                'memo': trade[2],
+                'used': trade[3]
+            }
+
 
 
 
