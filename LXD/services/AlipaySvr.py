@@ -99,7 +99,7 @@ class AlipaySvr:
                 else:
                     continue
                 print(tradeNO)
-                amount = repr(item.find_element_by_xpath("./td[@class='amount']/span").text)  # 字符串转换
+                amount = eval(item.find_element_by_xpath("./td[@class='amount']/span").text)  # 字符串转换
                 print(amount)
                 amount = int(amount * 100)  # 单位换算
                 self.__db__.saveAlipayTradeNo({
