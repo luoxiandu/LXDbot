@@ -131,7 +131,7 @@ class DB:
                 'tradeNo': trade[0],
                 'amount': trade[1],
                 'memo': trade[2],
-                'used': trade[3]
+                'used': bool(trade[3])
             }
 
     def useAlipayTradeNo(self, tradeNo):

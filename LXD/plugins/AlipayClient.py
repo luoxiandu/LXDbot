@@ -13,7 +13,7 @@ async def checkAlipay(session:CommandSession):
     orderid = session.argv[0]
     cache = db.getAlipayTradeNo(orderid)
     if cache:
-        if cache['used'] == '0':
+        if cache['used']:
             db.deposit(session.ctx['user_id'], cache['amount'])
             db.useAlipayTradeNo(orderid)
             await session.finish(repr(float(cache['amount']) / 100) + '元已经收到，充值成功！')
