@@ -18,7 +18,7 @@ class AlipaySvr:
     __db__ = None
     __scheduler__ = None
     __FirefoxProfile__ = "data/FirefoxProfile"
-    __QQbot__ = None
+    __QQbot__ = nonebot.get_bot()
     __mainloop_job__ = None
 
     def __init__(self):
@@ -34,8 +34,6 @@ class AlipaySvr:
         # self.browser.get("https://consumeprod.alipay.com/record/advanced.htm")  # 转到交易记录页
         # 打开数据库
         self.__db__ = DB()
-        # QQbot初始化
-        self.__QQbot__ = nonebot.get_bot()
         # 设置定时刷新
         self.__scheduler__ = AsyncIOScheduler()
         self.__mainloop_job__ = self.__scheduler__.add_job(self.mainloop_handler, 'interval', seconds=60)
@@ -48,11 +46,6 @@ class AlipaySvr:
         entrance.click()
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
-        await self.stateerrchk()
-        # 进行review
-        await self.review()
-
-    async def stateerrchk(self):
         # 判断页面是否正常
         if self.browser.title == '登录 - 支付宝':
             self.__mainloop_job__.pause()
@@ -82,6 +75,8 @@ class AlipaySvr:
                 # await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             self.__mainloop_job__.resume()
             pass
+        # 进行review
+        self.review()
 
     # 监测订单信息
     def review(self):
@@ -89,8 +84,7 @@ class AlipaySvr:
         # top_orderno = self.browser.find_element_by_xpath("//a[@id='J-tradeNo-1']").get_attribute('title')
         last_seen_tradeNostr = self.__db__.getvar('Alipay_last_seen_orderno')
         if top_tradeNostr != last_seen_tradeNostr:  # 有新订单
-            for item in self.browser.find_elements_by_xpath("//table[@id='tradeRecordsIndex']/tbody/tr"):
-                print(item)
+            for item in self.browser.find_elements_by_xpath("//table[@id='tradeRecordsIndex']/tr"):
                 memo = item.find_element_by_xpath("./p[@class='memo-info']").text
                 tradeNostr = item.find_element_by_xpath("./td[contains(@class,'tradeNo')]/p").text
                 if last_seen_tradeNostr:
