@@ -9,6 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import time
 import re
+import random
 
 
 class AlipaySvr:
@@ -39,6 +40,7 @@ class AlipaySvr:
         self.__scheduler__.start()
 
     async def mainloop_handler(self):
+        time.sleep(random.random())
         # 刷新页面
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
         entrance.click()
