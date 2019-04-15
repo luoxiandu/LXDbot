@@ -45,11 +45,11 @@ class AlipaySvr:
 
     def login(self, username, password):
         entrance = self.browser.find_element_by_xpath("//li[@data-status='show_login']")
+        time.sleep(random.random())
+        entrance.click()
         userinput = self.browser.find_element_by_xpath("//input[@id='J-input-user']")
         pwdinput = self.browser.find_element_by_xpath("//input[@id='password_rsainput']")
         smt = self.browser.find_element_by_xpath("//input[@id='J-login-btn']")
-        time.sleep(random.random())
-        entrance.click()
         time.sleep(random.random())
         userinput.clear()
         time.sleep(random.random())
