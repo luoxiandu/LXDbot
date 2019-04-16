@@ -84,16 +84,18 @@ class AlipaySvr:
             entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
             ActionChains(self.browser).move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
                                                         yoffset=random.randint(15, 20)).click(entrance).perform()
+            self.__errstatus__ = None
         except NoSuchElementException:
-            try:
-                for uid in [916327225, 1158395892]:
-                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='支付宝出问题了，具体问题已进入排查。')
-            except ActionFailed as e:
-                print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
+            if not self.__errstatus__:
+                try:
+                    for uid in [916327225, 1158395892]:
+                        await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='支付宝出问题了，具体问题已进入排查。')
+                except ActionFailed as e:
+                    print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
         # 判断页面是否正常
-        if self.browser.title == '登录 - 支付宝':  # 登录失效
+        if self.browser.title == '登录 - 支付宝' and self.__errstatus__ != 'NeedLogin':  # 登录失效
             self.__mainloop_job__.pause()
             self.__errstatus__ = 'NeedLogin'
             scrshot = self.browser.get_screenshot_as_base64()
@@ -105,13 +107,13 @@ class AlipaySvr:
             }
             try:
                 for uid in [916327225, 1158395892]:
-                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='登录失效，请尽快修复！')
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='登录失效，请尽快修复！如果二维码过期，请回复“刷新支付宝页面”。')
                     await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message=msg)
             except ActionFailed as e:
                 print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
             self.__mainloop_job__.resume()
             return
-        if self.browser.title == '安全校验 - 支付宝':  # 被风控
+        if self.browser.title == '安全校验 - 支付宝' and self.__errstatus__ != 'NeedConfirm':  # 被风控
             self.__mainloop_job__.pause()
             self.__errstatus__ = 'NeedConfirm'
             scrshot = self.browser.get_screenshot_as_base64()
@@ -123,7 +125,7 @@ class AlipaySvr:
             }
             try:
                 for uid in [916327225, 1158395892]:
-                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='需要安全校验，请尽快修复！')
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='需要安全校验，请尽快修复！如果二维码过期，请回复“刷新支付宝页面”。')
                     await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message=msg)
             except ActionFailed as e:
                 print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
@@ -132,6 +134,13 @@ class AlipaySvr:
         # 进行review
         if not self.__errstatus__:
             self.review()
+        else:
+            print('程序依然处于错误状态，请尽快修复！')
+            try:
+                for uid in [916327225, 1158395892]:
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='程序依然处于错误状态，请尽快修复！如果二维码过期，请回复“刷新支付宝页面”。')
+            except ActionFailed as e:
+                print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
 
     # 监测订单信息
     def review(self):
