@@ -22,6 +22,7 @@ class AlipaySvr:
     __FirefoxProfile__ = "data/FirefoxProfile"
     __QQbot__ = nonebot.get_bot()
     __mainloop_job__ = None
+    __errstatus__ = None
 
     def __init__(self):
         self.browser = webdriver.Firefox(firefox_profile=self.__FirefoxProfile__)
@@ -88,12 +89,13 @@ class AlipaySvr:
                 for uid in [916327225, 1158395892]:
                     await self.__QQbot__.send_private_msg(user_id=uid, message='支付宝出问题了，具体问题已进入排查。')
             except ActionFailed as e:
-                print('酷QHTTP插件错误，返回值：' + e.retcode)
+                print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
         # 判断页面是否正常
         if self.browser.title == '登录 - 支付宝':  # 登录失效
             self.__mainloop_job__.pause()
+            self.__errstatus__ = 'NeedLogin'
             scrshot = self.browser.get_screenshot_as_base64()
             msg = {
                 'type': 'image',
@@ -106,11 +108,12 @@ class AlipaySvr:
                     await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
                     await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             except ActionFailed as e:
-                print('酷QHTTP插件错误，返回值：' + e.retcode)
+                print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
             self.__mainloop_job__.resume()
             return
         if self.browser.title == '安全校验 - 支付宝':  # 被风控
             self.__mainloop_job__.pause()
+            self.__errstatus__ = 'NeedConfirm'
             scrshot = self.browser.get_screenshot_as_base64()
             msg = {
                 'type': 'image',
@@ -123,11 +126,12 @@ class AlipaySvr:
                     await self.__QQbot__.send_private_msg(user_id=uid, message='需要安全校验，请尽快修复！')
                     await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             except ActionFailed as e:
-                print('酷QHTTP插件错误，返回值：' + e.retcode)
+                print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
             self.__mainloop_job__.resume()
             return
         # 进行review
-        self.review()
+        if not self.__errstatus__:
+            self.review()
 
     # 监测订单信息
     def review(self):
