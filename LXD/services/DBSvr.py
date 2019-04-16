@@ -140,6 +140,15 @@ class DB:
         self.conn.commit()
         return
 
+    def getRandomAlipayTradeNo(self):
+        cur = self.conn.cursor()
+        r = cur.execute("SELECT * FROM AlipayOrders ORDER BY RANDOM() LIMIT 1")
+        trade = r.fetchone()
+        if not trade:
+            return None
+        else:
+            return trade[0]
+
 
 
 

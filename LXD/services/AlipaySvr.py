@@ -65,12 +65,16 @@ class AlipaySvr:
     async def mainloop_handler(self):
         time.sleep(random.random())
         # 刷新页面
+        if random.choice([True, False]):
+            randomtradeno = self.__db__.getRandomAlipayTradeNo()
+            self.checkoderid(randomtradeno, 0)
+        time.sleep(random.random())
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
         entrance.click()
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
         # 判断页面是否正常
-        if self.browser.title == '登录 - 支付宝':
+        if self.browser.title == '登录 - 支付宝':  # 登录失效
             self.__mainloop_job__.pause()
             scrshot = self.browser.get_screenshot_as_base64()
             msg = {
@@ -84,7 +88,7 @@ class AlipaySvr:
                 await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             self.__mainloop_job__.resume()
             pass
-        if self.browser.title == '安全校验 - 支付宝':
+        if self.browser.title == '安全校验 - 支付宝':  # 被风控
             self.__mainloop_job__.pause()
             scrshot = self.browser.get_screenshot_as_base64()
             msg = {
