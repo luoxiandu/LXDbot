@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiocqhttp.exceptions import ActionFailed
+from sqlite3 import IntegrityError
 import time
 import re
 import random
@@ -150,11 +151,14 @@ class AlipaySvr:
                 amount = eval(item.find_element_by_xpath("./td[@class='amount']/span").text)  # 字符串转换
                 print(amount)
                 amount = int(amount * 100)  # 单位换算
-                self.__db__.saveAlipayTradeNo({
-                    'tradeNo': tradeNO,
-                    'memo': memo,
-                    'amount': amount
-                })
+                try:
+                    self.__db__.saveAlipayTradeNo({
+                        'tradeNo': tradeNO,
+                        'memo': memo,
+                        'amount': amount
+                    })
+                except IntegrityError:
+                    pass
             print(last_seen_tradeNostr)
             self.__db__.setvar('Alipay_last_seen_orderno', top_tradeNostr)  # 订单检测完成
             return
