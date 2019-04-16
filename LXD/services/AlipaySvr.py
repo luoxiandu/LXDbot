@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from aiocqhttp.exceptions import ActionFailed
 import time
 import re
 import random
@@ -80,7 +81,8 @@ class AlipaySvr:
             self.checkoderid(randomtradeno, 0)
         time.sleep(random.random())
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
-        entrance.click()
+        self.__achain__.move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click().perform()
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
         # 判断页面是否正常
@@ -93,9 +95,12 @@ class AlipaySvr:
                     'file': 'base64://' + scrshot
                 }
             }
-            for uid in [916327225, 1158395892]:
-                await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
-                await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+            try:
+                for uid in [916327225, 1158395892]:
+                    await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
+                    await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+            except ActionFailed as e:
+                print('酷QHTTP插件错误，返回值：' + e.retcode)
             self.__mainloop_job__.resume()
             pass
         if self.browser.title == '安全校验 - 支付宝':  # 被风控
@@ -107,9 +112,12 @@ class AlipaySvr:
                     'file': 'base64://' + scrshot
                 }
             }
-            for uid in [916327225, 1158395892]:
-                await self.__QQbot__.send_private_msg(user_id=uid, message='需要安全校验，请尽快修复！')
-                await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+            try:
+                for uid in [916327225, 1158395892]:
+                    await self.__QQbot__.send_private_msg(user_id=uid, message='需要安全校验，请尽快修复！')
+                    await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+            except ActionFailed as e:
+                print('酷QHTTP插件错误，返回值：' + e.retcode)
             self.__mainloop_job__.resume()
             pass
         # 进行review
@@ -159,9 +167,13 @@ class AlipaySvr:
         # gotoadvanced.click()
         inpkwd = self.browser.find_element_by_xpath("//input[@id='J-keyword']")
         btnsubmit = self.browser.find_element_by_xpath("//input[@id='J-set-query-form']")
+        self.__achain__.move_to_element_with_offset(inpkwd, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click().perform()
         inpkwd.clear()
+        time.sleep(random.random())
         inpkwd.send_keys(orderid)
-        btnsubmit.click()
+        self.__achain__.move_to_element_with_offset(btnsubmit, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click().perform()
         self.browser.implicitly_wait(2)
         try:
             result = self.browser.find_element_by_xpath("//tr[@id='J-item-1']/td[@class='amount']/span").text
