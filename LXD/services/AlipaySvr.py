@@ -28,7 +28,7 @@ class AlipaySvr:
         self.__achain__ = ActionChains(self.browser)
         # 初始化支付宝网页
         self.browser.get("https://personalweb.alipay.com/portal/i.htm")
-        self.login('18715707081', 'wjd1996')
+        # self.login('18715707081', 'wjd1996')
         self.browser.implicitly_wait(500)
         self.username = self.browser.find_element_by_xpath("//a[@seed='account-zhangh-myalipay-v1']").text  # 检测登录
         print('支付宝 ' + self.username + ' 登录成功！')
