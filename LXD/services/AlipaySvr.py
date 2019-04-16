@@ -79,7 +79,7 @@ class AlipaySvr:
                     'file': 'base64://' + scrshot
                 }
             }
-            for uid in [91637225, 1158395892]:
+            for uid in [916327225, 1158395892]:
                 await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
                 await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             self.__mainloop_job__.resume()
