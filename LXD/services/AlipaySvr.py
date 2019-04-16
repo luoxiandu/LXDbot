@@ -100,7 +100,7 @@ class AlipaySvr:
             except ActionFailed as e:
                 print('酷QHTTP插件错误，返回值：' + e.retcode)
             self.__mainloop_job__.resume()
-            pass
+            return
         if self.browser.title == '安全校验 - 支付宝':  # 被风控
             self.__mainloop_job__.pause()
             scrshot = self.browser.get_screenshot_as_base64()
@@ -117,12 +117,13 @@ class AlipaySvr:
             except ActionFailed as e:
                 print('酷QHTTP插件错误，返回值：' + e.retcode)
             self.__mainloop_job__.resume()
-            pass
+            return
         # 进行review
         self.review()
 
     # 监测订单信息
     def review(self):
+        time.sleep(1)
         self.browser.implicitly_wait(10)
         top_tradeNostr = self.browser.find_element_by_xpath("//tr[@id='J-item-1']/td[contains(@class,'tradeNo')]/p").text
         # top_orderno = self.browser.find_element_by_xpath("//a[@id='J-tradeNo-1']").get_attribute('title')
