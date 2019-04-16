@@ -67,7 +67,7 @@ async def manualAlipayCheck(session:CommandSession):
     await session.finish('充值完毕！为用户' + user + '充值' + amount)
 
 
-@on_command('refreshBrowser', aliases=('刷新支付宝页面',))
+@on_command('refreshBrowser', aliases=('刷新支付宝页面',), privileged=SUPERUSER)
 async def refreshBrowser(session:CommandSession):
     alipay.browser.refresh()
     scrshot = alipay.browser.get_screenshot_as_base64()
