@@ -21,11 +21,9 @@ class AlipaySvr:
     __FirefoxProfile__ = "data/FirefoxProfile"
     __QQbot__ = nonebot.get_bot()
     __mainloop_job__ = None
-    __achain__ = None
 
     def __init__(self):
         self.browser = webdriver.Firefox(firefox_profile=self.__FirefoxProfile__)
-        self.__achain__ = ActionChains(self.browser)
         # 初始化支付宝网页
         self.browser.get("https://personalweb.alipay.com/portal/i.htm")
         # self.login('18715707081', 'wjd1996')
@@ -34,7 +32,7 @@ class AlipaySvr:
         print('支付宝 ' + self.username + ' 登录成功！')
         time.sleep(5)  # 别那么快
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")  # 模拟点击跳转记录页
-        entrance.click()
+        ActionChains(self.browser).move_to_element(entrance).click(entrance).perform()
         # self.browser.get("https://consumeprod.alipay.com/record/advanced.htm")  # 转到交易记录页
         # 打开数据库
         self.__db__ = DB()
@@ -49,28 +47,28 @@ class AlipaySvr:
     def login(self, username, password):
         entrance = self.browser.find_element_by_xpath("//li[@data-status='show_login']")
         time.sleep(random.random())
-        self.__achain__.move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
-                                                    yoffset=random.randint(15, 20)).click().perform()
+        ActionChains(self.browser).move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click(entrance).perform()
         userinput = self.browser.find_element_by_xpath("//input[@id='J-input-user']")
         pwdinput = self.browser.find_element_by_xpath("//input[@id='password_rsainput']")
         smt = self.browser.find_element_by_xpath("//input[@id='J-login-btn']")
         time.sleep(random.random())
-        self.__achain__.move_to_element_with_offset(userinput, xoffset=random.randint(3,5),
-                                                    yoffset=random.randint(15, 20)).click().perform()
+        ActionChains(self.browser).move_to_element_with_offset(userinput, xoffset=random.randint(3,5),
+                                                    yoffset=random.randint(15, 20)).click(userinput).perform()
         time.sleep(random.random())
         userinput.clear()
         time.sleep(random.random())
         userinput.send_keys(username)
         time.sleep(random.random())
-        self.__achain__.move_to_element_with_offset(pwdinput, xoffset=random.randint(3, 5),
-                                                    yoffset=random.randint(15, 20)).click().perform()
+        ActionChains(self.browser).move_to_element_with_offset(pwdinput, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click(pwdinput).perform()
         time.sleep(random.random())
         pwdinput.clear()
         time.sleep(random.random())
         pwdinput.send_keys(password)
         time.sleep(random.random())
-        self.__achain__.move_to_element_with_offset(smt, xoffset=random.randint(3, 5),
-                                                    yoffset=random.randint(15, 20)).click().perform()
+        ActionChains(self.browser).move_to_element_with_offset(smt, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click(smt).perform()
         return
 
     async def mainloop_handler(self):
@@ -81,11 +79,10 @@ class AlipaySvr:
             self.checkoderid(randomtradeno, 0)
         time.sleep(random.random())
         entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
-        self.__achain__.move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
-                                                    yoffset=random.randint(15, 20)).click().perform()
+        ActionChains(self.browser).move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click(entrance).perform()
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
-        self.__achain__ = ActionChains(self.browser)
         # 判断页面是否正常
         if self.browser.title == '登录 - 支付宝':  # 登录失效
             self.__mainloop_job__.pause()
@@ -127,7 +124,6 @@ class AlipaySvr:
     # 监测订单信息
     def review(self):
         self.browser.implicitly_wait(10)
-        self.__achain__ = ActionChains(self.browser)
         top_tradeNostr = self.browser.find_element_by_xpath("//tr[@id='J-item-1']/td[contains(@class,'tradeNo')]/p").text
         # top_orderno = self.browser.find_element_by_xpath("//a[@id='J-tradeNo-1']").get_attribute('title')
         last_seen_tradeNostr = self.__db__.getvar('Alipay_last_seen_orderno')
@@ -166,18 +162,17 @@ class AlipaySvr:
 
     def checkoderid(self, orderid, price):
         WebDriverWait(self.browser, 20, 0.5).until(expected_conditions.title_is, '我的账单 - 支付宝')
-        self.__achain__ = ActionChains(self.browser)
         # gotoadvanced = self.browser.find_element_by_xpath("//a[@seed='CR-AdvancedFilter']")
         # gotoadvanced.click()
         inpkwd = self.browser.find_element_by_xpath("//input[@id='J-keyword']")
         btnsubmit = self.browser.find_element_by_xpath("//input[@id='J-set-query-form']")
-        self.__achain__.move_to_element_with_offset(inpkwd, xoffset=random.randint(3, 5),
-                                                    yoffset=random.randint(15, 20)).click().perform()
+        ActionChains(self.browser).move_to_element_with_offset(inpkwd, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click(inpkwd).perform()
         inpkwd.clear()
         time.sleep(random.random())
         inpkwd.send_keys(orderid)
-        self.__achain__.move_to_element_with_offset(btnsubmit, xoffset=random.randint(3, 5),
-                                                    yoffset=random.randint(15, 20)).click().perform()
+        ActionChains(self.browser).move_to_element_with_offset(btnsubmit, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click(btnsubmit).perform()
         self.browser.implicitly_wait(2)
         try:
             result = self.browser.find_element_by_xpath("//tr[@id='J-item-1']/td[@class='amount']/span").text
