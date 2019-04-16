@@ -79,9 +79,16 @@ class AlipaySvr:
             randomtradeno = self.__db__.getRandomAlipayTradeNo()
             self.checkoderid(randomtradeno, 0)
         time.sleep(random.random())
-        entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
-        ActionChains(self.browser).move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
-                                                    yoffset=random.randint(15, 20)).click(entrance).perform()
+        try:
+            entrance = self.browser.find_element_by_xpath("//a[@seed='global-record']")
+            ActionChains(self.browser).move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
+                                                        yoffset=random.randint(15, 20)).click(entrance).perform()
+        except NoSuchElementException:
+            try:
+                for uid in [916327225, 1158395892]:
+                    await self.__QQbot__.send_private_msg(user_id=uid, message='支付宝出问题了，具体问题已进入排查。')
+            except ActionFailed as e:
+                print('酷QHTTP插件错误，返回值：' + e.retcode)
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
         # 判断页面是否正常
