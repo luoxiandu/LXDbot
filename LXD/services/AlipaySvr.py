@@ -85,6 +85,7 @@ class AlipaySvr:
                                                     yoffset=random.randint(15, 20)).click().perform()
         # self.browser.refresh()
         self.browser.implicitly_wait(5)
+        self.__achain__ = ActionChains(self.browser)
         # 判断页面是否正常
         if self.browser.title == '登录 - 支付宝':  # 登录失效
             self.__mainloop_job__.pause()
@@ -125,6 +126,8 @@ class AlipaySvr:
 
     # 监测订单信息
     def review(self):
+        self.browser.implicitly_wait(10)
+        self.__achain__ = ActionChains(self.browser)
         top_tradeNostr = self.browser.find_element_by_xpath("//tr[@id='J-item-1']/td[contains(@class,'tradeNo')]/p").text
         # top_orderno = self.browser.find_element_by_xpath("//a[@id='J-tradeNo-1']").get_attribute('title')
         last_seen_tradeNostr = self.__db__.getvar('Alipay_last_seen_orderno')
@@ -163,6 +166,7 @@ class AlipaySvr:
 
     def checkoderid(self, orderid, price):
         WebDriverWait(self.browser, 20, 0.5).until(expected_conditions.title_is, '我的账单 - 支付宝')
+        self.__achain__ = ActionChains(self.browser)
         # gotoadvanced = self.browser.find_element_by_xpath("//a[@seed='CR-AdvancedFilter']")
         # gotoadvanced.click()
         inpkwd = self.browser.find_element_by_xpath("//input[@id='J-keyword']")
