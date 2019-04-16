@@ -20,9 +20,11 @@ class AlipaySvr:
     __FirefoxProfile__ = "data/FirefoxProfile"
     __QQbot__ = nonebot.get_bot()
     __mainloop_job__ = None
+    __achain__ = None
 
     def __init__(self):
         self.browser = webdriver.Firefox(firefox_profile=self.__FirefoxProfile__)
+        self.__achain__ = ActionChains(self.browser)
         # 初始化支付宝网页
         self.browser.get("https://personalweb.alipay.com/portal/i.htm")
         self.login('18715707081', 'wjd1996')
@@ -46,20 +48,28 @@ class AlipaySvr:
     def login(self, username, password):
         entrance = self.browser.find_element_by_xpath("//li[@data-status='show_login']")
         time.sleep(random.random())
-        entrance.click()
+        self.__achain__.move_to_element_with_offset(entrance, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click().perform()
         userinput = self.browser.find_element_by_xpath("//input[@id='J-input-user']")
         pwdinput = self.browser.find_element_by_xpath("//input[@id='password_rsainput']")
         smt = self.browser.find_element_by_xpath("//input[@id='J-login-btn']")
+        time.sleep(random.random())
+        self.__achain__.move_to_element_with_offset(userinput, xoffset=random.randint(3,5),
+                                                    yoffset=random.randint(15, 20)).click().perform()
         time.sleep(random.random())
         userinput.clear()
         time.sleep(random.random())
         userinput.send_keys(username)
         time.sleep(random.random())
+        self.__achain__.move_to_element_with_offset(pwdinput, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click().perform()
+        time.sleep(random.random())
         pwdinput.clear()
         time.sleep(random.random())
         pwdinput.send_keys(password)
         time.sleep(random.random())
-        smt.click()
+        self.__achain__.move_to_element_with_offset(smt, xoffset=random.randint(3, 5),
+                                                    yoffset=random.randint(15, 20)).click().perform()
         return
 
     async def mainloop_handler(self):
