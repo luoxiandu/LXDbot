@@ -81,7 +81,7 @@ class AlipaySvr:
             }
             for uid in [91637225, 1158395892]:
                 await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
-                # await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+                await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             self.__mainloop_job__.resume()
             pass
         if self.browser.title == '安全校验 - 支付宝':
@@ -95,7 +95,7 @@ class AlipaySvr:
             }
             for uid in [916327225, 1158395892]:
                 await self.__QQbot__.send_private_msg(user_id=uid, message='需要安全校验，请尽快修复！')
-                # await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+                await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
             self.__mainloop_job__.resume()
             pass
         # 进行review
