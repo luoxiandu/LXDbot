@@ -87,7 +87,7 @@ class AlipaySvr:
         except NoSuchElementException:
             try:
                 for uid in [916327225, 1158395892]:
-                    await self.__QQbot__.send_private_msg(user_id=uid, message='支付宝出问题了，具体问题已进入排查。')
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='支付宝出问题了，具体问题已进入排查。')
             except ActionFailed as e:
                 print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
         # self.browser.refresh()
@@ -105,8 +105,8 @@ class AlipaySvr:
             }
             try:
                 for uid in [916327225, 1158395892]:
-                    await self.__QQbot__.send_private_msg(user_id=uid, message='登录失效，请尽快修复！')
-                    await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='登录失效，请尽快修复！')
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message=msg)
             except ActionFailed as e:
                 print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
             self.__mainloop_job__.resume()
@@ -123,8 +123,8 @@ class AlipaySvr:
             }
             try:
                 for uid in [916327225, 1158395892]:
-                    await self.__QQbot__.send_private_msg(user_id=uid, message='需要安全校验，请尽快修复！')
-                    await self.__QQbot__.send_private_msg(user_id=uid, message=msg)
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message='需要安全校验，请尽快修复！')
+                    await self.__QQbot__.send_private_msg_rate_limited(user_id=uid, message=msg)
             except ActionFailed as e:
                 print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
             self.__mainloop_job__.resume()
