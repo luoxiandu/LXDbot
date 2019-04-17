@@ -28,5 +28,3 @@ if __name__ == '__main__':
     webserver = web.Application()
     webserver.add_routes([web.post('/020pay', notify_handler_020)])
     web.run_app(webserver)
-    db = DB()
-    QQbot = nonebot.get_bot()
