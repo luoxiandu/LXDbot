@@ -50,7 +50,7 @@ async def generalDeposit(session:CommandSession):
 @on_command('generalDeposit', aliases=('手动充值', 'sdcz', 'SDCZ'), privileged=SUPERUSER, shell_like=True, only_to_me=False)
 async def generalDeposit(session:CommandSession):
     account = session.argv[0]
-    amount = int(float(session.argv[1]) / 100)
+    amount = int(float(session.argv[1]) * 100)
     db.deposit(account, amount)
     session.finish('成功为' + session.argv[0] + '充值' + session.argv[1] + '元！')
 
