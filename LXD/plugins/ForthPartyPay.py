@@ -18,7 +18,7 @@ bot = nonebot.get_bot()
 async def generalDeposit(session:CommandSession):
     if len(session.argv) == 2:
         price = int(eval(session.argv[1]) * 100)
-        if session.argv[0] == '支付宝' or 'zfb' or 'ZFB':
+        if session.argv[0] in ('支付宝', 'zfb', 'ZFB'):
             qrcode = await pay.getPayQRcode(price=repr(price), type='2', orderuid=repr(session.ctx['user_id']), goodsname='支付宝充值')
             if qrcode:
                 msg = {
@@ -29,7 +29,7 @@ async def generalDeposit(session:CommandSession):
                 }
             else:
                 msg = '获取支付宝二维码错误，请重试或联系群主。'
-        elif session.argv[0] == '微信' or 'wx' or 'WX':
+        elif session.argv[0] in ('微信', 'wx', 'WX'):
             qrcode = await pay.getPayQRcode(price=repr(price), type='1', orderuid=repr(session.ctx['user_id']), goodsname='微信充值')
             if qrcode:
                 msg = {
