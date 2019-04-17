@@ -26,7 +26,7 @@ async def generalDeposit(session:CommandSession):
                 }
             }
         elif session.argv[0] == '微信':
-            qrcode = await pay.getPayQRcode(price=price, type='1', orderuid=repr(session.ctx['user_id']), goodsname='微信充值')
+            qrcode = await pay.getPayQRcode(price=repr(price), type='1', orderuid=repr(session.ctx['user_id']), goodsname='微信充值')
             msg = {
                 'type': 'image',
                 'data': {
