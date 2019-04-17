@@ -6,7 +6,7 @@ import re
 db = DB()
 
 
-@on_command('ask', aliases=('问',), only_to_me=False)
+@on_command('ask', aliases=('问',''), only_to_me=False)
 async def ask(session:CommandSession):
     question = session.current_arg
     answer = db.getvar('question_' + question)
