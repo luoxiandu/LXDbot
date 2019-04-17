@@ -5,6 +5,7 @@ from nonebot import on_command, CommandSession
 from aiocqhttp.exceptions import ActionFailed
 from LXD.services.ForthPartyPaySvr import ForthPaySvr
 from LXD.services.DBSvr import DB
+from sqlite3 import IntegrityError
 from nonebot.permission import SUPERUSER
 import hashlib
 
@@ -52,7 +53,10 @@ async def notify_handler_020():
     kstr = data['actual_price'] + data['bill_no'] + data['orderid'] + data['orderuid'] + data[
         'price'] + config.pay_token
     if hashlib.md5(kstr.encode('utf-8')).hexdigest() == data['key']:
-        db.saveForthPartyOrder(data)
+        try:
+            db.saveForthPartyOrder(data)
+        except IntegrityError:
+            return 'success'
         db.deposit(data['orderuid'], int(data['actual_price']))
         try:
             await bot.send_private_msg_rate_limited(user_id=int(data['orderuid']), message='您的' + repr(
