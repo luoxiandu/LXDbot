@@ -12,6 +12,7 @@ pay = ForthPaySvr()
 db = DB()
 bot = nonebot.get_bot()
 
+
 @on_command('generalDeposit', aliases=('充值', '快速充值'), shell_like=True)
 async def generalDeposit(session:CommandSession):
     if len(session.argv) == 2:
@@ -37,6 +38,7 @@ async def generalDeposit(session:CommandSession):
         await session.send(msg)
     else:
         await session.send('快速充值用法：发送 充值 微信/支付宝 金额')
+
 
 @bot.server_app.route('/020pay_notice', methods=['POST'])
 async def notify_handler_020():
