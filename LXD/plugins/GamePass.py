@@ -9,6 +9,8 @@ db = DB()
 async def getGamePass(session:CommandSession):
     account = session.ctx['user_id']
     price = db.getprice('GamePass')
+    if db.checkgamepass() == 0:
+        session.finish('目前没有库存，请等待上货。')
     alert = account + "要购买价值" + str(float(price) / 100) + "的游戏账号，是否确定购买？"
     ensure = session.get('ensure_to_buy', prompt=alert)
     if ensure != '是' or '确定' or '购买':
