@@ -49,7 +49,7 @@ async def notify_handler_020():
         db.saveForthPartyOrder(data)
         db.deposit(data['orderuid'], int(data['price']))
         try:
-            await self.__QQbot__.send_private_msg_rate_limited(user_id=int(data['orderuid']), message='您的' + repr(
+            await bot.send_private_msg_rate_limited(user_id=int(data['orderuid']), message='您的' + repr(
                 float(data['price']) / 100) + '元充值已到账！')
         except ActionFailed as e:
             print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
