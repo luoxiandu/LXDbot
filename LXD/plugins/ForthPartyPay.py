@@ -47,9 +47,12 @@ async def generalDeposit(session:CommandSession):
         await session.send('快速充值用法：发送 充值 微信/支付宝 金额')
 
 
-@on_command('generalDeposit', aliases=('补单',), privileged=SUPERUSER, shell_like=True)
-async def generalDepost(session:CommandSession):
-    pass
+@on_command('generalDeposit', aliases=('手动充值',), privileged=SUPERUSER, shell_like=True)
+async def generalDeposit(session:CommandSession):
+    account = session.argv[0]
+    amount = int(float(session.argv[1]) / 100)
+    db.deposit(account, amount)
+    await session.send('成功为' + session.argv[0] + '充值' + session.argv[1] + '元！')
 
 
 @on_command('changeSuccessString', aliases=('切换手续费耍赖状态',), privileged=SUPERUSER)
