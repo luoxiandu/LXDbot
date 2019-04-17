@@ -9,4 +9,4 @@ db = DB()
 async def checkBalance(session:CommandSession):
     account = session.ctx['user_id']
     balance = db.getbalance(account)
-    await session.send("账号" + repr(account) + "的余额为：" + repr(float(balance) / 100) if balance else "尚未开户，请充值，充值后自动开户。")
+    session.finish("账号" + repr(account) + "的余额为：" + repr(float(balance) / 100) if balance else "尚未开户，请充值，充值后自动开户。")
