@@ -47,8 +47,34 @@ async def generalDeposit(session:CommandSession):
         await session.send('快速充值用法：发送 充值 微信/支付宝 金额')
 
 
+@on_command('generalDeposit', aliases=('补单',), privileged=SUPERUSER, shell_like=True)
+async def generalDepost(session:CommandSession):
+    pass
+
+
+@on_command('changeSuccessString', aliases=('切换手续费耍赖状态',), privileged=SUPERUSER)
+async def changeSuccessString(session:CommandSession):
+    success_str = db.getvar('020success')
+    if success_str == 'success':
+        db.setvar('020success', 'surprise, motherfucker!')
+        await session.send('成功切换为手续费耍赖状态！')
+    else:
+        db.setvar('020success', 'success')
+        await session.send('成功切换为手续费不耍赖状态！')
+
+
+@on_command('getSuccessString', aliases=('查询手续费耍赖状态',), privileged=SUPERUSER)
+async def getSuccessString(session:CommandSession):
+    success_str = db.getvar('020success')
+    if success_str == 'success':
+        await session.send('现在是手续费不耍赖状态！')
+    else:
+        await session.send('现在是手续费耍赖状态！请注意别被察觉！')
+
+
 @bot.server_app.route('/020pay_notice', methods=['POST'])
 async def notify_handler_020():
+    success_str = db.getvar('020success')
     data = await request.form
     kstr = data['actual_price'] + data['bill_no'] + data['orderid'] + data['orderuid'] + data[
         'price'] + config.pay_token
@@ -56,13 +82,13 @@ async def notify_handler_020():
         try:
             db.saveForthPartyOrder(data)
         except IntegrityError:
-            return 'success'
+            return success_str
         db.deposit(data['orderuid'], int(data['actual_price']))
         try:
             await bot.send_private_msg_rate_limited(user_id=int(data['orderuid']), message='您的' + repr(
                 float(data['actual_price']) / 100) + '元充值已到账！')
         except ActionFailed as e:
             print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
-        return 'success'
+        return success_str
     else:
         return 'Token Validation Failed.'
