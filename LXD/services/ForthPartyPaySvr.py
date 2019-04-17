@@ -34,7 +34,7 @@ class ForthPaySvr:
                 if r['code'] == 200:
                     async with aiohttp.ClientSession() as QRsession:
                         async with QRsession.get('https://ppay.mmbbo.cn/api.php/pp/scerweima2?url=' + r['data']['qrcode']) as resp:
-                            return base64.b64encode(resp.read())
+                            return base64.b64encode(await resp.read())
                 else:
                     return None
 
