@@ -17,6 +17,6 @@ async def ask(session:CommandSession):
 async def addQuestion(session:CommandSession):
     c = re.split(r'(#[^#]+#)(.+)', session.current_arg)
     question = c[1].strip('#')
-    answer = c[2]
+    answer = c[2].strip()
     db.setvar('question_' + question, answer)
     session.finish('问题' + question + '设置成功！')
