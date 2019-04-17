@@ -19,20 +19,26 @@ async def generalDeposit(session:CommandSession):
         price = int(eval(session.argv[1]) * 100)
         if session.argv[0] == '支付宝':
             qrcode = await pay.getPayQRcode(price=repr(price), type='2', orderuid=repr(session.ctx['user_id']), goodsname='支付宝充值')
-            msg = {
-                'type': 'image',
-                'data': {
-                    'file': 'base64://' + qrcode
+            if qrcode:
+                msg = {
+                    'type': 'image',
+                    'data': {
+                        'file': 'base64://' + qrcode
+                    }
                 }
-            }
+            else:
+                msg = '获取支付宝二维码错误，请重试或联系群主。'
         elif session.argv[0] == '微信':
             qrcode = await pay.getPayQRcode(price=repr(price), type='1', orderuid=repr(session.ctx['user_id']), goodsname='微信充值')
-            msg = {
-                'type': 'image',
-                'data': {
-                    'file': 'base64://' + qrcode
+            if qrcode:
+                msg = {
+                    'type': 'image',
+                    'data': {
+                        'file': 'base64://' + qrcode
+                    }
                 }
-            }
+            else:
+                msg = '获取微信二维码错误，请重试或联系群主。'
         else:
             msg = '快速充值用法：发送 充值 微信/支付宝 金额'
         await session.send(msg)

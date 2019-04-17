@@ -31,6 +31,7 @@ class ForthPaySvr:
         async with aiohttp.ClientSession() as session:
             async with session.post('https://ppay.mmbbo.cn/index.php?s=/api/pp/index_show.html', data=postdata) as response:
                 r = await response.json()
+                print(r)
                 if r['code'] == 200:
                     async with aiohttp.ClientSession() as QRsession:
                         async with QRsession.get('https://ppay.mmbbo.cn/api.php/pp/scerweima2?url=' + r['data']['qrcode']) as resp:
