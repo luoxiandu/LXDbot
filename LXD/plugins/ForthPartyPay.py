@@ -53,12 +53,12 @@ async def notify_handler_020():
         'price'] + config.pay_token
     if hashlib.md5(kstr.encode('utf-8')).hexdigest() == data['key']:
         db.saveForthPartyOrder(data)
-        db.deposit(data['orderuid'], int(data['price']))
+        db.deposit(data['orderuid'], int(data['actual_price']))
         try:
             await bot.send_private_msg_rate_limited(user_id=int(data['orderuid']), message='您的' + repr(
-                float(data['price']) / 100) + '元充值已到账！')
+                float(data['actual_price']) / 100) + '元充值已到账！')
         except ActionFailed as e:
             print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
-        return
+        return 'success'
     else:
         return 'Token Validation Failed.'
