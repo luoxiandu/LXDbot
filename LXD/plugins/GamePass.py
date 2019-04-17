@@ -24,6 +24,7 @@ async def getGamePass(session:CommandSession):
         strgp += '\nSteam账号：' + gp['steam']
         strgp += '\nSteam密码：' + gp['steampassword']
         strgp += '\n序列号：' + gp['key']
+        await session.send(db.getvar('GamePassHelp'))
         session.finish(strgp, ensure_private=True)
     else:
         session.finish('扣款失败，请查询余额！')
