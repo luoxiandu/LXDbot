@@ -149,6 +149,17 @@ class DB:
         else:
             return trade[0]
 
+    def saveForthPartyOrder(self, order):
+        cur = self.conn.cursor()
+        cur.execute("INSERT INTO ForthPartyOrders(id, amount, recieve_account_name, orderuid)  VALUES (?, ?, ?, ?)", (
+            order['orderid'],
+            order['price'],
+            order['account_name'],
+            order['orderuid']
+        ))
+        self.conn.commit()
+        return
+
 
 
 
