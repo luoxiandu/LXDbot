@@ -4,7 +4,8 @@ from LXD.services.DBSvr import DB
 from nonebot.permission import SUPERUSER
 from importlib import reload
 
-alipay = AlipaySvr()
+# alipay = AlipaySvr()
+alipay = None
 db = DB()
 
 
