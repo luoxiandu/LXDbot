@@ -23,6 +23,7 @@ async def getGamePass(session:CommandSession):
         strgp += '\n邮箱密码：' + gp['emailpassword']
         strgp += '\nSteam账号：' + gp['steam']
         strgp += '\nSteam密码：' + gp['steampassword']
+        strgp += '\n序列号：' + gp['key']
         session.finish(strgp, ensure_private=True)
     else:
         session.finish('扣款失败，请查询余额！')
@@ -43,7 +44,8 @@ async def addGamePass(session:CommandSession):
             'email': gp[0],
             'emailpassword': gp[1],
             'steam': gp[2],
-            'steampassword': gp[3]
+            'steampassword': gp[3],
+            'key': gp[4],
         })
     db.addgamepass(gpList)
     session.finish("上货完成！共有数据" + str(len(lines)) + "行，成功上货" + str(len(gpList)) + "个，未识别行数为" + repr(errcount))

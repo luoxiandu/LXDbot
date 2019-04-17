@@ -36,18 +36,19 @@ class DB:
     def addgamepass(self, gamepassList):
         cur = self.conn.cursor()
         for gp in gamepassList:
-            cur.execute("INSERT INTO gamepass(email, emailpassword, steam, steampassword, sold) VALUES (?, ?, ?, ?, 0)", (
+            cur.execute("INSERT INTO gamepass(email, emailpassword, steam, steampassword, sold, key) VALUES (?, ?, ?, ?, 0, ?)", (
                 gp['email'],
                 gp['emailpassword'],
                 gp['steam'],
-                gp['steampassword']
+                gp['steampassword'],
+                gp['key'],
             ))
         self.conn.commit()
         return
 
     def getgamepass(self):
         cur = self.conn.cursor()
-        r = cur.execute("SELECT * FROM gamepass WHERE sold=0 LIMIT 1")
+        r = cur.execute("SELECT id, email, emailpassword, steam, steampassword, key FROM gamepass WHERE sold=0 LIMIT 1")
         gp = r.fetchone()
         if not gp:
             return None
@@ -57,7 +58,8 @@ class DB:
                 'email': gp[1],
                 'emailpassword': gp[2],
                 'steam': gp[3],
-                'steampassword': gp[4]
+                'steampassword': gp[4],
+                'key': gp[5],
             }
             cur.execute("UPDATE gamepass SET sold=1 WHERE id=?", (gp['id'],))
             self.conn.commit()
