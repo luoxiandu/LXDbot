@@ -14,11 +14,11 @@ db = DB()
 bot = nonebot.get_bot()
 
 
-@on_command('generalDeposit', aliases=('充值', '快速充值'), shell_like=True)
+@on_command('generalDeposit', aliases=('充值', '快速充值', 'cz', 'CZ'), shell_like=True)
 async def generalDeposit(session:CommandSession):
     if len(session.argv) == 2:
         price = int(eval(session.argv[1]) * 100)
-        if session.argv[0] == '支付宝':
+        if session.argv[0] == '支付宝' or 'zfb' or 'ZFB':
             qrcode = await pay.getPayQRcode(price=repr(price), type='2', orderuid=repr(session.ctx['user_id']), goodsname='支付宝充值')
             if qrcode:
                 msg = {
@@ -29,7 +29,7 @@ async def generalDeposit(session:CommandSession):
                 }
             else:
                 msg = '获取支付宝二维码错误，请重试或联系群主。'
-        elif session.argv[0] == '微信':
+        elif session.argv[0] == '微信' or 'wx' or 'WX':
             qrcode = await pay.getPayQRcode(price=repr(price), type='1', orderuid=repr(session.ctx['user_id']), goodsname='微信充值')
             if qrcode:
                 msg = {
@@ -47,7 +47,7 @@ async def generalDeposit(session:CommandSession):
         await session.send('快速充值用法：发送 充值 微信/支付宝 金额')
 
 
-@on_command('generalDeposit', aliases=('手动充值',), privileged=SUPERUSER, shell_like=True)
+@on_command('generalDeposit', aliases=('手动充值', 'sdcz', 'SDCZ'), privileged=SUPERUSER, shell_like=True)
 async def generalDeposit(session:CommandSession):
     account = session.argv[0]
     amount = int(float(session.argv[1]) / 100)
@@ -55,7 +55,7 @@ async def generalDeposit(session:CommandSession):
     await session.send('成功为' + session.argv[0] + '充值' + session.argv[1] + '元！')
 
 
-@on_command('changeSuccessString', aliases=('切换手续费耍赖状态',), privileged=SUPERUSER)
+@on_command('changeSuccessString', aliases=('切换手续费耍赖状态', 'qhsxfsl', 'QHSXFSL'), privileged=SUPERUSER)
 async def changeSuccessString(session:CommandSession):
     success_str = db.getvar('020success')
     if success_str == 'success':
@@ -66,7 +66,7 @@ async def changeSuccessString(session:CommandSession):
         await session.send('成功切换为手续费不耍赖状态！')
 
 
-@on_command('getSuccessString', aliases=('查询手续费耍赖状态',), privileged=SUPERUSER)
+@on_command('getSuccessString', aliases=('查询手续费耍赖状态', 'cxsxfsl', 'CXSXFSL'), privileged=SUPERUSER)
 async def getSuccessString(session:CommandSession):
     success_str = db.getvar('020success')
     if success_str == 'success':
