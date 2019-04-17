@@ -16,7 +16,7 @@ async def ask(session:CommandSession):
 @on_command('addQuestion', aliases=('设置问题', '设问'), privileged=SUPERUSER)
 async def addQuestion(session:CommandSession):
     c = re.split(r'(#[^#]+#)(.+)', session.current_arg)
-    question = c[1]
+    question = c[1].strip('#')
     answer = c[2]
     db.setvar('question_' + question, answer)
     session.finish('问题' + question + '设置成功！')
