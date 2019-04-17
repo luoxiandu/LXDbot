@@ -36,7 +36,7 @@ async def addGamePass(session:CommandSession):
     gpList = []
     errcount = 0
     for line in lines:
-        gp = line.split('----')
+        gp = line.strip().split('----')
         if len(gp) != 5:
             errcount += 1
             continue
