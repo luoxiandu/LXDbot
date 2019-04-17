@@ -14,7 +14,7 @@ db = DB()
 bot = nonebot.get_bot()
 
 
-@on_command('generalDeposit', aliases=('充值', '快速充值', 'cz', 'CZ'), shell_like=True)
+@on_command('generalDeposit', aliases=('充值', '快速充值', 'cz', 'CZ'), shell_like=True, only_to_me=False)
 async def generalDeposit(session:CommandSession):
     if len(session.argv) == 2:
         price = int(eval(session.argv[1]) * 100)
