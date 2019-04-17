@@ -18,7 +18,7 @@ async def generalDeposit(session:CommandSession):
     if len(session.argv) == 2:
         price = int(eval(session.argv[1]) * 100)
         if session.argv[0] == '支付宝':
-            qrcode = await pay.getPayQRcode(price=price, type=2, orderuid=session.ctx['user_id'], goodsname='支付宝充值')
+            qrcode = await pay.getPayQRcode(price=repr(price), type='2', orderuid=repr(session.ctx['user_id']), goodsname='支付宝充值')
             msg = {
                 'type': 'image',
                 'data': {
@@ -26,7 +26,7 @@ async def generalDeposit(session:CommandSession):
                 }
             }
         elif session.argv[0] == '微信':
-            qrcode = await pay.getPayQRcode(price=price, type=1, orderuid=session.ctx['user_id'], goodsname='微信充值')
+            qrcode = await pay.getPayQRcode(price=price, type='1', orderuid=repr(session.ctx['user_id']), goodsname='微信充值')
             msg = {
                 'type': 'image',
                 'data': {
