@@ -1,4 +1,5 @@
 from nonebot import on_command, CommandSession
+from nonebot.command import call_command
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 
@@ -14,7 +15,7 @@ async def getGamePass(session:CommandSession):
     alert = ("[CQ:at,qq={%d}]" % account) + "要购买价值" + str(float(price) / 100) + "的游戏账号，是否确定购买？"
     ensure = session.get('ensure_to_buy', prompt=alert)
     if ensure not in ('是', '确定', '购买'):
-        session.finish('已取消购买。')
+        session.finish('已取消购买')
     result = db.cost(account, price)
     if result:
         gp = db.getgamepass()
@@ -27,7 +28,11 @@ async def getGamePass(session:CommandSession):
         await session.send(db.getvar('GamePassHelp'), ensure_private=True)
         session.finish(strgp, ensure_private=True)
     else:
-        session.finish('扣款失败，请查询余额！')
+        want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复微信/支付宝或其它内容取消充值')
+        if want_to_recharge in ('支付宝', '微信'):
+            await call_command(session.bot, session.ctx, name='generalDeposit', current_arg=want_to_recharge + ' ' + str(float(price) / 100))
+        else:
+            session.finish('已取消充值')
 
 
 @on_command('addGamePass', aliases=('添加账号', '账号上货'), privileged=SUPERUSER)
