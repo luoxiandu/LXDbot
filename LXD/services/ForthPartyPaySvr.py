@@ -1,9 +1,9 @@
 import nonebot
+from aiocqhttp.exceptions import ActionFailed
 from LXD.services.DBSvr import DB
 import aiohttp
 import config
 import hashlib
-import json
 import base64
 import time
 
@@ -31,11 +31,14 @@ class ForthPaySvr:
         async with aiohttp.ClientSession() as session:
             async with session.post('https://ppay.mmbbo.cn/index.php?s=/api/pp/index_show.html', data=postdata) as response:
                 r = await response.json()
-                print(r)
                 if r['code'] == 200:
                     async with aiohttp.ClientSession() as QRsession:
                         async with QRsession.get('https://ppay.mmbbo.cn/api.php/pp/scerweima2?url=' + r['data']['qrcode']) as resp:
                             return base64.b64encode(await resp.read()).decode()
                 else:
+                    try:
+                        await self.__QQbot__.send_group_msg_rate_limited(group_id=869494996, message='020支付接口返回错误：' + repr(r))
+                    except ActionFailed as e:
+                        print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
                     return None
 
