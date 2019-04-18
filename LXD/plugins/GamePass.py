@@ -14,7 +14,7 @@ async def getGamePass(session:CommandSession):
         session.finish('目前没有库存，请等待上货。')
     alert = ("[CQ:at,qq=%d]" % account) + "要购买价值" + str(float(price) / 100) + "元的游戏账号，是否确定购买？"
     ensure = session.get('ensure_to_buy', prompt=alert)
-    if ensure not in ('是', '确定', '购买'):
+    if ensure not in ('是', '确定', '购买', '确认'):
         session.finish('已取消购买')
     result = db.cost(account, price)
     if result:
