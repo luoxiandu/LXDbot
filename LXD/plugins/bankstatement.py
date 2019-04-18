@@ -30,9 +30,8 @@ async def checkBank(session:CommandSession):
 @on_command('getBankStatementByInterval', aliases=('查询流水', '查账'), privileged=SUPERUSER, shell_like=True, only_to_me=False)
 async def getBankStatementByInterval(session:CommandSession):
     start = session.get('start', prompt='请输入您要查账的起始日期，格式：年-月-日')
-    session.pause()
-    end = session.get('end', prompt='请输入您要查账的结束日期，格式：年-月-日')
     start = time.mktime(time.strptime(start, '%Y-%m-%d'))
+    end = session.get('end', prompt='请输入您要查账的结束日期，格式：年-月-日')
     end = time.mktime(time.strptime(end, '%Y-%m-%d'))
     msg = '您选择的区间内的账目如下：'
     r = db.getStatementByInterval(start, end)
