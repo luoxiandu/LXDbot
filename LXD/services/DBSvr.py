@@ -169,6 +169,24 @@ class DB:
         self.conn.commit()
         return
 
+    def getStatementByInterval(self, start, end):
+        cur = self.conn.cursor()
+        r = cur.execute("SELECT ROWID, amount, memo FROM Bankstatement WHERE time BETWEEN ? AND ?", (start, end))
+        banks = r.fetchall()
+        total_amount = 0
+        details = []
+        for line in banks:
+            total_amount += line[1]
+            details.append({
+                'rowid': repr(line[0]),
+                'amount': repr(float(line[1]) / 100),
+                'memo': line[2]
+            })
+        return {
+            'total_amount': total_amount,
+            'details': details
+        }
+
 
 
 

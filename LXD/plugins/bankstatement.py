@@ -2,6 +2,7 @@ from nonebot import on_command, CommandSession
 from nonebot.command import call_command
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
+import time
 
 __plugin_name__ = '群记账系统'
 db = DB()
@@ -24,3 +25,17 @@ async def addStatement(session:CommandSession):
 @on_command('checkBank', aliases=('查询群费',), privileged=SUPERUSER, only_to_me=False)
 async def checkBank(session:CommandSession):
     session.finish('当前群费余额为：' + repr(float(db.getvar('Bank')) / 100) + '元')
+
+
+@on_command('getBankStatementByInterval', aliases=('查询流水', '查账'), privileged=SUPERUSER, shell_like=True, only_to_me=False)
+async def getBankStatementByInterval(session:CommandSession):
+    start = session.get('start', prompt='请输入您要查账的起始日期，格式：年-月-日')
+    end = session.get('end', prompt='请输入您要查账的结束日期，格式：年-月-日')
+    start = time.mktime(time.strptime(start, '%Y-%m-%d'))
+    end = time.mktime(time.strptime(end, '%Y-%m-%d'))
+    msg = '您选择的区间内的账目如下：'
+    r = db.getStatementByInterval(start, end)
+    for line in r['details']:
+        msg += '\n|序号：'+ line['rowid'] + ' | ' + line['memo'] + ' | ' + line['amount'] + '元|'
+    msg += '\n区间总收入：' + repr(float(r['total_amount']) / 100) + '元'
+    session.finish(msg)
