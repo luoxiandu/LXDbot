@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 class DB:
     conn = None
@@ -159,6 +160,12 @@ class DB:
             order['account_name'],
             order['orderuid']
         ))
+        self.conn.commit()
+        return
+
+    def saveStatement(self, amo, memo):
+        cur = self.conn.cursor()
+        cur.execute("INSERT INTO Bankstatement(amount, memo, time) VALUES (?, ?, ?)", (amo, memo, time.time()))
         self.conn.commit()
         return
 
