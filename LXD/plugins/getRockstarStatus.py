@@ -1,6 +1,8 @@
 from nonebot import on_command, CommandSession
 import json, urllib.request
 
+__plugin_name__ = 'Rockstar服务监控系统'
+
 
 @on_command('getRockstarStatus', aliases=('服务器状态', 'R星服务器状态', '游戏服务器状态', '服务状态'), only_to_me=False)
 async def getRockstarStatus(session:CommandSession):

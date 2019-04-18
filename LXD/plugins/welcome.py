@@ -1,5 +1,7 @@
 from nonebot import on_notice, NoticeSession
 
+__plugin_name__ = '通知处理系统'
+
 
 # 将函数注册为群成员增加通知处理器
 @on_notice('group_increase')

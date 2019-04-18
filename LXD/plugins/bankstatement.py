@@ -3,6 +3,7 @@ from nonebot.command import call_command
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 
+__plugin_name__ = '群记账系统'
 db = DB()
 
 
