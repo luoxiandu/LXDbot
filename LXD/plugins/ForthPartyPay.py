@@ -106,7 +106,10 @@ async def notify_handler_020():
         except IntegrityError:
             return success_str
         db.deposit(data['orderuid'], int(data['actual_price']))
+        db.saveStatement(int(data['actual_price']), '自动记账-充值收入' + data['orderuid'])
         try:
+            await bot.send_group_msg_rate_limited(group_id=869494996, message='用户充值自动入账：' +
+                data['orderuid'] + '充值' + repr(float(data['actual_price']) / 100) + '元')
             await bot.send_private_msg_rate_limited(user_id=int(data['orderuid']), message='您的' + repr(
                 float(data['actual_price']) / 100) + '元充值已到账！')
         except ActionFailed as e:
