@@ -90,6 +90,16 @@
   ```
   并且自动通知到管理群接口错误的详细信息。
 - generalManualDeposit `('手动充值', 'sdcz', 'SDCZ')`
+  
+  用于管理员为客户手动充值，格式如下：
+  ```
+  generalManualDeposit QQ号 金额
+  ```
+  充值完成之后会有回复：
+  ```
+  成功为xxx充值xx.xx元！
+  ```
+  这个接口**不会**自动记账，管理员在进行手动充值之后，如果有实际的账目收入，请务必发送记账指令。
 - generalManualCost `('手动扣款', 'sdkk', 'SDKK')`
 - changeSuccessString `('切换手续费耍赖状态', 'qhsxfsl', 'QHSXFSL')`
 - getSuccessString `('查询手续费耍赖状态', 'cxsxfsl', 'CXSXFSL')`
