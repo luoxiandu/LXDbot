@@ -15,7 +15,7 @@ async def addStatement(session:CommandSession):
         bank = int(db.getvar('Bank'))
         bank += amount
         db.setvar('Bank', bank)
-        session.finish('记账成功！账目 ' + memo + ' 收入/支出' + session.argv[0] + '元，当前群余额为' + repr(float(bank) / 100) + '元')
+        session.finish('记账成功！账目 ' + memo + ' 收入/支出' + session.argv[0] + '元，当前群余额为' + repr(float(bank) / 100) + '元。')
     else:
         session.finish('用法：记账 金额（带正负） 账目名称')
 
