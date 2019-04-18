@@ -4,7 +4,7 @@ from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 import time
 
-__plugin_name__ = '群记账系统'
+__plugin_name__ = 'LXD.bankstatement'
 db = DB()
 
 

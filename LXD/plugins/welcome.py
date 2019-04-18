@@ -1,6 +1,6 @@
 from nonebot import on_notice, NoticeSession
 
-__plugin_name__ = '通知处理系统'
+__plugin_name__ = 'LXD.welcome'
 
 
 # 将函数注册为群成员增加通知处理器

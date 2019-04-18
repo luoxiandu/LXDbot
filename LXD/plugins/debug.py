@@ -1,7 +1,7 @@
 import nonebot
 from nonebot import on_command, CommandSession
 
-__plugin_name__ = '错误排查器'
+__plugin_name__ = 'LXD.debug'
 
 
 @on_command('getPlugins', aliases=('插件状态', ), only_to_me=False)

@@ -9,7 +9,7 @@ from sqlite3 import IntegrityError
 from nonebot.permission import SUPERUSER
 import hashlib
 
-__plugin_name__ = '支付处理系统'
+__plugin_name__ = 'LXD.ForthPartyPay'
 pay = ForthPaySvr()
 db = DB()
 bot = nonebot.get_bot()

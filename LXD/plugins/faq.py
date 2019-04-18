@@ -3,7 +3,7 @@ from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 import re
 
-__plugin_name__ = '问答系统'
+__plugin_name__ = 'LXD.faq'
 db = DB()
 
 

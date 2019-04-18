@@ -2,7 +2,7 @@ from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 
-__plugin_name__ = '账户系统'
+__plugin_name__ = 'LXD.account'
 db = DB()
 
 

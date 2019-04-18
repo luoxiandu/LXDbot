@@ -3,7 +3,7 @@ from nonebot.command import call_command
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 
-__plugin_name__ = '账号销售管理系统'
+__plugin_name__ = 'LXD.GamePass'
 db = DB()
 
 

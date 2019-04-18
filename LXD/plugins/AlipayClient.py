@@ -4,7 +4,7 @@ from LXD.services.DBSvr import DB
 from nonebot.permission import SUPERUSER
 from importlib import reload
 
-__plugin_name__ = '支付宝网页端收款系统（已停用）'
+__plugin_name__ = 'LXD.AlipayClient'
 # alipay = AlipaySvr()
 alipay = None
 db = DB()
