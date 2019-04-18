@@ -52,7 +52,24 @@ async def generalManualDeposit(session:CommandSession):
     account = session.argv[0]
     amount = int(float(session.argv[1]) * 100)
     db.deposit(account, amount)
+    try:
+        await bot.send_private_msg_rate_limited(user_id=int(account), message='您的' + session.argv[1] + '元充值已到账！')
+    except ActionFailed as e:
+        print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
     session.finish('成功为' + session.argv[0] + '充值' + session.argv[1] + '元！')
+
+
+@on_command('generalManualCost', aliases=('手动扣款', 'sdkk', 'SDKK'), privileged=SUPERUSER, shell_like=True)
+async def generalManualCost(session:CommandSession):
+    account = session.argv[0]
+    item = session.argv[1]
+    amount = int(float(session.argv[2]) * 100)
+    db.cost(account, amount)
+    try:
+        await bot.send_private_msg_rate_limited(user_id=int(account), message='您已成功购买' + session.argv[1] + '！付款' + session.argv[2] + '元')
+    except ActionFailed as e:
+        print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
+    session.finish('成功对' + session.argv[0] + '扣款' + session.argv[2] + '元！')
 
 
 @on_command('changeSuccessString', aliases=('切换手续费耍赖状态', 'qhsxfsl', 'QHSXFSL'), privileged=SUPERUSER)
