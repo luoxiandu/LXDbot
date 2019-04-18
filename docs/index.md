@@ -3,7 +3,7 @@
 ## 命令
 **注意** 所有的命令都可以使用后面加注的中文别称来访问。
 
-### 模块 `getRocstarStatus.py`
+### Rockstar服务监控模块 `getRocstarStatus.py`
 - ***getRockstarStatus*** `('服务器状态', 'R星服务器状态', '游戏服务器状态', '服务状态')`
   
   用于查询Rockstar服务器状态，无参数。
