@@ -66,7 +66,7 @@ async def generalManualCost(session:CommandSession):
     amount = int(float(session.argv[2]) * 100)
     if db.cost(account, amount):
         try:
-            await bot.send_private_msg_rate_limited(user_id=int(account), message='您已成功购买' + item + '！付款' + session.argv[2] + '元')
+            await bot.send_private_msg_rate_limited(user_id=int(account), message='您已成功购买' + item + '！付款' + session.argv[2] + '元。')
         except ActionFailed as e:
             print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
         session.finish('成功对' + session.argv[0] + '扣款' + session.argv[2] + '元！')
