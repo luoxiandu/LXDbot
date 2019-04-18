@@ -64,12 +64,14 @@ async def generalManualCost(session:CommandSession):
     account = session.argv[0]
     item = session.argv[1]
     amount = int(float(session.argv[2]) * 100)
-    db.cost(account, amount)
-    try:
-        await bot.send_private_msg_rate_limited(user_id=int(account), message='您已成功购买' + item + '！付款' + session.argv[2] + '元')
-    except ActionFailed as e:
-        print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
-    session.finish('成功对' + session.argv[0] + '扣款' + session.argv[2] + '元！')
+    if db.cost(account, amount):
+        try:
+            await bot.send_private_msg_rate_limited(user_id=int(account), message='您已成功购买' + item + '！付款' + session.argv[2] + '元')
+        except ActionFailed as e:
+            print('酷QHTTP插件错误，返回值：' + repr(e.retcode))
+        session.finish('成功对' + session.argv[0] + '扣款' + session.argv[2] + '元！')
+    else:
+        session.finish(account + '的余额不足，请提醒他充值或手动收款')
 
 
 @on_command('changeSuccessString', aliases=('切换手续费耍赖状态', 'qhsxfsl', 'QHSXFSL'), privileged=SUPERUSER)
