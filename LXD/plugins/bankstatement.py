@@ -6,7 +6,7 @@ from LXD.services.DBSvr import DB
 db = DB()
 
 
-@on_command('addStatement', aliases=('记账',), privileged=SUPERUSER, only_to_me=False)
+@on_command('addStatement', aliases=('记账',), privileged=SUPERUSER, only_to_me=False, shell_like=True)
 async def addStatement(session:CommandSession):
     if len(session.argv) == 2:
         amount = int(eval(session.argv[0]) * 100)
