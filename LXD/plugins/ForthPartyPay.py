@@ -107,6 +107,9 @@ async def notify_handler_020():
             return success_str
         db.deposit(data['orderuid'], int(data['actual_price']))
         db.saveStatement(int(data['actual_price']), '自动记账-充值收入' + data['orderuid'])
+        bank = int(db.getvar('Bank'))
+        bank += int(data['actual_price'])
+        db.setvar('Bank', bank)
         try:
             await bot.send_group_msg_rate_limited(group_id=869494996, message='用户充值自动入账：' +
                 data['orderuid'] + '充值' + repr(float(data['actual_price']) / 100) + '元')
