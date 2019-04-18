@@ -36,13 +36,13 @@ async def checkAlipay(session:CommandSession):
             await session.finish('未查询到款项！请确认钱款已经打入正确的账户。')
 
 
-@on_command('reboot', aliases=('重启支付宝模块',), privileged=SUPERUSER)
+@on_command('reboot', aliases=('重启支付宝模块',), permission=SUPERUSER)
 async def reboot(session:CommandSession):
     reload(AlipaySvr)
     await session.finish('模块重新加载完毕')
 
 
-@on_command('manualAlipayCheck', aliases=('手动支付宝充值',), privileged=SUPERUSER, shell_like=True)
+@on_command('manualAlipayCheck', aliases=('手动支付宝充值',), permission=SUPERUSER, shell_like=True)
 async def manualAlipayCheck(session:CommandSession):
     try:
         user = session.argv[0]
@@ -69,7 +69,7 @@ async def manualAlipayCheck(session:CommandSession):
     await session.finish('充值完毕！为用户' + user + '充值' + amount)
 
 
-@on_command('refreshBrowser', aliases=('刷新支付宝页面',), privileged=SUPERUSER)
+@on_command('refreshBrowser', aliases=('刷新支付宝页面',), permission=SUPERUSER)
 async def refreshBrowser(session:CommandSession):
     alipay.browser.refresh()
     scrshot = alipay.browser.get_screenshot_as_base64()

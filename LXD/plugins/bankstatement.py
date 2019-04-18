@@ -8,7 +8,7 @@ __plugin_name__ = '群记账系统'
 db = DB()
 
 
-@on_command('addStatement', aliases=('记账',), privileged=SUPERUSER, only_to_me=False, shell_like=True)
+@on_command('addStatement', aliases=('记账',), permission=SUPERUSER, only_to_me=False, shell_like=True)
 async def addStatement(session:CommandSession):
     if len(session.argv) == 2:
         amount = int(eval(session.argv[0]) * 100)
@@ -22,12 +22,12 @@ async def addStatement(session:CommandSession):
         session.finish('用法：记账 金额（带正负） 账目名称')
 
 
-@on_command('checkBank', aliases=('查询群费',), privileged=SUPERUSER, only_to_me=False)
+@on_command('checkBank', aliases=('查询群费',), permission=SUPERUSER, only_to_me=False)
 async def checkBank(session:CommandSession):
     session.finish('当前群费余额为：' + repr(float(db.getvar('Bank')) / 100) + '元')
 
 
-@on_command('getBankStatementByInterval', aliases=('查询流水', '查账'), privileged=SUPERUSER, only_to_me=False)
+@on_command('getBankStatementByInterval', aliases=('查询流水', '查账'), permission=SUPERUSER, only_to_me=False)
 async def getBankStatementByInterval(session:CommandSession):
     start = session.get('start', prompt='请输入您要查账的起始日期，格式：年-月-日')
     start = time.mktime(time.strptime(start, '%Y-%m-%d'))

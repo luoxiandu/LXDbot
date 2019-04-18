@@ -48,7 +48,7 @@ async def generalDeposit(session:CommandSession):
         session.finish('快速充值用法：发送 充值 微信/支付宝 金额')
 
 
-@on_command('generalManualDeposit', aliases=('手动充值', 'sdcz', 'SDCZ'), privileged=SUPERUSER, shell_like=True, only_to_me=False)
+@on_command('generalManualDeposit', aliases=('手动充值', 'sdcz', 'SDCZ'), permission=SUPERUSER, shell_like=True, only_to_me=False)
 async def generalManualDeposit(session:CommandSession):
     account = session.argv[0]
     amount = int(float(session.argv[1]) * 100)
@@ -60,7 +60,7 @@ async def generalManualDeposit(session:CommandSession):
     session.finish('成功为' + session.argv[0] + '充值' + session.argv[1] + '元！')
 
 
-@on_command('generalManualCost', aliases=('手动扣款', 'sdkk', 'SDKK'), privileged=SUPERUSER, shell_like=True)
+@on_command('generalManualCost', aliases=('手动扣款', 'sdkk', 'SDKK'), permission=SUPERUSER, shell_like=True)
 async def generalManualCost(session:CommandSession):
     account = session.argv[0]
     item = session.argv[1]
@@ -75,7 +75,7 @@ async def generalManualCost(session:CommandSession):
         session.finish(account + '的余额不足，请提醒他充值或手动收款')
 
 
-@on_command('changeSuccessString', aliases=('切换手续费耍赖状态', 'qhsxfsl', 'QHSXFSL'), privileged=SUPERUSER)
+@on_command('changeSuccessString', aliases=('切换手续费耍赖状态', 'qhsxfsl', 'QHSXFSL'), permission=SUPERUSER)
 async def changeSuccessString(session:CommandSession):
     success_str = db.getvar('020success')
     if success_str == 'success':
@@ -86,7 +86,7 @@ async def changeSuccessString(session:CommandSession):
         session.finish('成功切换为手续费不耍赖状态！')
 
 
-@on_command('getSuccessString', aliases=('查询手续费耍赖状态', 'cxsxfsl', 'CXSXFSL'), privileged=SUPERUSER)
+@on_command('getSuccessString', aliases=('查询手续费耍赖状态', 'cxsxfsl', 'CXSXFSL'), permission=SUPERUSER)
 async def getSuccessString(session:CommandSession):
     success_str = db.getvar('020success')
     if success_str == 'success':
