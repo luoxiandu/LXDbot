@@ -12,7 +12,7 @@ async def getGamePass(session:CommandSession):
     price = db.getprice('GamePass')
     if db.checkgamepass() == 0:
         session.finish('目前没有库存，请等待上货。')
-    alert = ("[CQ:at,qq={%d}]" % account) + "要购买价值" + str(float(price) / 100) + "的游戏账号，是否确定购买？"
+    alert = ("[CQ:at,qq={%d}]" % account) + "要购买价值" + str(float(price) / 100) + "元的游戏账号，是否确定购买？"
     ensure = session.get('ensure_to_buy', prompt=alert)
     if ensure not in ('是', '确定', '购买'):
         session.finish('已取消购买')
@@ -59,7 +59,7 @@ async def addGamePass(session:CommandSession):
 
 @on_command('checkGamePass', aliases=('查询账号余量', '查询黑号余量'), privileged=SUPERUSER)
 async def checkGamePass(session:CommandSession):
-    session.finish("当前账号余量：" + repr(db.checkgamepass()))
+    session.finish("当前账号余量：" + repr(db.checkgamepass()) + '个')
 
 
 @on_command('setGamePassPrice', aliases=('设置黑号价格', '设置账号价格'), privileged=SUPERUSER)
@@ -71,5 +71,5 @@ async def setGamePassPrice(session:CommandSession):
 
 @on_command('getGamePassPrice', aliases=('查询黑号价格', '查询账号价格'), privileged=SUPERUSER)
 async def getGamePassPrice(session:CommandSession):
-    session.finish("当前账号价格：" + repr(float(db.getprice('GamePass')) / 100))
+    session.finish("当前账号价格：" + repr(float(db.getprice('GamePass')) / 100) + '元')
 
