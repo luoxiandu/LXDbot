@@ -1,9 +1,7 @@
 from nonebot import on_command, CommandSession
 import json, urllib.request
-from LXD.services.getRockstarIDSvr import RockstarIDgetter
 
 __plugin_name__ = 'LXD.getRockstarStatus'
-IDgetter = RockstarIDgetter()
 
 
 @on_command('getRockstarStatus', aliases=('服务器状态', 'R星服务器状态', '游戏服务器状态', '服务状态'), only_to_me=False)
