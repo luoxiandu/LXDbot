@@ -14,6 +14,7 @@ class RockstarIDgetter:
         # logs = [json.loads(log['message'])['message'] for log in self.__browser__.get_log('performance')]
         self.__browser__.implicitly_wait(120)
         avatar = self.__browser__.find_element_by_xpath("//div[@data-ui-name='avatar']")
+        print(avatar)
         if avatar:
             print('登录成功！')
         self.getID('AngeloTheCat')
