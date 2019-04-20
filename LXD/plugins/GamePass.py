@@ -58,19 +58,19 @@ async def addGamePass(session:CommandSession):
     session.finish("上货完成！共有数据" + str(len(lines)) + "行，成功上货" + str(len(gpList)) + "个，未识别行数为" + repr(errcount))
 
 
-@on_command('checkGamePass', aliases=('查询账号余量', '查询黑号余量'), permission=SUPERUSER)
+@on_command('checkGamePass', aliases=('查询账号余量', '查询黑号余量'), permission=SUPERUSER, only_to_me=False)
 async def checkGamePass(session:CommandSession):
     session.finish("当前账号余量：" + repr(db.checkgamepass()) + '个')
 
 
-@on_command('setGamePassPrice', aliases=('设置黑号价格', '设置账号价格'), permission=SUPERUSER)
+@on_command('setGamePassPrice', aliases=('设置黑号价格', '设置账号价格'), permission=SUPERUSER, only_to_me=False)
 async def setGamePassPrice(session:CommandSession):
     price = eval(session.current_arg_text.strip())
     db.setprice('GamePass', int(price * 100))
     session.finish('设置成功完成')
 
 
-@on_command('getGamePassPrice', aliases=('查询黑号价格', '查询账号价格'), permission=SUPERUSER)
+@on_command('getGamePassPrice', aliases=('查询黑号价格', '查询账号价格'), permission=SUPERUSER, only_to_me=False)
 async def getGamePassPrice(session:CommandSession):
     session.finish("当前账号价格：" + repr(float(db.getprice('GamePass')) / 100) + '元')
 
