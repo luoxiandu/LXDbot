@@ -72,6 +72,19 @@ class DB:
         gpamount = r.fetchone()
         return gpamount[0]
 
+    def setpassword(self, acc, pwd):
+        cur = self.conn.cursor()
+        r = cur.execute("SELECT balance FROM account WHERE QQ=?", (acc,))
+        balance = r.fetchone()
+        if not balance:
+            cur.execute("INSERT INTO account(QQ, balance, donate, password) VALUES (?, ?, ?, ?)", (acc, 0, 0, pwd))
+            self.conn.commit()
+            return
+        else:
+            cur.execute("UPDATE account SET password=? WHERE QQ=?", (pwd, acc))
+            self.conn.commit()
+            return
+
     # amo以分为单位的整数，切记切记
     def deposit(self, acc, amo):
         cur = self.conn.cursor()
