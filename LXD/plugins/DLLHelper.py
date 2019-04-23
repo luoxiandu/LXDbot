@@ -10,4 +10,4 @@ bot = nonebot.get_bot()
 @bot.server_app.route('/getdll')
 async def getdll():
     data = await request.formk
-    return json.dumps({'payload': 'fuckyou', 'sessionkey': 'ABCD456'})
+    return json.dumps({'payload': 'ZnVja2l0', 'sessionkey': 'ABCD456'})
