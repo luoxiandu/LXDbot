@@ -12,8 +12,8 @@ bot = nonebot.get_bot()
 @bot.server_app.route('/getdll', methods=['POST'])
 async def getdll():
     data = await request.form
-    with open('aaa.bbb') as dllfile:
-        with open('ccc.ddd') as xprfile:
+    with open('aaa.bbb', 'rb') as dllfile:
+        with open('ccc.ddd', 'rb') as xprfile:
             ret = {
                 'payload': {
                     'dll': base64.encodebytes(dllfile.read()),
