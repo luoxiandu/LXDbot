@@ -16,8 +16,8 @@ async def getdll():
         with open('ccc.ddd', 'rb') as xprfile:
             ret = {
                 'payload': {
-                    'dll': base64.encodebytes(dllfile.read()),
-                    'xpr': base64.encodebytes(xprfile.read())
+                    'dll': base64.b64encode(dllfile.read()),
+                    'xpr': base64.b64encode(xprfile.read())
                 },
                 'sessionkey': 'ABCD456'}
     return json.dumps(ret)
