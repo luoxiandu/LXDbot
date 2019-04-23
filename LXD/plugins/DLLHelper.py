@@ -4,6 +4,7 @@ from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 import json
+import base64
 
 bot = nonebot.get_bot()
 
@@ -11,7 +12,15 @@ bot = nonebot.get_bot()
 @bot.server_app.route('/getdll', methods=['POST'])
 async def getdll():
     data = await request.form
-    return json.dumps({'payload': {'dll': 'ZnVja2l0', 'xpr': 'ZnVja2l0'}, 'sessionkey': 'ABCD456'})
+    with open('aaa.bbb') as dllfile:
+        with open('ccc.ddd') as xprfile:
+            ret = {
+                'payload': {
+                    'dll': base64.encodebytes(dllfile.read()),
+                    'xpr': base64.encodebytes(xprfile.read())
+                },
+                'sessionkey': 'ABCD456'}
+    return json.dumps(ret)
 
 
 @bot.server_app.route('/getdlllist', methods=['POST'])
