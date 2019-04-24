@@ -135,6 +135,12 @@ class DB:
             self.conn.commit()
             return
 
+    def deleteaccount(self, acc):
+        cur = self.conn.cursor()
+        cur.execute("DELETE FROM account WHERE QQ=?", (acc,))
+        self.conn.commit()
+        return
+
     # amo以分为单位的整数，切记切记
     def deposit(self, acc, amo):
         cur = self.conn.cursor()
