@@ -23,4 +23,4 @@ async def group_increase(session: NoticeSession):
 @on_notice('group_decrease')
 async def group_decrease(session:NoticeSession):
     db.deleteaccount(session.ctx['user_id'])
-    await session.send(session.ctx['user_id'] + '退群了，他的账号已经被删除，无法使用外挂下载注入系统，并且账户里的余额也被清零了。大家千万不要学他！')
+    await session.send(repr(session.ctx['user_id']) + '退群了，他的账号已经被删除，无法使用外挂下载注入系统，并且账户里的余额也被清零了。大家千万不要学他！')
