@@ -31,4 +31,12 @@ async def setPassword(session:CommandSession):
 @bot.server_app.route('/login', methods=['POST'])
 async def loginhandler():
     data = await request.form
-    return json.dumps({'status': 'success', 'sessionkey': 'ABCD123'})
+    acc = data['username']
+    pwd = data['password']
+    ret = {}
+    if db.chkpassword(acc, pwd):
+        ret['status'] = 'success'
+        ret['sessionkey'] = db.newSessionkey(acc)
+    else:
+        ret['status'] = 'failed'
+    return json.dumps(ret)

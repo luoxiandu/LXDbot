@@ -1,5 +1,6 @@
 import sqlite3
 import time
+import random
 
 class DB:
     conn = None
@@ -33,6 +34,55 @@ class DB:
         cur.execute("REPLACE INTO prices VALUES (?, ?)", (item, price))
         self.conn.commit()
         return
+
+    def getDLLList(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT id,name FROM cheats")
+        r = cur.fetchall()
+        ret = []
+        for row in r:
+            ret.append({
+                'id': row[0],
+                'name': row[1]
+            })
+        return ret
+
+    def getDLL(self, id):
+        cur = self.conn.cursor()
+        cur.execute("SELECT dll,xpr FROM cheats WHERE id=?", (id,))
+        r = cur.fetchone()
+        return {
+            'dllpath': r[0],
+             'xprpath': r[1]
+        }
+
+    def checkSessionkey(self, sessionkey):
+        cur = self.conn.cursor()
+        parts = sessionkey.split("::")
+        acc = parts[0]
+        sskey = parts[1]
+        cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
+        r = cur.fetchone()
+        if r[0] == sskey:
+            return True
+        else:
+            return False
+
+    def newSessionkey(self, acc):
+        cur = self.conn.cursor()
+        sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
+        cur.execute("UPDATE account SET sessionkey=? WHERE QQ=?", (sessionkey, acc))
+        self.conn.commit()
+        return acc + '::' + sessionkey
+
+    def chkpassword(self, acc, pwd):
+        cur = self.conn.cursor()
+        cur.execute("SELECT password FROM account WHERE QQ=?", (acc,))
+        r = cur.fetchone()
+        if pwd == r[0]:
+            return True
+        else:
+            return False
 
     def addgamepass(self, gamepassList):
         cur = self.conn.cursor()
