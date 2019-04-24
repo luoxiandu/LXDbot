@@ -22,9 +22,12 @@ async def setPassword(session:CommandSession):
     ensure = session.get('ensure', prompt='您确定要设置密码吗？')
     if ensure in ['确定', '确认', '是', '设置']:
         password = session.get('password', prompt='请输入密码：')
-        confirm = session.get('password', prompt='请确认密码：')
+        confirm = session.get('confirm', prompt='请确认密码：')
         if password != confirm:
             session.finish('两次输入的密码不一致，已取消设置密码。如需设置请重新发送“设置密码”')
+        else:
+            db.setpassword(account, password)
+            session.finish('密码设置成功！')
     else:
         session.finish('已取消设置密码')
 
