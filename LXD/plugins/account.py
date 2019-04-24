@@ -37,7 +37,7 @@ async def loginhandler():
     acc = data['username']
     pwd = data['password']
     ret = {}
-    if db.chkpassword(acc, pwd) and acc and pwd:
+    if acc and pwd and db.chkpassword(acc, pwd):
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(acc)
     else:

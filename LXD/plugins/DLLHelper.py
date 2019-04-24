@@ -16,7 +16,7 @@ async def getdll():
     id = data['id']
     sessionkey = data['sessionkey']
     ret = {}
-    if db.checkSessionkey(sessionkey) and id and sessionkey:
+    if id and sessionkey and db.checkSessionkey(sessionkey):
         ret['status'] = 'success'
         paths = db.getDLL(id)
         with open(paths['dllpath'], 'rb') as dllfile:
@@ -36,7 +36,7 @@ async def getdlllist():
     data = await request.form
     sessionkey = data['sessionkey']
     ret = {}
-    if db.checkSessionkey(sessionkey) and sessionkey:
+    if sessionkey and db.checkSessionkey(sessionkey):
         ret['status'] = 'success'
         ret['payload'] = db.getDLLList()
         ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
