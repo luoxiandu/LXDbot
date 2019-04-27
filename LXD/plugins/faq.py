@@ -1,10 +1,20 @@
-from nonebot import on_command, CommandSession
+from nonebot import on_command, CommandSession, NoneBot
+from nonebot.message import message_preprocessor, Context_T
+from nonebot.helpers import send
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 import re
 
 __plugin_name__ = 'LXD.faq'
 db = DB()
+
+
+@message_preprocessor
+async def autoAsk(bot: NoneBot, ctx: Context_T):
+    rmsg = ctx['raw_message']
+    answer = db.getvar('question_' + rmsg)
+    if answer:
+        await send(bot, ctx, answer)
 
 
 @on_command('ask', aliases=('问',), only_to_me=False)
