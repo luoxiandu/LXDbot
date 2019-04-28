@@ -18,7 +18,7 @@ async def onRequest(session: RequestSession):
 @on_notice('group_increase')
 async def group_increase(session: NoticeSession):
     # 发送欢迎消息
-    await session.send('欢迎新朋友！洛仙都商店随时恭候您的光临~')
+    await session.send('欢迎新朋友！洛仙都商店随时恭候您的光临~请私聊我设置密码，在群文件下载注入器，开始您的仙境之旅吧！')
 
 @on_notice('group_decrease')
 async def group_decrease(session:NoticeSession):
