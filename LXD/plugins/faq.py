@@ -1,6 +1,7 @@
 from nonebot import on_command, CommandSession, NoneBot
 from nonebot.message import message_preprocessor, Context_T
 from nonebot.helpers import send
+from nonebot.log import logger
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 import re
@@ -15,6 +16,7 @@ async def autoAsk(bot: NoneBot, ctx: Context_T):
     answer = db.getvar('question_' + rmsg)
     if answer:
         await send(bot, ctx, answer)
+        logger.info('Answer found and sent.')
 
 
 @on_command('ask', aliases=('问',), only_to_me=False)
