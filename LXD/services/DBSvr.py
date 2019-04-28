@@ -79,8 +79,11 @@ class DB:
         cur = self.conn.cursor()
         cur.execute("SELECT password FROM account WHERE QQ=?", (acc,))
         r = cur.fetchone()
-        if pwd == r[0]:
-            return True
+        if r:
+            if pwd == r[0]:
+                return True
+            else:
+                return False
         else:
             return False
 

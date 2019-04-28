@@ -16,6 +16,7 @@ async def checkBalance(session:CommandSession):
     balance = db.getbalance(account)
     session.finish("账号" + repr(account) + "的余额为：" + (repr(float(balance) / 100) + '元') if balance is not None else "尚未开户，请充值，充值后自动开户。")
 
+
 @on_command('setPassword', aliases=('设置密码', ))
 async def setPassword(session:CommandSession):
     account = session.ctx['user_id']
@@ -30,6 +31,7 @@ async def setPassword(session:CommandSession):
             session.finish('密码设置成功！')
     else:
         session.finish('已取消设置密码')
+
 
 @bot.server_app.route('/login', methods=['POST'])
 async def loginhandler():
