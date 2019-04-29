@@ -79,7 +79,7 @@ async def generalManualCost(session:CommandSession):
 async def changeSuccessString(session:CommandSession):
     success_str = db.getvar('020success')
     if success_str == 'success':
-        db.setvar('020success', 'surprise, motherfucker!')
+        db.setvar('020success', 'Token Validation Failed.')
         session.finish('成功切换为手续费耍赖状态！')
     else:
         db.setvar('020success', 'success')
