@@ -5,7 +5,7 @@ from nonebot.log import logger
 from nonebot.permission import SUPERUSER
 from LXD.services.DBSvr import DB
 
-__plugin_name__ = 'LXD.noticeHelper'
+__plugin_name__ = 'LXD.DiscussionControl'
 db = DB()
 
 
