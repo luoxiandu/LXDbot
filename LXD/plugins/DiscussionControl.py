@@ -12,7 +12,7 @@ db = DB()
 @on_command('cls', aliases=('清屏',), permission=SUPERUSER, only_to_me=False)
 async def cls(session:CommandSession):
     await session.send('开始清屏')
-    clswords = '-清屏指令-群主专用-非常拉风-'
+    clswords = '-清屏指令-群主专用-非常拉风-再清两下-保证秩序-遵守群规-不说废话-不发广告-不煽动情绪-不威胁管理-'
     for k in clswords:
         await session.send(k)
     session.finish('清屏完成')
