@@ -23,6 +23,12 @@ class DB:
         self.conn.commit()
         return
 
+    def varpp(self, key):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE vars SET value=value+1 WHERE k=?", (key,))
+        self.conn.commit()
+        return
+
     def getprice(self, item):
         cur = self.conn.cursor()
         r = cur.execute("SELECT price FROM prices WHERE name=?", (item,))
