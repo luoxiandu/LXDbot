@@ -17,6 +17,8 @@ async def getdll():
     sessionkey = data['sessionkey']
     ret = {}
     if id and sessionkey and db.checkSessionkey(sessionkey):
+        db.varpp('dllcount')
+        db.varpp('dllcountday')
         ret['status'] = 'success'
         paths = db.getDLL(id)
         with open(paths['dllpath'], 'rb') as dllfile:

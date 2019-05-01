@@ -40,6 +40,8 @@ async def loginhandler():
     pwd = data['password']
     ret = {}
     if acc and pwd and db.chkpassword(acc, pwd):
+        db.varpp('logincount')
+        db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(acc)
     else:
