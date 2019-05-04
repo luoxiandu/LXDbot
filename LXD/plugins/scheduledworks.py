@@ -2,6 +2,7 @@ from LXD.services.DBSvr import DB
 from nonebot import get_bot
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+__plugin_name__ = 'LXD.scheduledworks'
 db = DB()
 bot = get_bot()
 sched = AsyncIOScheduler()
@@ -30,5 +31,5 @@ async def reportinjectorinfo():
 
 
 sched.add_job(resetvars, 'cron', hour=0, minute=0, second=0)
-sched.add_job(reportinjectorinfo, 'cron', minute=0, second=0)
+sched.add_job(reportinjectorinfo, 'cron', minute=0, second=0, hour='*/6')
 sched.start()
