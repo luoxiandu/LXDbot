@@ -69,7 +69,7 @@ class DB:
         sskey = parts[1]
         cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
         r = cur.fetchone()
-        if r[0] == sskey:
+        if r and r[0] == sskey:
             return True
         else:
             return False
