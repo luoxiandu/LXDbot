@@ -15,9 +15,13 @@ async def autoAsk(bot: NoneBot, ctx: Context_T):
     rmsg = ctx['raw_message']
     grpid = ctx['group_id']
     answer = db.getvar('question_' + str(grpid) + '_' + rmsg)
+    panswer = db.getvar('question_private_' + rmsg)
     if answer:
         await send(bot, ctx, answer)
         logger.info('Answer found and sent.')
+    if panswer:
+        await send(bot, ctx, answer, ensure_private=True)
+        logger.info('Private answer found and sent.')
 
 
 @on_command('ask', aliases=('问',), only_to_me=False)
