@@ -3,6 +3,7 @@ from quart import request
 from nonebot import on_command, CommandSession
 from nonebot.command import call_command
 from nonebot.permission import SUPERUSER
+from aiocqhttp.exceptions import ActionFailed
 from LXD.services.DBSvr import DB
 import json
 
@@ -19,7 +20,10 @@ async def buygameservice(session:CommandSession):
     except KeyError:
         grplst = await bot.get_group_list()
         for grp in grplst:
-            info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
+            try:
+                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
+            except ActionFailed:
+                continue
             if info.get('group_id') == grp['group_id']:
                 grpid = str(info['group_id'])
     cash = session.get('cash', prompt='请输入您期望得到的游戏币数额（如果不购买鲨鱼卡请输入0）：')
