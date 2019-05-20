@@ -13,7 +13,7 @@ db = DB()
 @message_preprocessor
 async def autoAsk(bot: NoneBot, ctx: Context_T):
     rmsg = ctx['raw_message']
-    grpid = ctx['group_id']
+    grpid = ctx.get('group_id')
     answer = db.getvar('question_' + str(grpid) + '_' + rmsg)
     panswer = db.getvar('question_private_' + rmsg)
     if answer:
@@ -27,7 +27,7 @@ async def autoAsk(bot: NoneBot, ctx: Context_T):
 @on_command('ask', aliases=('问',), only_to_me=False)
 async def ask(session:CommandSession):
     question = session.current_arg
-    grpid = session.ctx['group_id']
+    grpid = session.ctx.get('group_id')
     answer = db.getvar('question_' + str(grpid) + '_' + question)
     if answer:
         session.finish(answer)
