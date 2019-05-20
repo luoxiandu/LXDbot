@@ -13,7 +13,8 @@ db = DB()
 @message_preprocessor
 async def autoAsk(bot: NoneBot, ctx: Context_T):
     rmsg = ctx['raw_message']
-    answer = db.getvar('question_' + rmsg)
+    grpid = ctx['group_id']
+    answer = db.getvar('question_' + str(grpid) + '_' + rmsg)
     if answer:
         await send(bot, ctx, answer)
         logger.info('Answer found and sent.')
@@ -22,7 +23,8 @@ async def autoAsk(bot: NoneBot, ctx: Context_T):
 @on_command('ask', aliases=('问',), only_to_me=False)
 async def ask(session:CommandSession):
     question = session.current_arg
-    answer = db.getvar('question_' + question)
+    grpid = session.ctx['group_id']
+    answer = db.getvar('question_' + str(grpid) + '_' + question)
     if answer:
         session.finish(answer)
     else:
@@ -38,8 +40,9 @@ async def addQuestion(session:CommandSession):
     c = re.split(r'(#[^#]+#)(.+)', session.current_arg, flags=re.M | re.S)
     question = c[1].strip('#')
     answer = c[2].strip()
-    db.setvar('question_' + question, answer)
-    session.finish('问题' + question + '设置成功！')
+    grpid = session.get('grpid', prompt='请输入这个问题对应的群号')
+    db.setvar('question_' + grpid + '_' + question, answer)
+    session.finish('群' + grpid + '的问题' + question + '设置成功！')
 
 
 @on_command('addPrivateQuestion', aliases=('设置私密问题', '私密设问'), permission=SUPERUSER, only_to_me=False)
