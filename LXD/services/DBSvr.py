@@ -267,6 +267,14 @@ class DB:
             'details': details
         }
 
+    def orderGameAccountService(self, acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total):
+        cur = self.conn.cursor()
+        cur.execute("INSERT INTO GameServiceOrders(QQ, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, paid, finished, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (
+            acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, 1, 0, total
+        ))
+        self.conn.commit()
+        return
+
 
 
 
