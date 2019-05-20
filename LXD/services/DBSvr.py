@@ -43,13 +43,14 @@ class DB:
 
     def getDLLList(self):
         cur = self.conn.cursor()
-        cur.execute("SELECT id,name FROM cheats")
+        cur.execute("SELECT id,name,memo FROM cheats")
         r = cur.fetchall()
         ret = []
         for row in r:
             ret.append({
                 'id': row[0],
-                'name': row[1]
+                'name': row[1],
+                'memo': row[2]
             })
         return ret
 
