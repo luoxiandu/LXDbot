@@ -38,7 +38,7 @@ async def buygameservice(session:CommandSession):
     cash -= bullshark * 500000
     tigershark = cash // 200000
     cash -= tigershark * 200000
-    redshark = cash // 100000 + 1
+    redshark = cash // 100000 + 1 if cash != 0 else 0
     level = session.get('level', prompt='请输入您期望更改的级别（如果不购买等级更改请输入0）：')
     unlock = session.get('unlock', prompt='您要购买解锁吗？如购买解锁请回复“解锁”，否则输入任意内容继续：')
     total = 0
