@@ -58,7 +58,9 @@ async def buygameservice(session:CommandSession):
         total += int(db.getprice('unlock_' + grpid))
     else:
         unlock = False
+    gametotal = megalodon * 8000000 + whale * 3500000 + greatwhite * 1250000 + bullshark * 500000 + tigershark * 200000 + redshark * 100000
     msg = "根据您的需求，为您定制的鲨鱼卡方案为：\n巨齿鲨卡%d张，鲸鲨卡%d张，大白鲨卡%d张，牛鲨卡%d张，虎鲨卡%d张，红鲨卡%d张" % (megalodon, whale, greatwhite, bullshark, tigershark, redshark)
+    msg += '\n这些鲨鱼卡充值完成后您将获得游戏币' + str(gametotal)
     msg += '\n加上其它需求，您的订单总价格为：' + str(float(total) / 100) + '元，确认下单请回复“确认”，或回复其它内容取消下单。'
     confirm = session.get('confirm', prompt=msg)
     if confirm == '确认':
