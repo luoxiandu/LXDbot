@@ -57,7 +57,7 @@ async def replyaccountinfo():
         account = sessionkey.split("::")[0]
         ret['status'] = 'success'
         ret['payload'] = {
-            'balance': db.getbalance(account)
+            'balance': float(db.getbalance(account)) / 100
         }
         ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
     else:
