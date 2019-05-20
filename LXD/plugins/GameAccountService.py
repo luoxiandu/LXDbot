@@ -84,3 +84,5 @@ async def buygameservice(session:CommandSession):
                                    current_arg=want_to_recharge + ' ' + str(float(total) / 100))
             else:
                 session.finish('已取消充值')
+    else:
+        session.finish('您的下单需求已取消！')
