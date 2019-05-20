@@ -47,3 +47,19 @@ async def loginhandler():
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
+
+@bot.server_app.route('/getaccountinfo', methods=['POST'])
+async def replyaccountinfo():
+    data = await request.form
+    sessionkey = data['sessionkey']
+    ret = {}
+    if sessionkey and db.checkSessionkey(sessionkey):
+        account = sessionkey.split("::")[0]
+        ret['status'] = 'success'
+        ret['payload'] = {
+            'balance': db.getbalance(account)
+        }
+        ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
+    else:
+        ret['status'] = 'failed'
+    return json.dumps(ret)
