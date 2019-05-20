@@ -50,7 +50,7 @@ async def buygameservice(session:CommandSession):
     total += tigershark * int(db.getprice('tigershark_' + grpid))
     total += redshark * int(db.getprice('redshark_' + grpid))
     if total == 0:
-        session.finish("您什么都没买，欢迎再来！")
+        session.finish("您本次下单任何需求都没有，但我也很开心，欢迎再次光顾！")
     if level != '0':
         total += int(db.getprice('level_' + grpid))
     if unlock == '解锁':
