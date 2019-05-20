@@ -40,6 +40,7 @@ async def buygameservice(session:CommandSession):
     tigershark = cash // 200000
     cash -= tigershark * 200000
     redshark = cash // 100000
+    await session.send("根据您的需求，为您定制鲨鱼卡方案：巨齿鲨卡%d张，鲸鲨卡%d张，大白鲨卡%d张，牛鲨卡%d张，虎鲨卡%d张，红鲨卡%d张" % (megalodon, whale, greatwhite, bullshark, tigershark, redshark))
     level = session.get('level', prompt='请输入您期望更改的级别（如果不购买等级更改请输入0）：')
     unlock = session.get('unlock', prompt='您要购买解锁吗？如购买解锁请回复“解锁”，否则输入任意内容继续：')
     total = 0
@@ -58,7 +59,6 @@ async def buygameservice(session:CommandSession):
         total += int(db.getprice('unlock_' + grpid))
     else:
         unlock = False
-    await session.send("根据您的需求，为您定制鲨鱼卡方案：巨齿鲨卡%d张，鲸鲨卡%d张，大白鲨卡%d张，牛鲨卡%d张，虎鲨卡%d张，红鲨卡%d张" % (megalodon, whale, greatwhite, bullshark, tigershark, redshark))
     confirm = session.get('confirm', prompt='您的订单总价格为：' + str(float(total) / 100) + '元，确认下单请回复“确认”，或回复其它内容取消下单。')
     if confirm == '确认':
         result = db.cost(acc, total)
