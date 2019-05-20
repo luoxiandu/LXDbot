@@ -5,14 +5,14 @@ from LXD.services.DBSvr import DB
 __plugin_name__ = 'LXD.noticeHelper'
 db = DB()
 
-@on_notice
-async def onNotice(session: NoticeSession):
-    logger.info('有新的通知事件：%s', session.ctx)
-
-
-@on_request
-async def onRequest(session: RequestSession):
-    logger.info('有新的请求事件：%s', session.ctx)
+# @on_notice
+# async def onNotice(session: NoticeSession):
+#     logger.info('有新的通知事件：%s', session.ctx)
+#
+#
+# @on_request
+# async def onRequest(session: RequestSession):
+#     logger.info('有新的请求事件：%s', session.ctx)
 
 # 将函数注册为群成员增加通知处理器
 @on_notice('group_increase')
