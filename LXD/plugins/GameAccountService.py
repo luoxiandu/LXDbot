@@ -26,6 +26,7 @@ async def buygameservice(session:CommandSession):
                 continue
             if info.get('group_id') == grp['group_id']:
                 grpid = str(info['group_id'])
+    print(grpid)
     cash = session.get('cash', prompt='请输入您期望得到的游戏币数额（如果不购买鲨鱼卡请输入0）：')
     cash = int(cash)
     megalodon = cash // 8000000
