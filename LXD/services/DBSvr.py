@@ -52,7 +52,8 @@ class DB:
                 'name': row[1],
                 'memo': row[2]
             })
-        return ret.reverse()
+        ret.reverse()
+        return ret
 
     def getDLL(self, id):
         cur = self.conn.cursor()
