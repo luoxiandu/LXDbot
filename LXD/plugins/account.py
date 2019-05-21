@@ -28,7 +28,7 @@ async def setPassword(session:CommandSession):
         grplst = await bot.get_group_list()
         for grp in grplst:
             try:
-                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
+                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=account)
             except ActionFailed:
                 continue
             if info.get('group_id') == grp['group_id']:
