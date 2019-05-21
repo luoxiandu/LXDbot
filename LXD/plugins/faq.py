@@ -41,12 +41,13 @@ async def ask(session:CommandSession):
 
 @on_command('addQuestion', aliases=('设置问题', '设问'), permission=SUPERUSER, only_to_me=False)
 async def addQuestion(session:CommandSession):
-    c = re.split(r'(#[^#]+#)(.+)', session.current_arg, flags=re.M | re.S)
-    question = c[1].strip('#')
-    answer = c[2].strip()
+    if session.is_first_run:
+        c = re.split(r'(#[^#]+#)(.+)', session.current_arg, flags=re.M | re.S)
+        session.state['question'] = c[1].strip('#')
+        session.state['answer'] = c[2].strip()
     grpid = session.get('grpid', prompt='请输入这个问题对应的群号')
-    db.setvar('question_' + grpid + '_' + question, answer)
-    session.finish('群' + grpid + '的问题' + question + '设置成功！')
+    db.setvar('question_' + grpid + '_' + session.state['question'], session.state['answer'])
+    session.finish('群' + grpid + '的问题' + session.state['question'] + '设置成功！')
 
 
 @on_command('addPrivateQuestion', aliases=('设置私密问题', '私密设问'), permission=SUPERUSER, only_to_me=False)
