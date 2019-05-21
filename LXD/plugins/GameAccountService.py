@@ -26,7 +26,7 @@ async def buygameservice(session:CommandSession):
                 continue
             if info.get('group_id') == grp['group_id']:
                 grpid = str(info['group_id'])
-    if not session.is_first_run:
+    if session.state.get('cached'):
         cache = session.get('cache', prompt='您要使用充值前最后一次缓存的订单吗？')
         if cache not in ():
             del session.state['cash']
@@ -90,6 +90,7 @@ async def buygameservice(session:CommandSession):
             want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
             if want_to_recharge in ('支付宝', '微信'):
                 await session.send('请充值之后重新发送下单指令')
+                session.state['cached'] = True
                 await call_command(session.bot, session.ctx, name='generalDeposit',
                                    current_arg=want_to_recharge + ' ' + str(float(total) / 100))
             else:

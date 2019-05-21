@@ -41,7 +41,7 @@ async def ask(session:CommandSession):
 
 @on_command('addQuestion', aliases=('设置问题', '设问'), permission=SUPERUSER, only_to_me=False)
 async def addQuestion(session:CommandSession):
-    if session.is_first_run:
+    if not session.state.get('question'):
         c = re.split(r'(#[^#]+#)(.+)', session.current_arg, flags=re.M | re.S)
         session.state['question'] = c[1].strip('#')
         session.state['answer'] = c[2].strip()
