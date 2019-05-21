@@ -20,6 +20,20 @@ async def checkBalance(session:CommandSession):
 @on_command('setPassword', aliases=('设置密码', ))
 async def setPassword(session:CommandSession):
     account = session.ctx['user_id']
+    if not session.state.get('grpid')
+    try:
+        session.state['grpid'] = str(session.ctx['group_id'])
+    except KeyError:
+        grplst = await bot.get_group_list()
+        for grp in grplst:
+            try:
+                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
+            except ActionFailed:
+                continue
+            if info.get('group_id') == grp['group_id']:
+                session.state['grpid'] = str(info['group_id'])
+    if session.state['grpid'] not in ['105976356']:
+        session.finish('您没有权限使用洛仙都客户端，请加入主群：105976356')
     ensure = session.get('ensure', prompt='您确定要设置密码吗？')
     if ensure in ['确定', '确认', '是', '设置']:
         password = session.get('password', prompt='请输入密码：')
