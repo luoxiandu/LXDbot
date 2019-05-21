@@ -26,7 +26,14 @@ async def buygameservice(session:CommandSession):
                 continue
             if info.get('group_id') == grp['group_id']:
                 grpid = str(info['group_id'])
+    if not session.is_first_run:
+        cache = session.get('cache', prompt='您要使用充值前最后一次缓存的订单吗？')
+        if cache not in ():
+            del session.state['cash']
+            del session.state['level']
+            del session.state['unlock']
     cash = session.get('cash', prompt='请输入您期望得到的游戏币数额（如果不购买鲨鱼卡请输入0）：')
+    session.state['cash'] = cash
     cash = int(cash)
     megalodon = cash // 8000000
     cash -= megalodon * 8000000
@@ -40,7 +47,9 @@ async def buygameservice(session:CommandSession):
     cash -= tigershark * 200000
     redshark = cash // 100000 + 1 if cash != 0 else 0
     level = session.get('level', prompt='请输入您期望更改的级别（如果不购买等级更改请输入0）：')
+    session.state['level'] = level
     unlock = session.get('unlock', prompt='您要购买解锁吗？如购买解锁请回复“解锁”，否则输入任意内容继续：')
+    session.state['unlock'] = unlock
     total = 0
     total += megalodon * int(db.getprice('megalodon_' + grpid))
     total += whale * int(db.getprice('whale_' + grpid))
