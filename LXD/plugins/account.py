@@ -2,6 +2,7 @@ import nonebot
 from quart import request
 from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
+from aiocqhttp.exceptions import ActionFailed
 from LXD.services.DBSvr import DB
 import json
 
