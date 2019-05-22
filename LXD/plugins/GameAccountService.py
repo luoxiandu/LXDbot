@@ -75,12 +75,12 @@ async def buygameservice(session:CommandSession):
         result = db.cost(acc, total)
         if result:
             msg = acc + '购买了账号服务：'
-            msg += "\n巨齿鲨卡：" + str(megalodon) + '张'
-            msg += "\n鲸鲨卡：" + str(whale) + '张'
-            msg += "\n大白鲨卡：" + str(greatwhite) + '张'
-            msg += "\n牛鲨卡：" + str(bullshark) + '张'
-            msg += "\n虎鲨卡：" + str(tigershark) + '张'
-            msg += "\n红鲨卡：" + str(redshark) + '张'
+            msg += "\n巨齿鲨卡800w：" + str(megalodon) + '张'
+            msg += "\n鲸鲨卡350w：" + str(whale) + '张'
+            msg += "\n大白鲨卡125w：" + str(greatwhite) + '张'
+            msg += "\n牛鲨卡50w：" + str(bullshark) + '张'
+            msg += "\n虎鲨卡20w：" + str(tigershark) + '张'
+            msg += "\n红鲨卡10w：" + str(redshark) + '张'
             msg += "\n刷级：" + level
             msg += "\n解锁：" + repr(unlock)
             await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
