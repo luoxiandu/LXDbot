@@ -74,13 +74,13 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if HWID and IP and db.chktrial(HWID) or True:
+    if HWID and IP and db.chktrial(HWID):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
-        sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=5), args=[HWID], id=HWID, replace_existing=True)
+        sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
