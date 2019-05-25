@@ -101,7 +101,7 @@ async def replyaccountinfo():
             'balance': float(db.getbalance(account)) / 100 if account.isdigit() else 0.0,
             'isBeggar': not account.isdigit()
         }
-        ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
+        ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
@@ -111,4 +111,4 @@ async def replyaccountinfo():
 async def chklogin():
     while True:
         sessionkey = await websocket.receive()
-        await websocket.send(json.dumps({'status': 'success' if sessionkey and db.checkSessionkey(sessionkey) else 'failed'}))
+        await websocket.send(db.newSessionkey(sessionkey.split("::")[0]) if sessionkey and db.checkSessionkey(sessionkey) else '*failed*')

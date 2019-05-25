@@ -27,7 +27,7 @@ async def getdll():
                         'dll': base64.b64encode(dllfile.read()).decode(),
                         'xpr': base64.b64encode(xprfile.read()).decode()
                     }
-        ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
+        ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
@@ -41,7 +41,7 @@ async def getdlllist():
     if sessionkey and db.checkSessionkey(sessionkey):
         ret['status'] = 'success'
         ret['payload'] = db.getDLLList()
-        ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
+        ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
