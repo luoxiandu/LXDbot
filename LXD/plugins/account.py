@@ -79,7 +79,7 @@ async def triallogin():
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
-        sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=1), args=[HWID], id=HWID)
+        sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=1), args=[HWID], id=HWID, replace_existing=True)
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
