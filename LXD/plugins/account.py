@@ -63,6 +63,23 @@ async def loginhandler():
         ret['status'] = 'failed'
     return json.dumps(ret)
 
+
+@bot.server_app.route('/requesttrial', methods=['POST'])
+async def triallogin():
+    data = await request.form
+    IP = request.remote_addr
+    HWID = data['HWID']
+    ret = {}
+    if HWID and IP and db.newtrial(HWID, IP):
+        db.varpp('logincount')
+        db.varpp('logincountday')
+        ret['status'] = 'success'
+        ret['sessionkey'] = db.newSessionkey(HWID)
+    else:
+        ret['status'] = 'failed'
+    return json.dumps(ret)
+
+
 @bot.server_app.route('/getaccountinfo', methods=['POST'])
 async def replyaccountinfo():
     data = await request.form
@@ -72,7 +89,8 @@ async def replyaccountinfo():
         account = sessionkey.split("::")[0]
         ret['status'] = 'success'
         ret['payload'] = {
-            'balance': float(db.getbalance(account)) / 100
+            'balance': float(db.getbalance(account)) / 100,
+            'isBeggar': not account.isdigit()
         }
         ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
     else:

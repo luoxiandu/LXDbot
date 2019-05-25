@@ -69,7 +69,10 @@ class DB:
         parts = sessionkey.split("::")
         acc = parts[0]
         sskey = parts[1]
-        cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
+        if acc.isdigit():
+            cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
+        else:
+            cur.execute("SELECT sessionkey FROM beggars WHERE HWID=?", (acc,))
         r = cur.fetchone()
         if r and r[0] == sskey:
             return True
@@ -79,9 +82,18 @@ class DB:
     def newSessionkey(self, acc):
         cur = self.conn.cursor()
         sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
-        cur.execute("UPDATE account SET sessionkey=? WHERE QQ=?", (sessionkey, acc))
+        if acc.isdigit():
+            cur.execute("UPDATE account SET sessionkey=? WHERE QQ=?", (sessionkey, acc))
+        else:
+            cur.execute("UPDATE beggars SET sessionkey=? WHERE HWID=?", (sessionkey, acc))
         self.conn.commit()
         return acc + '::' + sessionkey
+
+    def newtrial(self, HWID, IP):
+        cur = self.conn.cursor()
+        cur.execute("REPLACE INTO beggars(HWID, IP, lastlogin) VALUES (?, ?, ?)", (HWID, IP, time.time()))
+        self.conn.commit()
+        return True
 
     def chkpassword(self, acc, pwd):
         cur = self.conn.cursor()
