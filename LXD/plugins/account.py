@@ -101,5 +101,5 @@ async def replyaccountinfo():
 @bot.server_app.websocket('/chklogin')
 async def chklogin():
     while True:
-        sessionkey = await websocket.recieve()
+        sessionkey = await websocket.receive()
         websocket.send(json.dumps({'status': 'success' if sessionkey and db.checkSessionkey(sessionkey) else 'failed'}))
