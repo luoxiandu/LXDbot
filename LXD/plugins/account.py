@@ -102,4 +102,4 @@ async def replyaccountinfo():
 async def chklogin():
     while True:
         sessionkey = await websocket.receive()
-        websocket.send(json.dumps({'status': 'success' if sessionkey and db.checkSessionkey(sessionkey) else 'failed'}))
+        await websocket.send(json.dumps({'status': 'success' if sessionkey and db.checkSessionkey(sessionkey) else 'failed'}))
