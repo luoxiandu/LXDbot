@@ -1,5 +1,6 @@
 import sqlite3
 import time
+import datetime
 import random
 
 class DB:
@@ -102,7 +103,20 @@ class DB:
         cur = self.conn.cursor()
         cur.execute("REPLACE INTO beggars(HWID, IP, lastlogin) VALUES (?, ?, ?)", (HWID, IP, time.time()))
         self.conn.commit()
-        return True
+        return
+
+    def chktrial(self, HWID):
+        cur = self.conn.cursor()
+        cur.execute("SELECT lastlogin FROM beggars WHERE HWID=?", (HWID,))
+        r = cur.fetchone()
+        if r:
+            lastlogin = datetime.datetime.fromtimestamp(r[0])
+            if datetime.datetime.now().date() != lastlogin.date():
+                return True
+            else:
+                return False
+        else:
+            return True
 
     def chkpassword(self, acc, pwd):
         cur = self.conn.cursor()

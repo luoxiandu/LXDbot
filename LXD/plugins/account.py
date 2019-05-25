@@ -74,7 +74,8 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if HWID and IP and db.newtrial(HWID, IP):
+    if HWID and IP and db.chktrial(HWID):
+        db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
