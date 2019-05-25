@@ -3,12 +3,15 @@ from quart import request, websocket
 from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
 from aiocqhttp.exceptions import ActionFailed
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from LXD.services.DBSvr import DB
 import json
+import datetime
 
 __plugin_name__ = 'LXD.account'
 db = DB()
 bot = nonebot.get_bot()
+sched = AsyncIOScheduler()
 
 
 @on_command('checkBalance', aliases=('查询余额', '查询账户余额', '余额查询', '余额'))
@@ -75,9 +78,15 @@ async def triallogin():
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
+        sched.add_job(kickbeggar(HWID), 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60))
+        sched.start()
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
+
+
+async def kickbeggar(HWID):
+    db.clearSessionkey(HWID)
 
 
 @bot.server_app.route('/getaccountinfo', methods=['POST'])

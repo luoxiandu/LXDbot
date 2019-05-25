@@ -89,6 +89,15 @@ class DB:
         self.conn.commit()
         return acc + '::' + sessionkey
 
+    def clearSessionkey(self, acc):
+        cur = self.conn.cursor()
+        if acc.isdigit():
+            cur.execute("UPDATE account SET sessionkey='' WHERE QQ=?", (acc,))
+        else:
+            cur.execute("UPDATE beggars SET sessionkey='' WHERE HWID=?", (acc,))
+        self.conn.commit()
+        return
+
     def newtrial(self, HWID, IP):
         cur = self.conn.cursor()
         cur.execute("REPLACE INTO beggars(HWID, IP, lastlogin) VALUES (?, ?, ?)", (HWID, IP, time.time()))
