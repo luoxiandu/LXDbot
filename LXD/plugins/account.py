@@ -1,5 +1,5 @@
 import nonebot
-from quart import request
+from quart import request, websocket
 from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
 from aiocqhttp.exceptions import ActionFailed
@@ -98,8 +98,8 @@ async def replyaccountinfo():
     return json.dumps(ret)
 
 
-@bot.server_app.route('/chklogin', methods=['POST'])
+@bot.server_app.websocket('/chklogin')
 async def chklogin():
-    data = await request.form
-    sessionkey = data['sessionkey']
-    return json.dumps({'status': 'success' if sessionkey and db.checkSessionkey(sessionkey) else 'failed'})
+    while True:
+        sessionkey = await websocket.recieve()
+        websocket.send(json.dumps({'status': 'success' if sessionkey and db.checkSessionkey(sessionkey) else 'failed'}))
