@@ -98,7 +98,7 @@ async def replyaccountinfo():
         account = sessionkey.split("::")[0]
         ret['status'] = 'success'
         ret['payload'] = {
-            'balance': float(db.getbalance(account)) / 100,
+            'balance': float(db.getbalance(account)) / 100 if account.isdigit() else 0.0,
             'isBeggar': not account.isdigit()
         }
         ret['sessionkey'] = db.newSessionkey(sessionkey.split("::")[0])
