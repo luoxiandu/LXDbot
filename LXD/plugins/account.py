@@ -12,6 +12,7 @@ __plugin_name__ = 'LXD.account'
 db = DB()
 bot = nonebot.get_bot()
 sched = AsyncIOScheduler()
+sched.start()
 
 
 @on_command('checkBalance', aliases=('查询余额', '查询账户余额', '余额查询', '余额'))
@@ -78,8 +79,7 @@ async def triallogin():
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
-        sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=1), args=[HWID])
-        sched.start()
+        sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=1), args=[HWID], id=HWID)
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
