@@ -96,3 +96,10 @@ async def replyaccountinfo():
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
+
+
+@bot.server_app.route('/chklogin', methods=['POST'])
+async def chklogin():
+    data = await request.form
+    sessionkey = data['sessionkey']
+    return json.dumps({'status': 'success' if sessionkey and db.checkSessionkey(sessionkey) else 'failed'})
