@@ -101,7 +101,12 @@ class DB:
 
     def newtrial(self, HWID, IP):
         cur = self.conn.cursor()
-        cur.execute("REPLACE INTO beggars(HWID, IP, lastlogin, logincount) VALUES (?, ?, ?, logincount+1)", (HWID, IP, time.time()))
+        logincount = 0
+        cur.execute("SELECT logincount FROM beggars WHERE HWID=?", (HWID,))
+        r = cur.fetchone()
+        if r:
+            logincount = r[0] + 1
+        cur.execute("REPLACE INTO beggars(HWID, IP, lastlogin, logincount) VALUES (?, ?, ?, ?)", (HWID, IP, time.time(), logincount))
         self.conn.commit()
         return
 
