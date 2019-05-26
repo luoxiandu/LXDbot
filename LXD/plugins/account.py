@@ -74,7 +74,7 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if HWID and IP and data['version'] == '1.2' and db.chktrial(HWID) or True:
+    if HWID and IP and data['version'] == '1.2' and (db.chktrial(HWID) or True):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
