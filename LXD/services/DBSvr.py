@@ -101,7 +101,7 @@ class DB:
 
     def newtrial(self, HWID, IP):
         cur = self.conn.cursor()
-        logincount = 0
+        logincount = 1
         cur.execute("SELECT logincount FROM beggars WHERE HWID=?", (HWID,))
         r = cur.fetchone()
         if r:
