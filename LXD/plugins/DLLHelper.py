@@ -16,7 +16,7 @@ async def getdll():
     id = data['id']
     sessionkey = data['sessionkey']
     ret = {}
-    if id and sessionkey and db.checkSessionkey(sessionkey):
+    if id and sessionkey and db.checkSessionkey(sessionkey) and data['version'] == '1.2':
         db.varpp('dllcount')
         db.varpp('dllcountday')
         ret['status'] = 'success'
@@ -38,7 +38,7 @@ async def getdlllist():
     data = await request.form
     sessionkey = data['sessionkey']
     ret = {}
-    if sessionkey and db.checkSessionkey(sessionkey):
+    if sessionkey and db.checkSessionkey(sessionkey) and data['version'] == '1.2':
         ret['status'] = 'success'
         ret['payload'] = db.getDLLList()
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])

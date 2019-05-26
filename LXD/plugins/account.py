@@ -58,7 +58,7 @@ async def loginhandler():
     acc = data['username']
     pwd = data['password']
     ret = {}
-    if acc and pwd and db.chkpassword(acc, pwd):
+    if acc and pwd and db.chkpassword(acc, pwd) and data['version'] == '1.2':
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
@@ -74,7 +74,7 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if HWID and IP and db.chktrial(HWID) or True:
+    if HWID and IP and data['version'] == '1.2' and db.chktrial(HWID) or True:
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
@@ -95,7 +95,7 @@ async def replyaccountinfo():
     data = await request.form
     sessionkey = data['sessionkey']
     ret = {}
-    if sessionkey and db.checkSessionkey(sessionkey):
+    if sessionkey and db.checkSessionkey(sessionkey) and data['version'] == '1.2':
         account = sessionkey.split("::")[0]
         ret['status'] = 'success'
         ret['payload'] = {
