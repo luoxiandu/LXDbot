@@ -2,6 +2,7 @@ import nonebot
 from quart import request, websocket
 from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
+from nonebot.log import logger
 from aiocqhttp.exceptions import ActionFailed
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from LXD.services.DBSvr import DB
@@ -117,4 +118,7 @@ async def replyaccountinfo():
 async def chklogin():
     while True:
         sessionkey = await websocket.receive()
-        await websocket.send(db.newSessionkey(sessionkey.split("::")[0]) if sessionkey and db.checkSessionkey(sessionkey) else '*failed*')
+        logger.info('recieved sessionkey: ' + sessionkey)
+        msg = db.newSessionkey(sessionkey.split("::")[0]) if sessionkey and db.checkSessionkey(sessionkey) else '*failed*'
+        logger.info('response: ' + msg)
+        await websocket.send(msg)
