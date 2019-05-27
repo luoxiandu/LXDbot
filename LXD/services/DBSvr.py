@@ -123,6 +123,11 @@ class DB:
         else:
             return True
 
+    def gettrialonline(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT count(*) FROM beggars WHERE sessionkey != ''")
+        return cur.fetchone()[0]
+
     def chkpassword(self, acc, pwd):
         cur = self.conn.cursor()
         cur.execute("SELECT password FROM account WHERE QQ=?", (acc,))

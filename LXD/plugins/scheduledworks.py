@@ -12,7 +12,7 @@ async def resetvars():
     msg = "今日实时更新注入器使用总结："
     msg += "\n今日登录：" + db.getvar('logincountday') + '次'
     msg += "\n今日注入：" + db.getvar('dllcountday') + '次'
-    await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
+    # await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
     await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
     db.setvar('dllcountday', 0)
     db.setvar('logincountday', 0)
@@ -25,8 +25,9 @@ async def reportinjectorinfo():
     msg += "\n今日登录：" + db.getvar('logincountday') + '次'
     msg += "\n总注入：" + db.getvar('dllcount') + '次'
     msg += "\n今日注入：" + db.getvar('dllcountday') + '次'
+    msg += "\n当前试用在线人数：" + str(db.gettrialonline())
     await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
-    await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
+    # await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
     return
 
 
