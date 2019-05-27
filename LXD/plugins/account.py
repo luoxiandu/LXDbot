@@ -52,7 +52,7 @@ async def setPassword(session:CommandSession):
         session.finish('已取消设置密码')
 
 
-@on_command('trialonline', aliases=('查询试用',))
+@on_command('trialonline', aliases=('查询试用',), only_to_me=False, permission=SUPERUSER)
 async def trialonline(session:CommandSession):
     session.finish('当前试用在线人数：' + str(db.gettrialonline()))
 
