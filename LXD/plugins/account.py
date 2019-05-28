@@ -66,13 +66,24 @@ async def kickhandler(session:CommandSession):
     session.finish('踢 ' + account + ' 成功！' if db.kickonline(account) else '踢除过程中出错，可能已经离线！')
 
 
+@on_command('getversion', aliases=('查询版本',), only_to_me=False, permission=SUPERUSER)
+async def getversion(session:CommandSession):
+    session.finish('当前版本为：' + db.getvar('current_version'))
+
+
+@on_command('setversion', aliases=('设置版本',), only_to_me=False, permission=SUPERUSER, shell_like=True)
+async def setversion(session:CommandSession):
+    db.setvar('current_version', session.argv[0])
+    session.finish('设置成功！当前版本为：' + db.getvar('current_version'))
+
+
 @bot.server_app.route('/login', methods=['POST'])
 async def loginhandler():
     data = await request.form
     acc = data['username']
     pwd = data['password']
     ret = {}
-    if acc and pwd and db.chkpassword(acc, pwd) and data['version'] == '1.21':
+    if acc and pwd and db.chkpassword(acc, pwd) and data['version'] == db.getvar('current_version'):
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
@@ -93,7 +104,7 @@ async def triallogin():
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
         db.setonline(ret['sessionkey'])
-    elif HWID and IP and data['version'] == '1.21' and (db.chktrialonce(HWID) or True):
+    elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
@@ -115,7 +126,7 @@ async def replyaccountinfo():
     data = await request.form
     sessionkey = data['sessionkey']
     ret = {}
-    if sessionkey and db.checkSessionkey(sessionkey) and data['version'] == '1.21':
+    if sessionkey and db.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
         account = sessionkey.split("::")[0]
         ret['status'] = 'success'
         ret['payload'] = {
