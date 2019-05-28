@@ -13,9 +13,9 @@ async def getRockstarStatus(session:CommandSession):
         for service in result['statuses']:
             if service['tag'] == 'gtao':
                 for platform in service['services_platforms']:
-                    GTAstatus[platform['name']] = '服务正常' if platform['service_status_id'] == 1 else '暂不可用，Rockstar内部错误代码为' + platform['service_status_id']
+                    GTAstatus[platform['name']] = '服务正常' if platform['service_status_id'] == 1 else '暂不可用，Rockstar内部错误代码为' + str(platform['service_status_id'])
             if service['tag'] == 'sc':
-                SCstatus = '服务正常' if service['services_platforms'][0]['service_status_id'] == 1 else '暂不可用，Rockstar内部错误代码为' + service['services_platforms'][0]['service_status_id']
+                SCstatus = '服务正常' if service['services_platforms'][0]['service_status_id'] == 1 else '暂不可用，Rockstar内部错误代码为' + str(service['services_platforms'][0]['service_status_id'])
     except KeyError:
         await session.finish("查询失败，请重试！")
         return
