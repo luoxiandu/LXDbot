@@ -83,7 +83,7 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if db.onlinecount(HWID):
+    if db.onlinecount(HWID) and data['version'] == '1.21':
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
         db.setonline(ret['sessionkey'])
