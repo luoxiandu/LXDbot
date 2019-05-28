@@ -45,7 +45,7 @@ async def generalDeposit(session:CommandSession):
             msg = '快速充值用法：发送 充值 微信/支付宝 金额'
         session.finish(msg)
     else:
-        session.finish('快速充值用法：发送 充值 微信/支付宝 金额')
+        session.finish('充值命令用法：请向我发送“充值 微信/支付宝 金额”，例如您想用微信充值100元，请发送“充值 微信 100”')
 
 
 @on_command('generalManualDeposit', aliases=('手动充值', 'sdcz', 'SDCZ'), permission=SUPERUSER, shell_like=True, only_to_me=False)
