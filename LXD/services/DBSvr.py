@@ -5,6 +5,8 @@ import random
 
 class DB:
     conn = None
+    __VIPs__ = {}
+    __beggars__ = {}
 
     def __init__(self):
         self.conn = sqlite3.connect("data/LXD.db")
@@ -66,37 +68,44 @@ class DB:
         }
 
     def checkSessionkey(self, sessionkey):
-        cur = self.conn.cursor()
+        # cur = self.conn.cursor()
         parts = sessionkey.split("::")
         acc = parts[0]
         sskey = parts[1]
         if acc.isdigit():
-            cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
+            # cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
+            r = DB.__VIPs__.get(acc)
         else:
-            cur.execute("SELECT sessionkey FROM beggars WHERE HWID=?", (acc,))
-        r = cur.fetchone()
-        if r and r[0] == sskey:
+            # cur.execute("SELECT sessionkey FROM beggars WHERE HWID=?", (acc,))
+            r = DB.__beggars__.get(acc)
+        # r = cur.fetchone()
+        # if r and r[0] == sskey:
+        if r == sskey:
             return True
         else:
             return False
 
     def newSessionkey(self, acc):
-        cur = self.conn.cursor()
+        # cur = self.conn.cursor()
         sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
         if acc.isdigit():
-            cur.execute("UPDATE account SET sessionkey=? WHERE QQ=?", (sessionkey, acc))
+            # cur.execute("UPDATE account SET sessionkey=? WHERE QQ=?", (sessionkey, acc))
+            DB.__VIPs__[acc] = sessionkey
         else:
-            cur.execute("UPDATE beggars SET sessionkey=? WHERE HWID=?", (sessionkey, acc))
-        self.conn.commit()
+            # cur.execute("UPDATE beggars SET sessionkey=? WHERE HWID=?", (sessionkey, acc))
+            DB.__beggars__[acc] = sessionkey
+        # self.conn.commit()
         return acc + '::' + sessionkey
 
     def clearSessionkey(self, acc):
-        cur = self.conn.cursor()
+        # cur = self.conn.cursor()
         if acc.isdigit():
-            cur.execute("UPDATE account SET sessionkey='' WHERE QQ=?", (acc,))
+            # cur.execute("UPDATE account SET sessionkey='' WHERE QQ=?", (acc,))
+            del DB.__VIPs__[acc]
         else:
-            cur.execute("UPDATE beggars SET sessionkey='' WHERE HWID=?", (acc,))
-        self.conn.commit()
+            # cur.execute("UPDATE beggars SET sessionkey='' WHERE HWID=?", (acc,))
+            del DB.__beggars__[acc]
+        # self.conn.commit()
         return
 
     def newtrial(self, HWID, IP):
@@ -124,9 +133,10 @@ class DB:
             return True
 
     def gettrialonline(self):
-        cur = self.conn.cursor()
-        cur.execute("SELECT count(*) FROM beggars WHERE sessionkey != ''")
-        return cur.fetchone()[0]
+        # cur = self.conn.cursor()
+        # cur.execute("SELECT count(*) FROM beggars WHERE sessionkey != ''")
+        # return cur.fetchone()[0]
+        return len(DB.__beggars__)
 
     def chkpassword(self, acc, pwd):
         cur = self.conn.cursor()
