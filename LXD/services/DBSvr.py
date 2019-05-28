@@ -119,7 +119,7 @@ class DB:
         self.conn.commit()
         return
 
-    def chktrial(self, HWID):
+    def chktrialonce(self, HWID):
         cur = self.conn.cursor()
         cur.execute("SELECT lastlogin FROM beggars WHERE HWID=?", (HWID,))
         r = cur.fetchone()
@@ -131,6 +131,12 @@ class DB:
                 return False
         else:
             return True
+
+    def chkonline(self, HWID):
+        return HWID in DB.__beggars__
+
+    def getbeggarSessionkey(self, HWID):
+        return DB.__beggars__.get(HWID)
 
     def gettrialonline(self):
         # cur = self.conn.cursor()
