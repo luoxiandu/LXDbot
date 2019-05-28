@@ -7,6 +7,7 @@ class DB:
     conn = None
     __VIPs__ = {}
     __beggars__ = {}
+    __online__ = {}
 
     def __init__(self):
         self.conn = sqlite3.connect("data/LXD.db")
@@ -132,17 +133,28 @@ class DB:
         else:
             return True
 
-    def chkonline(self, HWID):
+    def onlinecount(self, HWID):
         return HWID in DB.__beggars__
 
-    def getbeggarSessionkey(self, HWID):
-        return DB.__beggars__.get(HWID)
+    def chkonline(self):
+        for acc in DB.__online__:
+            if DB.__online__[acc] == DB.__beggars__.get(acc) or DB.__online__[acc] == DB.__VIPs__.get(acc):
+                del DB.__online__[acc]
 
-    def gettrialonline(self):
+    def setonline(self, sessionkey):
+        parts = sessionkey.split("::")
+        acc = parts[0]
+        sskey = parts[1]
+        DB.__online__[acc] = sskey
+
+    def getonline(self):
         # cur = self.conn.cursor()
         # cur.execute("SELECT count(*) FROM beggars WHERE sessionkey != ''")
         # return cur.fetchone()[0]
-        return len(DB.__beggars__)
+        return len(DB.__online__)
+
+    def getonlinedetail(self):
+        return DB.__online__.keys()
 
     def chkpassword(self, acc, pwd):
         cur = self.conn.cursor()

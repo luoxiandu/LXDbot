@@ -25,12 +25,13 @@ async def reportinjectorinfo():
     msg += "\n今日登录：" + db.getvar('logincountday') + '次'
     msg += "\n总注入：" + db.getvar('dllcount') + '次'
     msg += "\n今日注入：" + db.getvar('dllcountday') + '次'
-    msg += "\n当前试用在线人数：" + str(db.gettrialonline())
+    msg += "\n当前总在线人数：" + str(db.getonline())
     await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
     # await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
     return
 
 
+sched.add_job(db.chkonline, 'interval', seconds=10)
 sched.add_job(resetvars, 'cron', hour=0, minute=0, second=0)
 sched.add_job(reportinjectorinfo, 'cron', minute=0, second=0, hour='*/6')
 sched.start()

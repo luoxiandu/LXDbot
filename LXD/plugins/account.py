@@ -53,9 +53,11 @@ async def setPassword(session:CommandSession):
         session.finish('已取消设置密码')
 
 
-@on_command('trialonline', aliases=('查询试用',), only_to_me=False, permission=SUPERUSER)
-async def trialonline(session:CommandSession):
-    session.finish('当前试用在线人数：' + str(db.gettrialonline()))
+@on_command('chkonline', aliases=('查询在线',), only_to_me=False, permission=SUPERUSER)
+async def chkonline(session:CommandSession):
+    msg = '在线者：' + '\n'.join(db.getonlinedetail())
+    msg += '\n当前总在线人数：' + str(db.getonline())
+    session.finish(msg)
 
 
 @bot.server_app.route('/login', methods=['POST'])
@@ -69,6 +71,7 @@ async def loginhandler():
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(acc)
+        db.setonline(ret['sessionkey'])
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
@@ -80,15 +83,17 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if db.chkonline(HWID):
+    if db.onlinecount(HWID):
         ret['status'] = 'success'
-        ret['sessionkey'] = HWID + '::' + db.getbeggarSessionkey(HWID)
+        ret['sessionkey'] = db.newSessionkey(HWID)
+        db.setonline(ret['sessionkey'])
     elif HWID and IP and data['version'] == '1.2' and (db.chktrialonce(HWID) or True):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
+        db.setonline(ret['sessionkey'])
         sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
     else:
         ret['status'] = 'failed'
