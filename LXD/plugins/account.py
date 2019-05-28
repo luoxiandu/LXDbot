@@ -55,7 +55,7 @@ async def setPassword(session:CommandSession):
 
 @on_command('chkonline', aliases=('查询在线',), only_to_me=False, permission=SUPERUSER)
 async def chkonline(session:CommandSession):
-    msg = '在线者：' + '\n'.join(db.getonlinedetail())
+    msg = '在线者：\n' + '\n'.join(db.getonlinedetail())
     msg += '\n当前总在线人数：' + str(db.getonline())
     session.finish(msg)
 
@@ -128,5 +128,7 @@ async def chklogin():
         sessionkey = await websocket.receive()
         logger.info('recieved sessionkey: ' + sessionkey)
         msg = db.newSessionkey(sessionkey.split("::")[0]) if sessionkey and db.checkSessionkey(sessionkey) else '*failed*'
+        if msg != '*failed*':
+            db.setonline(msg)
         logger.info('response: ' + msg)
         await websocket.send(msg)

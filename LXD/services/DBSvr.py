@@ -137,7 +137,7 @@ class DB:
         return HWID in DB.__beggars__
 
     def chkonline(self):
-        for acc in DB.__online__:
+        for acc in list(DB.__online__.keys()):
             if DB.__online__[acc] == DB.__beggars__.get(acc) or DB.__online__[acc] == DB.__VIPs__.get(acc):
                 del DB.__online__[acc]
 
@@ -154,7 +154,7 @@ class DB:
         return len(DB.__online__)
 
     def getonlinedetail(self):
-        return DB.__online__.keys()
+        return list(DB.__online__.keys())
 
     def chkpassword(self, acc, pwd):
         cur = self.conn.cursor()
