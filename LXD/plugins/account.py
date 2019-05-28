@@ -60,6 +60,12 @@ async def chkonline(session:CommandSession):
     session.finish(msg)
 
 
+@on_command('kick', aliases=('踢',), only_to_me=False, permission=SUPERUSER, shell_like=True)
+async def kickhandler(session:CommandSession):
+    account = session.argv[0]
+    session.finish('踢 ' + account + ' 成功！' if db.kickonline(account) else '踢除过程中出错，可能已经离线！')
+
+
 @bot.server_app.route('/login', methods=['POST'])
 async def loginhandler():
     data = await request.form

@@ -156,6 +156,17 @@ class DB:
     def getonlinedetail(self):
         return list(DB.__online__.keys())
 
+    def kickonline(self, acc):
+        # noinspection PyBroadException
+        try:
+            if acc.isdigit():
+                del DB.__VIPs__[acc]
+            else:
+                del DB.__beggars__[acc]
+            return True
+        except Exception:
+            return False
+
     def chkpassword(self, acc, pwd):
         cur = self.conn.cursor()
         cur.execute("SELECT password FROM account WHERE QQ=?", (acc,))
