@@ -2,6 +2,7 @@ import sqlite3
 import time
 import datetime
 import random
+from nonebot.log import logger
 
 class DB:
     conn = None
@@ -137,6 +138,7 @@ class DB:
         for acc in list(DB.__online__.keys()):
             if DB.__online__[acc] == DB.__beggars__.get(acc) or DB.__online__[acc] == DB.__VIPs__.get(acc):
                 del DB.__online__[acc]
+                logger.info('用户' + acc + '主动离线')
 
     def setonline(self, sessionkey):
         parts = sessionkey.split("::")
