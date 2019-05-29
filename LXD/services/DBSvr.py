@@ -107,6 +107,7 @@ class DB:
             # cur.execute("UPDATE beggars SET sessionkey='' WHERE HWID=?", (acc,))
             del DB.__beggars__[acc]
         # self.conn.commit()
+        del DB.__online__[acc]
         return
 
     def newtrial(self, HWID, IP):
