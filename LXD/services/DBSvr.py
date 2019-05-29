@@ -136,6 +136,10 @@ class DB:
 
     def chkonline(self):
         for acc in list(DB.__online__.keys()):
+            logger.info('----')
+            logger.info(DB.__online__.get('916327225'))
+            logger.info(DB.__VIPs__.get('916327225'))
+            logger.info('----')
             if DB.__online__[acc] == DB.__beggars__.get(acc) or DB.__online__[acc] == DB.__VIPs__.get(acc):
                 del DB.__online__[acc]
                 logger.info('用户' + acc + '主动离线')
