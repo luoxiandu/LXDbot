@@ -149,7 +149,6 @@ async def chklogin():
         if sessionkey and db.checkSessionkey(sessionkey):
             msg = db.newSessionkey(sessionkey.split("::")[0])
             await websocket.send(msg)
-            db.setonline(msg)
         else:
             msg = '*failed*'
             await websocket.send(msg)
