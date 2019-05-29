@@ -75,16 +75,12 @@ class DB:
         sskey = parts[1]
         if acc.isdigit():
             # cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
-            r = DB.__VIPs__.get(acc)
+            return DB.__VIPs__.get(acc) == sskey
         else:
             # cur.execute("SELECT sessionkey FROM beggars WHERE HWID=?", (acc,))
-            r = DB.__beggars__.get(acc)
+            return DB.__beggars__.get(acc) == sskey
         # r = cur.fetchone()
         # if r and r[0] == sskey:
-        if r == sskey:
-            return True
-        else:
-            return False
 
     def newSessionkey(self, acc):
         # cur = self.conn.cursor()
