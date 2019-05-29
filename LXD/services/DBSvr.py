@@ -163,6 +163,7 @@ class DB:
                 del DB.__VIPs__[acc]
             else:
                 del DB.__beggars__[acc]
+            del DB.__online__[acc]
             return True
         except Exception:
             return False
