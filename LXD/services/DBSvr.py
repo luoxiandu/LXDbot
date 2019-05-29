@@ -135,13 +135,16 @@ class DB:
         return HWID in DB.__beggars__
 
     def chkonline(self):
-        for acc in list(DB.__online__.keys()):
+        newonline = {}
+        for acc in DB.__online__.keys():
             if DB.__online__[acc] == DB.__beggars__.get(acc) or DB.__online__[acc] == DB.__VIPs__.get(acc):
-                del DB.__online__[acc]
                 logger.info('用户' + acc + '主动离线')
-        for acc in list(DB.__VIPs__.keys()):
+            else:
+                newonline[acc] = DB.__online__[acc]
+        DB.__online__ = newonline
+        for acc in DB.__VIPs__.keys():
             DB.__online__[acc] = DB.__VIPs__[acc]
-        for HWID in list(DB.__beggars__.keys()):
+        for HWID in DB.__beggars__.keys():
             DB.__online__[HWID] = DB.__beggars__[HWID]
 
     def getonline(self):
