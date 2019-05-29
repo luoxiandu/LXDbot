@@ -23,10 +23,13 @@ async def getdll():
         paths = db.getDLL(id)
         with open(paths['dllpath'], 'rb') as dllfile:
             with open(paths['xprpath'], 'rb') as xprfile:
-                ret['payload'] = {
-                        'dll': base64.b64encode(dllfile.read()).decode(),
-                        'xpr': base64.b64encode(xprfile.read()).decode()
-                    }
+                    ret['payload'] = {
+                            'dll': base64.b64encode(dllfile.read()).decode(),
+                            'xpr': base64.b64encode(xprfile.read()).decode(),
+                        }
+        if paths['resourcepath']:
+            with open(paths['resourcepath'], 'rb') as rcfile:
+                ret['payload']['resource'] = base64.b64encode(rcfile.read()).decode()
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'
