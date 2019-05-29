@@ -148,6 +148,5 @@ async def chklogin():
         if msg != '*failed*':
             db.setonline(msg)
         else:
-            logger.info('recieved sessionkey: ' + sessionkey)
-            logger.info('response: ' + msg)
+            logger.info('用户' + sessionkey.split('::')[0] + '被踢')
         await websocket.send(msg)
