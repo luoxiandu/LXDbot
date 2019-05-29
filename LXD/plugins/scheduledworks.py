@@ -31,7 +31,7 @@ async def reportinjectorinfo():
     return
 
 
-sched.add_job(db.chkonline, 'interval', seconds=2)
+sched.add_job(db.chkonline, 'interval', seconds=5)
 sched.add_job(resetvars, 'cron', hour=0, minute=0, second=0)
 sched.add_job(reportinjectorinfo, 'cron', minute=0, second=0, hour='*/6')
 sched.start()
