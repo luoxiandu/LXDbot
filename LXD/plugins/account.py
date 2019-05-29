@@ -143,10 +143,12 @@ async def replyaccountinfo():
 async def chklogin():
     while True:
         sessionkey = await websocket.receive()
-
-        msg = db.newSessionkey(sessionkey.split("::")[0]) if sessionkey and db.checkSessionkey(sessionkey) else '*failed*'
-        if msg != '*failed*':
+        if sessionkey and db.checkSessionkey(sessionkey):
+            msg = db.newSessionkey(sessionkey.split("::")[0])
+            await websocket.send(msg)
             db.setonline(msg)
         else:
+            msg = '*failed*'
+            await websocket.send(msg)
             logger.info('用户' + sessionkey.split('::')[0] + '被踢')
-        await websocket.send(msg)
+
