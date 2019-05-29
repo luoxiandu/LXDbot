@@ -88,7 +88,6 @@ async def loginhandler():
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(acc)
-        db.setonline(ret['sessionkey'])
         logger.info('用户' + acc + '已登录上线')
     else:
         ret['status'] = 'failed'
@@ -104,7 +103,6 @@ async def triallogin():
     if db.onlinecount(HWID) and data['version'] == '1.21':
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
-        db.setonline(ret['sessionkey'])
         logger.info('用户' + HWID + '在一小时限制内已重新上线')
     elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True):
         db.newtrial(HWID, IP)
@@ -112,7 +110,6 @@ async def triallogin():
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = db.newSessionkey(HWID)
-        db.setonline(ret['sessionkey'])
         sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
         logger.info('用户' + HWID + '已获取一小时试用时间并登录')
     else:

@@ -136,19 +136,13 @@ class DB:
 
     def chkonline(self):
         for acc in list(DB.__online__.keys()):
-            logger.info('----')
-            logger.info(DB.__online__.get('916327225'))
-            logger.info(DB.__VIPs__.get('916327225'))
-            logger.info('----')
             if DB.__online__[acc] == DB.__beggars__.get(acc) or DB.__online__[acc] == DB.__VIPs__.get(acc):
                 del DB.__online__[acc]
                 logger.info('用户' + acc + '主动离线')
-
-    def setonline(self, sessionkey):
-        parts = sessionkey.split("::")
-        acc = parts[0]
-        sskey = parts[1]
-        DB.__online__[acc] = sskey
+        for acc in list(DB.__VIPs__.keys()):
+            DB.__online__[acc] = DB.__VIPs__[acc]
+        for HWID in list(DB.__beggars__.keys()):
+            DB.__online__[HWID] = DB.__beggars__[HWID]
 
     def getonline(self):
         # cur = self.conn.cursor()
