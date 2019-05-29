@@ -139,6 +139,10 @@ class DB:
         for acc in DB.__online__.keys():
             if DB.__online__[acc] == DB.__beggars__.get(acc) or DB.__online__[acc] == DB.__VIPs__.get(acc):
                 logger.info('用户' + acc + '主动离线')
+                if acc.isdigit():
+                    del DB.__VIPs__[acc]
+                else:
+                    del DB.__beggars__[acc]
             else:
                 newonline[acc] = DB.__online__[acc]
         DB.__online__ = newonline
