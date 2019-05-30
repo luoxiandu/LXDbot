@@ -155,5 +155,8 @@ async def chklogin():
         else:
             msg = '*failed*'
             await websocket.send(msg)
-            logger.info('用户' + sessionkey.split('::')[0] + '认证失败')
+            acc = sessionkey.split('::')[0]
+            db.clearSessionkey(acc)
+            logger.info('用户' + acc + '认证失败')
+
 
