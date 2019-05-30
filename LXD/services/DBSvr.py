@@ -77,10 +77,10 @@ class DB:
         sskey = parts[1]
         if acc.isdigit():
             # cur.execute("SELECT sessionkey FROM account WHERE QQ=?", (acc,))
-            return DB.__VIPs__[acc] == sskey
+            return DB.__VIPs__.get(acc) == sskey
         else:
             # cur.execute("SELECT sessionkey FROM beggars WHERE HWID=?", (acc,))
-            return DB.__beggars__[acc] == sskey
+            return DB.__beggars__.get(acc) == sskey
         # r = cur.fetchone()
         # if r and r[0] == sskey:
 
