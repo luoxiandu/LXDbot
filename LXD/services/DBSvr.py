@@ -9,6 +9,7 @@ class DB:
     __VIPs__ = {}
     __beggars__ = {}
     __online__ = {}
+    __onlinewritelock__ = False
 
     def __init__(self):
         self.conn = sqlite3.connect("data/LXD.db")
@@ -85,6 +86,7 @@ class DB:
         # if r and r[0] == sskey:
 
     def newSessionkey(self, acc):
+        DB.__onlinewritelock__ = True
         # cur = self.conn.cursor()
         sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
         if acc.isdigit():
@@ -94,18 +96,24 @@ class DB:
             # cur.execute("UPDATE beggars SET sessionkey=? WHERE HWID=?", (sessionkey, acc))
             DB.__beggars__[acc] = sessionkey
         # self.conn.commit()
+        DB.__onlinewritelock__ = False
         return acc + '::' + sessionkey
 
     def clearSessionkey(self, acc):
-        # cur = self.conn.cursor()
-        if acc.isdigit():
-            # cur.execute("UPDATE account SET sessionkey='' WHERE QQ=?", (acc,))
-            del DB.__VIPs__[acc]
-        else:
-            # cur.execute("UPDATE beggars SET sessionkey='' WHERE HWID=?", (acc,))
-            del DB.__beggars__[acc]
-        # self.conn.commit()
-        del DB.__online__[acc]
+        DB.__onlinewritelock__ = True
+        try:
+            # cur = self.conn.cursor()
+            if acc.isdigit():
+                # cur.execute("UPDATE account SET sessionkey='' WHERE QQ=?", (acc,))
+                del DB.__VIPs__[acc]
+            else:
+                # cur.execute("UPDATE beggars SET sessionkey='' WHERE HWID=?", (acc,))
+                del DB.__beggars__[acc]
+            # self.conn.commit()
+            del DB.__online__[acc]
+        except KeyError:
+            pass
+        DB.__onlinewritelock__ = False
         return
 
     def newtrial(self, HWID, IP):
@@ -137,6 +145,8 @@ class DB:
 
     def chkonline(self):
         for acc in DB.__online__.keys():
+            while DB.__onlinewritelock__:
+                pass
             if acc.isdigit():
                 if DB.__online__[acc] == DB.__VIPs__.get(acc):
                     del DB.__VIPs__[acc]
@@ -161,6 +171,7 @@ class DB:
         return list(DB.__online__.keys())
 
     def kickonline(self, acc):
+        DB.__onlinewritelock__ = True
         # noinspection PyBroadException
         try:
             if acc.isdigit():
@@ -168,8 +179,10 @@ class DB:
             else:
                 del DB.__beggars__[acc]
             del DB.__online__[acc]
+            DB.__onlinewritelock__ = False
             return True
         except Exception:
+            DB.__onlinewritelock__ = False
             return False
 
     def chkpassword(self, acc, pwd):
