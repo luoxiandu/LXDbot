@@ -64,7 +64,7 @@ async def chkonline(session:CommandSession):
 async def atonline(session:CommandSession):
     msg = ""
     for online in db.getVIPonline():
-        msg += "[CQ:at,qq=%d]" % online
+        msg += "[CQ:at,qq=%s]" % online
     session.finish(msg)
 
 
