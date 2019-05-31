@@ -158,13 +158,13 @@ async def chklogin(uid):
     while True:
         sessionkey = await websocket.receive()
         if sessionkey.split("::")[0] == uid and db.checkSessionkey(sessionkey):
-            msg = db.newSessionkey(sessionkey.split("::")[0])
+            msg = await db.newSessionkey(sessionkey.split("::")[0])
             await websocket.send(msg)
         else:
             msg = '*failed*'
             await websocket.send(msg)
-            acc = sessionkey.split('::')[0]
-            db.clearSessionkey(acc)
+            acc = await sessionkey.split('::')[0]
+            await db.clearSessionkey(acc)
             logger.info('用户' + acc + '认证失败')
 
 
