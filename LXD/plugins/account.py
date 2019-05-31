@@ -149,7 +149,7 @@ async def replyaccountinfo():
 async def chklogin(uid):
     while True:
         sessionkey = await websocket.receive()
-        if sessionkey and db.checkSessionkey(sessionkey):
+        if sessionkey.split("::")[0] == uid and db.checkSessionkey(sessionkey):
             msg = db.newSessionkey(sessionkey.split("::")[0])
             await websocket.send(msg)
         else:
