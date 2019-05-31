@@ -155,7 +155,6 @@ async def replyaccountinfo():
 
 @bot.server_app.websocket('/chklogin/<uid>')
 async def chklogin(uid):
-    logger.info(str(websocket._get_current_object()))
     while True:
         sessionkey = await websocket.receive()
         if sessionkey.split("::")[0] == uid and db.checkSessionkey(sessionkey):
