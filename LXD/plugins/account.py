@@ -158,7 +158,7 @@ async def chklogin(uid):
     logger.info(str(websocket._get_current_object()))
     while True:
         sessionkey = await websocket.receive()
-        if sessionkey.split("::")[0] == uid and await db.checkSessionkey(sessionkey):
+        if sessionkey.split("::")[0] == uid and db.checkSessionkey(sessionkey):
             msg = await db.newSessionkey(sessionkey.split("::")[0])
             await websocket.send(msg)
         else:
