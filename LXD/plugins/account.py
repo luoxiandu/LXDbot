@@ -145,8 +145,8 @@ async def replyaccountinfo():
     return json.dumps(ret)
 
 
-@bot.server_app.websocket('/chklogin')
-async def chklogin():
+@bot.server_app.websocket('/chklogin/<uid>')
+async def chklogin(uid):
     while True:
         sessionkey = await websocket.receive()
         if sessionkey and db.checkSessionkey(sessionkey):
