@@ -60,6 +60,14 @@ async def chkonline(session:CommandSession):
     session.finish(msg)
 
 
+@on_command('atonline', aliases=('艾特在线', '@在线'), only_to_me=False, permission=SUPERUSER)
+async def atonline(session:CommandSession):
+    msg = ""
+    for online in db.getVIPonline():
+        msg += "[CQ:at,qq=%d]" % online
+    session.finish(msg)
+
+
 @on_command('kick', aliases=('踢',), only_to_me=False, permission=SUPERUSER, shell_like=True)
 async def kickhandler(session:CommandSession):
     account = session.argv[0]

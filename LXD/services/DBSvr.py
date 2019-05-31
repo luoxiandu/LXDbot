@@ -170,6 +170,9 @@ class DB:
     def getonlinedetail(self):
         return list(DB.__online__.keys())
 
+    def getVIPonline(self):
+        return list(DB.__VIPs__.keys())
+
     def kickonline(self, acc):
         DB.__onlinewritelock__ = True
         # noinspection PyBroadException
