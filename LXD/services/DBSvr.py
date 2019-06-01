@@ -388,9 +388,9 @@ class DB:
 
 
 class SessionkeyManager:
-    __VIPs__ = dbm.open('data/kv_VIPs.db')
-    __beggars__ = dbm.open('data/kv_beggars.db')
-    __online__ = dbm.open('data/kv_online.db')
+    __VIPs__ = dbm.open('data/kv_VIPs.db', 'c')
+    __beggars__ = dbm.open('data/kv_beggars.db', 'c')
+    __online__ = dbm.open('data/kv_online.db', 'c')
     __onlinewritelock__ = False
 
     def checkSessionkey(self, sessionkey):
