@@ -1,19 +1,9 @@
+import dbm
 import sqlite3
 import time
 import datetime
 import random
 from nonebot.log import logger
-
-
-def Singleton(cls):
-    _instance = {}
-
-    def _singleton(*args, **kargs):
-        if cls not in _instance:
-            _instance[cls] = cls(*args, **kargs)
-        return _instance[cls]
-
-    return _singleton
 
 
 class DB:
@@ -397,11 +387,10 @@ class DB:
         return
 
 
-@Singleton
 class SessionkeyManager:
-    __VIPs__ = {}
-    __beggars__ = {}
-    __online__ = {}
+    __VIPs__ = dbm.open('data/kv_VIPs.db')
+    __beggars__ = dbm.open('data/kv_beggars.db')
+    __online__ = dbm.open('data/kv_online.db')
     __onlinewritelock__ = False
 
     def checkSessionkey(self, sessionkey):
