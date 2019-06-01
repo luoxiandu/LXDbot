@@ -431,6 +431,15 @@ class SessionkeyManager:
         finally:
             DB.__onlinewritelock__ = False
 
+    def getSessionkey(self,acc):
+        try:
+            if acc.isdigit():
+                return DB.__VIPs__[acc]
+            else:
+                return DB.__beggars__[acc]
+        except KeyError:
+            return 'Not exsist.'
+
     def onlinecount(self, HWID):
         return HWID in self.__beggars__
 
