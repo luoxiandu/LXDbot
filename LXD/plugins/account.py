@@ -104,6 +104,7 @@ async def loginhandler():
         logger.info('用户' + acc + '已登录上线')
     else:
         ret['status'] = 'failed'
+    logger.info('login ret: ' + str(ret))
     return json.dumps(ret)
 
 
@@ -127,6 +128,7 @@ async def triallogin():
         logger.info('用户' + HWID + '已获取新的试用时间并登录')
     else:
         ret['status'] = 'failed'
+    logger.info('requesttrial ret: ' + str(ret))
     return json.dumps(ret)
 
 
@@ -150,21 +152,26 @@ async def replyaccountinfo():
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'
+    logger.info('getaccountinfo ret: ' + str(ret))
     return json.dumps(ret)
 
 
 @bot.server_app.websocket('/chklogin/<uid>')
 async def chklogin(uid):
     while True:
-        sessionkey = await websocket.receive()
-        if sessionkey.split("::")[0] == uid and ssmgr.checkSessionkey(sessionkey):
-            msg = ssmgr.newSessionkey(sessionkey.split("::")[0])
-            await websocket.send(msg)
-        else:
-            msg = '*failed*'
-            await websocket.send(msg)
-            acc = sessionkey.split('::')[0]
-            ssmgr.clearSessionkey(acc)
-            logger.info('用户' + acc + '认证失败')
+        try:
+            sessionkey = await websocket.receive()
+            if sessionkey.split("::")[0] == uid and ssmgr.checkSessionkey(sessionkey):
+                msg = ssmgr.newSessionkey(sessionkey.split("::")[0])
+                await websocket.send(msg)
+            else:
+                msg = '*failed*'
+                await websocket.send(msg)
+                acc = sessionkey.split('::')[0]
+                ssmgr.clearSessionkey(acc)
+                logger.info('用户' + acc + '认证失败')
+        finally:
+            logger.info('recv sessionkey: ' + sessionkey)
+            logger.info('chklogin ret: ' + msg)
 
 
