@@ -5,6 +5,17 @@ import random
 from nonebot.log import logger
 
 
+def Singleton(cls):
+    _instance = {}
+
+    def _singleton(*args, **kargs):
+        if cls not in _instance:
+            _instance[cls] = cls(*args, **kargs)
+        return _instance[cls]
+
+    return _singleton
+
+
 class DB:
     conn = None
     __VIPs__ = {}
@@ -386,6 +397,7 @@ class DB:
         return
 
 
+@Singleton
 class SessionkeyManager:
     __VIPs__ = {}
     __beggars__ = {}
