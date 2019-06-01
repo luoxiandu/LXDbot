@@ -1,4 +1,4 @@
-from LXD.services.DBSvr import DB
+from LXD.services.DBSvr import DB, ssmgr
 from nonebot import get_bot
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -31,7 +31,7 @@ async def reportinjectorinfo():
     return
 
 
-sched.add_job(db.chkonline, 'interval', seconds=5)
+sched.add_job(ssmgr.chkonline, 'interval', seconds=5)
 sched.add_job(resetvars, 'cron', hour=0, minute=0, second=0)
 sched.add_job(reportinjectorinfo, 'cron', minute=0, second=0, hour='*/6')
 sched.start()
