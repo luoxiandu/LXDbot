@@ -4,6 +4,7 @@ import datetime
 import random
 from nonebot.log import logger
 
+
 class DB:
     conn = None
     __VIPs__ = {}
@@ -143,7 +144,7 @@ class DB:
         else:
             return True
 
-    def onlinecount(self, HWID):
+    def isonline(self, HWID):
         return HWID in DB.__beggars__
 
     def chkonline(self):
@@ -385,5 +386,81 @@ class DB:
         return
 
 
+class SessionkeyManager:
+    __VIPs__ = {}
+    __beggars__ = {}
+    __online__ = {}
+    __onlinewritelock__ = False
 
+    def checkSessionkey(self, sessionkey):
+        try:
+            parts = sessionkey.split("::")
+            acc = parts[0]
+            sskey = parts[1]
+            if acc.isdigit():
+                return DB.__VIPs__[acc] == sskey
+            else:
+                return DB.__beggars__[acc] == sskey
+        except KeyError:
+            return False
+
+    def newSessionkey(self, acc):
+        self.__onlinewritelock__ = True
+        try:
+            sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
+            if acc.isdigit():
+                self.__VIPs__[acc] = sessionkey
+            else:
+                self.__beggars__[acc] = sessionkey
+            return acc + '::' + sessionkey
+        finally:
+            self.__onlinewritelock__ = False
+
+    def clearSessionkey(self, acc):
+        self.__onlinewritelock__ = True
+        # noinspection PyBroadException
+        try:
+            if acc.isdigit():
+                del self.__VIPs__[acc]
+            else:
+                del self.__beggars__[acc]
+            del self.__online__[acc]
+            return True
+        except Exception:
+            return False
+        finally:
+            DB.__onlinewritelock__ = False
+
+    def onlinecount(self, HWID):
+        return HWID in self.__beggars__
+
+    def chkonline(self):
+        for acc in self.__online__.keys():
+            while self.__onlinewritelock__:
+                pass
+            if acc.isdigit():
+                if self.__online__[acc] == self.__VIPs__.get(acc):
+                    del self.__VIPs__[acc]
+                    logger.info('用户' + acc + '主动离线')
+            else:
+                if self.__online__[acc] == self.__beggars__.get(acc):
+                    del self.__beggars__[acc]
+                    logger.info('用户' + acc + '主动离线')
+        self.__online__ = {}
+        for acc in self.__VIPs__.keys():
+            self.__online__[acc] = self.__VIPs__[acc]
+        for HWID in self.__beggars__.keys():
+            self.__online__[HWID] = self.__beggars__[HWID]
+
+    def getonline(self):
+        return len(self.__online__)
+
+    def getonlinedetail(self):
+        return list(self.__online__.keys())
+
+    def getVIPonline(self):
+        return list(self.__VIPs__.keys())
+
+
+ssmgr = SessionkeyManager()
 

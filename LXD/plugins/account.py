@@ -5,7 +5,7 @@ from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 from aiocqhttp.exceptions import ActionFailed
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from LXD.services.DBSvr import DB
+from LXD.services.DBSvr import DB, ssmgr
 import json
 import datetime
 
@@ -55,15 +55,15 @@ async def setPassword(session:CommandSession):
 
 @on_command('chkonline', aliases=('查询在线',), only_to_me=False, permission=SUPERUSER)
 async def chkonline(session:CommandSession):
-    msg = '在线者：\n' + '\n'.join(db.getonlinedetail())
-    msg += '\n当前总在线人数：' + str(db.getonline())
+    msg = '在线者：\n' + '\n'.join(ssmgr.getonlinedetail())
+    msg += '\n当前总在线人数：' + str(ssmgr.getonline())
     session.finish(msg)
 
 
 @on_command('atonline', aliases=('艾特在线', '@在线'), only_to_me=False, permission=SUPERUSER)
 async def atonline(session:CommandSession):
     msg = ""
-    for online in db.getVIPonline():
+    for online in ssmgr.getVIPonline():
         msg += "[CQ:at,qq=%s]" % online
     session.finish(msg)
 
@@ -71,7 +71,7 @@ async def atonline(session:CommandSession):
 @on_command('kick', aliases=('踢',), only_to_me=False, permission=SUPERUSER, shell_like=True)
 async def kickhandler(session:CommandSession):
     account = session.argv[0]
-    if db.kickonline(account):
+    if ssmgr.clearSessionkey(account):
         msg = '踢 ' + account + ' 成功！'
         logger.info('用户' + str(session.ctx['user_id']) + '踢了用户' + account)
     else:
@@ -100,7 +100,7 @@ async def loginhandler():
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
-        ret['sessionkey'] = db.newSessionkey(acc)
+        ret['sessionkey'] = ssmgr.newSessionkey(acc)
         logger.info('用户' + acc + '已登录上线')
     else:
         ret['status'] = 'failed'
@@ -113,16 +113,16 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if db.onlinecount(HWID) and data['version'] == '1.21':
+    if ssmgr.isonline(HWID) and data['version'] == '1.21':
         ret['status'] = 'success'
-        ret['sessionkey'] = db.newSessionkey(HWID)
+        ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         logger.info('用户' + HWID + '在试用时间限制内已重新上线')
     elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
-        ret['sessionkey'] = db.newSessionkey(HWID)
+        ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
         logger.info('用户' + HWID + '已获取新的试用时间并登录')
     else:
@@ -131,7 +131,7 @@ async def triallogin():
 
 
 async def kickbeggar(HWID):
-    db.clearSessionkey(HWID)
+    ssmgr.clearSessionkey(HWID)
     logger.info('试用用户' + HWID + '登录到期')
 
 
@@ -140,7 +140,7 @@ async def replyaccountinfo():
     data = await request.form
     sessionkey = data['sessionkey']
     ret = {}
-    if sessionkey and db.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
+    if sessionkey and ssmgr.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
         account = sessionkey.split("::")[0]
         ret['status'] = 'success'
         ret['payload'] = {
@@ -157,14 +157,14 @@ async def replyaccountinfo():
 async def chklogin(uid):
     while True:
         sessionkey = await websocket.receive()
-        if sessionkey.split("::")[0] == uid and db.checkSessionkey(sessionkey):
-            msg = db.newSessionkey(sessionkey.split("::")[0])
+        if sessionkey.split("::")[0] == uid and ssmgr.checkSessionkey(sessionkey):
+            msg = ssmgr.newSessionkey(sessionkey.split("::")[0])
             await websocket.send(msg)
         else:
             msg = '*failed*'
             await websocket.send(msg)
             acc = sessionkey.split('::')[0]
-            db.clearSessionkey(acc)
+            ssmgr.clearSessionkey(acc)
             logger.info('用户' + acc + '认证失败')
 
 

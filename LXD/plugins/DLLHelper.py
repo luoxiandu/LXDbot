@@ -2,7 +2,7 @@ import nonebot
 from quart import request
 from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
-from LXD.services.DBSvr import DB
+from LXD.services.DBSvr import DB, ssmgr
 import json
 import base64
 
@@ -16,7 +16,7 @@ async def getdll():
     id = data['id']
     sessionkey = data['sessionkey']
     ret = {}
-    if id and sessionkey and db.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
+    if id and sessionkey and ssmgr.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
         db.varpp('dllcount')
         db.varpp('dllcountday')
         ret['status'] = 'success'
@@ -41,7 +41,7 @@ async def getdlllist():
     data = await request.form
     sessionkey = data['sessionkey']
     ret = {}
-    if sessionkey and db.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
+    if sessionkey and ssmgr.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
         ret['status'] = 'success'
         ret['payload'] = db.getDLLList()
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
