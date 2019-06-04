@@ -402,7 +402,7 @@ class SessionkeyManager:
         parts = sessionkey.split("::")
         acc = parts[0]
         sskey = parts[1]
-        return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone() == sskey
+        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()) == sskey
 
     def newSessionkey(self, acc):
         sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
