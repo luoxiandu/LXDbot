@@ -399,10 +399,13 @@ class SessionkeyManager:
         self.conn.close()
 
     def checkSessionkey(self, sessionkey):
-        parts = sessionkey.split("::")
-        acc = parts[0]
-        sskey = parts[1]
-        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,))) == sskey
+        try:
+            parts = sessionkey.split("::")
+            acc = parts[0]
+            sskey = parts[1]
+            return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()[0]) == sskey
+        except KeyError:
+            return False
 
     def newSessionkey(self, acc):
         sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
@@ -429,12 +432,15 @@ class SessionkeyManager:
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
 
+    def isonline(self, HWID):
+        return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (HWID,)).fetchone()
+
     def getonline(self):
-        return str(self.conn.execute('SELECT count(*) FROM sessions'))
+        return str(self.conn.execute('SELECT count(*) FROM sessions').fetchone()[0])
 
     def getonlinedetail(self):
-        return list(self.conn.execute('SELECT acc FROM sessions'))
+        return list(self.conn.execute('SELECT acc FROM sessions').fetchall())
 
     def getVIPonline(self):
-        return list(self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc'))
+        return list(self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc').fetchall())
 
