@@ -392,7 +392,7 @@ class SessionkeyManager:
     def __init__(self):
         # self.conn = sqlite3.connect('file:memDB1?mode=memory&cache=shared', uri=True)
         self.conn = sqlite3.connect('data/sskey.db')
-        self.conn.execute('CREATE TABLE IF NOT EXISTS sessions(acc text, sessionkey TEXT, lastcheck INTEGER)')
+        self.conn.execute('CREATE TABLE IF NOT EXISTS sessions(acc TEXT UNIQUE, sessionkey TEXT, lastcheck INTEGER)')
         self.conn.commit()
 
     def __del__(self):
@@ -423,7 +423,7 @@ class SessionkeyManager:
             return False
 
     def getSessionkey(self,acc):
-        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)))
+        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()[0])
 
     def chkonline(self):
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5))
