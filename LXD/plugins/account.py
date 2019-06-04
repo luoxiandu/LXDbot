@@ -166,7 +166,7 @@ async def chklogin(uid):
                 msg = '*failed*'
                 await websocket.send(msg)
                 acc = sessionkey.split('::')[0]
-                ssmgr.clearSessionkey(acc)
+                # ssmgr.clearSessionkey(acc)
                 logger.info('用户' + acc + '认证失败')
         finally:
             pass

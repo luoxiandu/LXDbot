@@ -404,7 +404,7 @@ class SessionkeyManager:
             acc = parts[0]
             sskey = parts[1]
             return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()[0]) == sskey
-        except KeyError:
+        except [KeyError, TypeError]:
             return False
 
     def newSessionkey(self, acc):
@@ -428,7 +428,7 @@ class SessionkeyManager:
     def chkonline(self):
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5)).fetchall()
         for acc in accs:
-            logger.info(str(acc[0]) + '已主动离线')
+            logger.info(str(acc[0]) + '已离线')
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
 
