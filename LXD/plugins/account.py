@@ -4,7 +4,6 @@ from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 from aiocqhttp.exceptions import ActionFailed
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from LXD.services.DBSvr import DB, SessionkeyManager
 import json
 import datetime
@@ -13,8 +12,6 @@ __plugin_name__ = 'LXD.account'
 db = DB()
 ssmgr = SessionkeyManager()
 bot = nonebot.get_bot()
-sched = AsyncIOScheduler()
-sched.start()
 
 
 @on_command('checkBalance', aliases=('查询余额', '查询账户余额', '余额查询', '余额'))
@@ -125,7 +122,7 @@ async def triallogin():
         db.varpp('logincountday')
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
-        sched.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
+        nonebot.scheduler.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
         logger.info('用户' + HWID + '已获取新的试用时间并登录')
     else:
         ret['status'] = 'failed'
