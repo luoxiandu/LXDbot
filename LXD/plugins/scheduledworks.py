@@ -31,8 +31,11 @@ async def reportinjectorinfo():
     # await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
     return
 
+async def checkonline():
+    await ssmgr.chkonline()
 
-sched.add_job(ssmgr.chkonline, 'interval', seconds=5)
+
+sched.add_job(checkonline, 'interval', seconds=5)
 sched.add_job(resetvars, 'cron', hour=0, minute=0, second=0)
 sched.add_job(reportinjectorinfo, 'cron', minute=0, second=0, hour='*/6')
 sched.start()
