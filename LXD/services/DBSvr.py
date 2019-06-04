@@ -392,8 +392,8 @@ class SessionkeyManager:
     def __init__(self):
         # self.conn = sqlite3.connect('file:memDB1?mode=memory&cache=shared', uri=True)
         self.conn = sqlite3.connect('data/sskey.db')
-        self.conn.execute('CREATE TABLE IF NOT EXISTS sessions(acc text, sessionkey TEXT, lastcheck INTEGER)')
-        self.conn.commit()
+        # self.conn.execute('CREATE TABLE IF NOT EXISTS sessions(acc text, sessionkey TEXT, lastcheck INTEGER)')
+        # self.conn.commit()
 
     def __del__(self):
         self.conn.close()
