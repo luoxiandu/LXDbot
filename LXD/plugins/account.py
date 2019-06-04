@@ -5,12 +5,13 @@ from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 from aiocqhttp.exceptions import ActionFailed
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from LXD.services.DBSvr import DB, ssmgr
+from LXD.services.DBSvr import DB, SessionkeyManager
 import json
 import datetime
 
 __plugin_name__ = 'LXD.account'
 db = DB()
+ssmgr = SessionkeyManager()
 bot = nonebot.get_bot()
 sched = AsyncIOScheduler()
 sched.start()

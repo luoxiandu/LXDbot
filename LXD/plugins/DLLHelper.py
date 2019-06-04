@@ -2,12 +2,13 @@ import nonebot
 from quart import request
 from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
-from LXD.services.DBSvr import DB, ssmgr
+from LXD.services.DBSvr import DB, SessionkeyManager
 import json
 import base64
 
 bot = nonebot.get_bot()
 db = DB()
+ssmgr = SessionkeyManager()
 
 
 @bot.server_app.route('/getdll', methods=['POST'])
