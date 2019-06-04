@@ -32,7 +32,7 @@ async def reportinjectorinfo():
     return
 
 async def checkonline():
-    await ssmgr.chkonline()
+    ssmgr.chkonline()
 
 
 sched.add_job(checkonline, 'interval', seconds=5)
