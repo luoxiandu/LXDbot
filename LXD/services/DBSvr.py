@@ -390,7 +390,7 @@ class DB:
 class SessionkeyManager:
 
     def __init__(self):
-        self.conn = sqlite3.connect('file:memDB1?mode=memory&cache=shared', uri=True)
+        self.conn = sqlite3.connect('file:memDB-SSKeys?mode=memory&cache=shared', uri=True)
         # self.conn = sqlite3.connect('data/sskey.db')
         self.conn.execute('CREATE TABLE IF NOT EXISTS sessions(acc TEXT UNIQUE, sessionkey TEXT, lastcheck INTEGER)')
         self.conn.commit()
@@ -439,8 +439,8 @@ class SessionkeyManager:
         return str(self.conn.execute('SELECT count(*) FROM sessions').fetchone()[0])
 
     def getonlinedetail(self):
-        return list(self.conn.execute('SELECT acc FROM sessions').fetchall())
+        return [row[0] for row in self.conn.execute('SELECT acc FROM sessions').fetchall()]
 
     def getVIPonline(self):
-        return list(self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc').fetchall())
+        return [row[0] for row in self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc').fetchall()]
 
