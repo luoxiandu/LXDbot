@@ -1,9 +1,10 @@
-from LXD.services.DBSvr import DB, ssmgr
+from LXD.services.DBSvr import DB, SessionkeyManager
 from nonebot import get_bot
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 __plugin_name__ = 'LXD.scheduledworks'
 db = DB()
+ssmgr = SessionkeyManager()
 bot = get_bot()
 sched = AsyncIOScheduler()
 
