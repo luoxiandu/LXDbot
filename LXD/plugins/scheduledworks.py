@@ -33,6 +33,7 @@ async def reportinjectorinfo():
     await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
     # await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
     del db
+    del ssmgr
     return
 
 
