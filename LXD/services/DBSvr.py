@@ -402,7 +402,7 @@ class SessionkeyManager:
         parts = sessionkey.split("::")
         acc = parts[0]
         sskey = parts[1]
-        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()) == sskey
+        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,))) == sskey
 
     def newSessionkey(self, acc):
         sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
@@ -420,21 +420,21 @@ class SessionkeyManager:
             return False
 
     def getSessionkey(self,acc):
-        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone())
+        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)))
 
     def chkonline(self):
-        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5)).fetchall()
+        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5))
         for acc in accs:
-            logger.info(acc + '已主动离线')
+            logger.info(str(acc) + '已主动离线')
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
 
     def getonline(self):
-        return str(self.conn.execute('SELECT count(*) FROM sessions').fetchone())
+        return str(self.conn.execute('SELECT count(*) FROM sessions'))
 
     def getonlinedetail(self):
-        return list(self.conn.execute('SELECT acc FROM sessions').fetchall())
+        return list(self.conn.execute('SELECT acc FROM sessions'))
 
     def getVIPonline(self):
-        return list(self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc').fetchall())
+        return list(self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc'))
 
