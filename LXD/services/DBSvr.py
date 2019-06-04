@@ -427,11 +427,9 @@ class SessionkeyManager:
 
     def chkonline(self):
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5))
-        offlines = []
         for acc in accs:
-            offlines.append(acc[0])
             logger.info(str(acc[0]) + '已主动离线')
-        self.conn.executemany('DELETE FROM sessions WHERE acc=?', offlines)
+        self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
 
     def isonline(self, HWID):
