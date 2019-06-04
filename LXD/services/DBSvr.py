@@ -390,8 +390,8 @@ class DB:
 class SessionkeyManager:
 
     def __init__(self):
-        # self.conn = sqlite3.connect('file:memDB-SSKeys?mode=memory&cache=shared', uri=True)
-        self.conn = sqlite3.connect('Z:/sskey.db')
+        self.conn = sqlite3.connect('file:memDB-SSKeys?mode=memory&cache=shared', uri=True)
+        # self.conn = sqlite3.connect('Z:/sskey.db')
         self.conn.execute('CREATE TABLE IF NOT EXISTS sessions(acc TEXT UNIQUE, sessionkey TEXT, lastcheck INTEGER)')
         self.conn.commit()
 
