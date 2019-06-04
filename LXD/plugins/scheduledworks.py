@@ -23,12 +23,13 @@ async def resetvars():
 @nonebot.scheduler.scheduled_job('cron', minute=0, second=0, hour='*/6')
 async def reportinjectorinfo():
     db = DB()
+    ssmgr = SessionkeyManager()
     msg = "当前实时更新注入器使用情况如下："
     msg += "\n总登录：" + db.getvar('logincount') + '次'
     msg += "\n今日登录：" + db.getvar('logincountday') + '次'
     msg += "\n总注入：" + db.getvar('dllcount') + '次'
     msg += "\n今日注入：" + db.getvar('dllcountday') + '次'
-    msg += "\n当前总在线人数：" + str(db.getonline())
+    msg += "\n当前总在线人数：" + str(ssmgr.getonline())
     await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
     # await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
     del db
