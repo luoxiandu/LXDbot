@@ -404,7 +404,7 @@ class SessionkeyManager:
             acc = parts[0]
             sskey = parts[1]
             return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()[0]) == sskey
-        except [KeyError, TypeError]:
+        except (KeyError, TypeError):
             return False
 
     def newSessionkey(self, acc):
