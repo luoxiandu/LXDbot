@@ -401,7 +401,7 @@ class SessionkeyManager:
         parts = sessionkey.split("::")
         acc = parts[0]
         sskey = parts[1]
-        return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)) == sskey
+        return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone() == sskey
 
     def newSessionkey(self, acc):
         sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
@@ -421,25 +421,25 @@ class SessionkeyManager:
     def getSessionkey(self,acc):
         # noinspection PyBroadException
         try:
-            return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,))
+            return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()
         except Exception:
             return 'Not exsist.'
 
     def chkonline(self):
-        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5))
+        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5)).fetchall()
         for acc in accs:
             logger.info(acc + '已主动离线')
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
 
     def getonline(self):
-        return self.conn.execute('SELECT count(*) FROM sessions')
+        return self.conn.execute('SELECT count(*) FROM sessions').fetchone()
 
     def getonlinedetail(self):
-        return self.conn.execute('SELECT acc FROM sessions')
+        return self.conn.execute('SELECT acc FROM sessions').fetchall()
 
     def getVIPonline(self):
-        return self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc')
+        return self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc').fetchall()
 
 
 ssmgr = SessionkeyManager()
