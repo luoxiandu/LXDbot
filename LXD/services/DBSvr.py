@@ -388,88 +388,58 @@ class DB:
 
 
 class SessionkeyManager:
-    __VIPs__ = dbm.open('data/kv_VIPs.db', 'c')
-    __beggars__ = dbm.open('data/kv_beggars.db', 'c')
-    __online__ = dbm.open('data/kv_online.db', 'c')
-    __onlinewritelock__ = False
+
+    def __init__(self):
+        self.conn = sqlite3.connect('file:memDB1?mode=memory&cache=shared', uri=True)
+        self.conn.execute('CREATE TABLE IF NOT EXISTS sessions(acc text, sessionkey TEXT, lastcheck INTEGER)')
+        self.conn.commit()
+
+    def __del__(self):
+        self.conn.close()
 
     def checkSessionkey(self, sessionkey):
-        try:
-            parts = sessionkey.split("::")
-            acc = parts[0]
-            sskey = parts[1]
-            if acc.isdigit():
-                return DB.__VIPs__[acc] == sskey
-            else:
-                return DB.__beggars__[acc] == sskey
-        except KeyError:
-            return False
+        parts = sessionkey.split("::")
+        acc = parts[0]
+        sskey = parts[1]
+        return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)) == sskey
 
     def newSessionkey(self, acc):
-        self.__onlinewritelock__ = True
-        try:
-            sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
-            if acc.isdigit():
-                self.__VIPs__[acc] = sessionkey
-            else:
-                self.__beggars__[acc] = sessionkey
-            return acc + '::' + sessionkey
-        finally:
-            self.__onlinewritelock__ = False
+        sessionkey = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random.randint(15, 20)))
+        self.conn.execute('REPLACE INTO sessions(acc, sessionkey, lastcheck) VALUES (?, ?, ?)', (acc, sessionkey, time.time()))
+        self.conn.commit()
+        return acc + '::' + sessionkey
 
     def clearSessionkey(self, acc):
-        self.__onlinewritelock__ = True
         # noinspection PyBroadException
         try:
-            if acc.isdigit():
-                del self.__VIPs__[acc]
-            else:
-                del self.__beggars__[acc]
-            del self.__online__[acc]
+            self.conn.execute('DELETE FROM sessions WHERE acc=?', (acc,))
+            self.conn.commit()
             return True
         except Exception:
             return False
-        finally:
-            DB.__onlinewritelock__ = False
 
     def getSessionkey(self,acc):
+        # noinspection PyBroadException
         try:
-            if acc.isdigit():
-                return DB.__VIPs__[acc]
-            else:
-                return DB.__beggars__[acc]
-        except KeyError:
+            return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,))
+        except Exception:
             return 'Not exsist.'
 
-    def onlinecount(self, HWID):
-        return HWID in self.__beggars__
-
     def chkonline(self):
-        for acc in self.__online__.keys():
-            while self.__onlinewritelock__:
-                pass
-            if acc.isdigit():
-                if self.__online__[acc] == self.__VIPs__.get(acc):
-                    del self.__VIPs__[acc]
-                    logger.info('用户' + acc + '主动离线')
-            else:
-                if self.__online__[acc] == self.__beggars__.get(acc):
-                    del self.__beggars__[acc]
-                    logger.info('用户' + acc + '主动离线')
-        self.__online__ = {}
-        for acc in self.__VIPs__.keys():
-            self.__online__[acc] = self.__VIPs__[acc]
-        for HWID in self.__beggars__.keys():
-            self.__online__[HWID] = self.__beggars__[HWID]
+        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5))
+        for acc in accs:
+            logger.info(acc + '已主动离线')
+        self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
+        self.conn.commit()
 
     def getonline(self):
-        return len(self.__online__)
+        return self.conn.execute('SELECT count(*) FROM sessions')
 
     def getonlinedetail(self):
-        return list(self.__online__.keys())
+        return self.conn.execute('SELECT acc FROM sessions')
 
     def getVIPonline(self):
-        return list(self.__VIPs__.keys())
+        return self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc')
 
 
 ssmgr = SessionkeyManager()
