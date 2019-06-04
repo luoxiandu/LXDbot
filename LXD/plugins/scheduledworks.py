@@ -1,12 +1,12 @@
 from LXD.services.DBSvr import DB, SessionkeyManager
 from nonebot import get_bot
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import nonebot
 
 __plugin_name__ = 'LXD.scheduledworks'
 bot = get_bot()
-sched = AsyncIOScheduler()
 
 
+@nonebot.scheduler.scheduled_job('cron', hour=0, minute=0, second=0)
 async def resetvars():
     db = DB()
     msg = "今日实时更新注入器使用总结："
@@ -20,6 +20,7 @@ async def resetvars():
     return
 
 
+@nonebot.scheduler.scheduled_job('cron', minute=0, second=0, hour='*/6')
 async def reportinjectorinfo():
     db = DB()
     msg = "当前实时更新注入器使用情况如下："
@@ -33,13 +34,9 @@ async def reportinjectorinfo():
     del db
     return
 
+
+@nonebot.scheduler.scheduled_job('interval', seconds=5)
 async def checkonline():
     ssmgr = SessionkeyManager()
     ssmgr.chkonline()
     del ssmgr
-
-
-sched.add_job(checkonline, 'interval', seconds=5)
-sched.add_job(resetvars, 'cron', hour=0, minute=0, second=0)
-sched.add_job(reportinjectorinfo, 'cron', minute=0, second=0, hour='*/6')
-sched.start()
