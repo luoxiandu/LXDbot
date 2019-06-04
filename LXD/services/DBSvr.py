@@ -419,11 +419,7 @@ class SessionkeyManager:
             return False
 
     def getSessionkey(self,acc):
-        # noinspection PyBroadException
-        try:
-            return self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()
-        except Exception:
-            return 'Not exsist.'
+        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone())
 
     def chkonline(self):
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5)).fetchall()
@@ -433,13 +429,13 @@ class SessionkeyManager:
         self.conn.commit()
 
     def getonline(self):
-        return self.conn.execute('SELECT count(*) FROM sessions').fetchone()
+        return str(self.conn.execute('SELECT count(*) FROM sessions').fetchone())
 
     def getonlinedetail(self):
-        return self.conn.execute('SELECT acc FROM sessions').fetchall()
+        return list(self.conn.execute('SELECT acc FROM sessions').fetchall())
 
     def getVIPonline(self):
-        return self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc').fetchall()
+        return list(self.conn.execute('SELECT acc FROM sessions WHERE acc+0=acc').fetchall())
 
 
 ssmgr = SessionkeyManager()
