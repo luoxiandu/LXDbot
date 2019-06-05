@@ -37,7 +37,7 @@ async def reportinjectorinfo():
     return
 
 
-@nonebot.scheduler.scheduled_job('interval', seconds=5)
+# @nonebot.scheduler.scheduled_job('interval', seconds=5)
 async def checkonline():
     ssmgr = SessionkeyManager()
     ssmgr.chkonline()
