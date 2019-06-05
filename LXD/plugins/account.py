@@ -157,20 +157,24 @@ async def replyaccountinfo():
 @bot.server_app.websocket('/chklogin/<uid>')
 async def chklogin(uid):
     lastmsg = '无'
-    while True:
-        try:
-            sessionkey = await websocket.receive()
-            if sessionkey.split("::")[0] == uid and (ssmgr.checkSessionkey(sessionkey) or sessionkey == lastmsg):
-                msg = ssmgr.newSessionkey(sessionkey.split("::")[0])
-                await websocket.send(msg)
-                lastmsg = msg
-            else:
-                msg = '*failed*'
-                await websocket.send(msg)
-                acc = sessionkey.split('::')[0]
-                # ssmgr.clearSessionkey(acc)
-                logger.info('用户' + acc + '认证失败\n接收的sessionkey: ' + sessionkey + '\n正确的sessionkey: ' + str(ssmgr.getSessionkey(acc)) + '\n上次的返回: ' + lastmsg)
-        finally:
-            pass
+    try:
+        while True:
+            try:
+                sessionkey = await websocket.receive()
+                if sessionkey.split("::")[0] == uid and (ssmgr.checkSessionkey(sessionkey) or sessionkey == lastmsg):
+                    msg = ssmgr.newSessionkey(sessionkey.split("::")[0])
+                    await websocket.send(msg)
+                    lastmsg = msg
+                else:
+                    msg = '*failed*'
+                    await websocket.send(msg)
+                    acc = sessionkey.split('::')[0]
+                    # ssmgr.clearSessionkey(acc)
+                    logger.info('用户' + acc + '认证失败\n接收的sessionkey: ' + sessionkey + '\n正确的sessionkey: ' + str(ssmgr.getSessionkey(acc)) + '\n上次的返回: ' + lastmsg)
+            finally:
+                pass
+    finally:
+        ssmgr.clearSessionkey(uid)
+        logger.info('用户' + uid + '断开连接')
 
 
