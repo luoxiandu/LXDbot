@@ -126,7 +126,10 @@ async def notify_handler_020():
 @bot.server_app.route('/020pay_getQRcode', methods=['POST'])
 async def LXDClientGetQRcode():
     data = await request.form
-    price = int(float(data['price']) * 100)
+    try:
+        price = int(float(data['price']) * 100)
+    except ValueError:
+        return "<h1>金额输入错误</h1>"
     if data['paytype'] == '支付宝':
         paytype = '2'
     elif data['paytype'] == '微信':
