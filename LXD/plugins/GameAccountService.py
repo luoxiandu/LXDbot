@@ -132,13 +132,13 @@ async def makeorder():
         #     if info.get('group_id') == grp['group_id']:
         #         grpid = str(info['group_id'])
         grpid = '1'
-        megalodon = data['megalodon']
-        whale = data['whale']
-        greatwhite = data['greatwhite']
-        bullshark = data['bullshark']
-        tigershark = data['tigershark']
-        redshark = data['redshark']
-        level = data['level']
+        megalodon = int(data['megalodon'])
+        whale = int(data['whale'])
+        greatwhite = int(data['greatwhite'])
+        bullshark = int(data['bullshark'])
+        tigershark = int(data['tigershark'])
+        redshark = int(data['redshark'])
+        level = int(data['level'])
         unlock = bool(data['unlock'])
         total = 0
         total += megalodon * int(db.getprice('megalodon_' + grpid))
