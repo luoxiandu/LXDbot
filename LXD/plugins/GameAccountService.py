@@ -147,7 +147,7 @@ async def makeorder():
         total += bullshark * int(db.getprice('bullshark_' + grpid))
         total += tigershark * int(db.getprice('tigershark_' + grpid))
         total += redshark * int(db.getprice('redshark_' + grpid))
-        if level != '0':
+        if level != 0:
             total += int(db.getprice('level_' + grpid))
         if unlock:
             total += int(db.getprice('unlock_' + grpid))
