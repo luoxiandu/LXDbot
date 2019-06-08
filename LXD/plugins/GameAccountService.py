@@ -123,14 +123,15 @@ async def makeorder():
     # noinspection PyBroadException
     try:
         acc = data['username']
-        grplst = await bot.get_group_list()
-        for grp in grplst:
-            try:
-                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
-            except ActionFailed:
-                continue
-            if info.get('group_id') == grp['group_id']:
-                grpid = str(info['group_id'])
+        # grplst = await bot.get_group_list()
+        # for grp in grplst:
+        #     try:
+        #         info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
+        #     except ActionFailed:
+        #         continue
+        #     if info.get('group_id') == grp['group_id']:
+        #         grpid = str(info['group_id'])
+        grpid = '1'
         megalodon = data['megalodon']
         whale = data['whale']
         greatwhite = data['greatwhite']

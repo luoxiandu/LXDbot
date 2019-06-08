@@ -140,15 +140,16 @@ async def replyaccountinfo():
     data = await request.form
     sessionkey = data['sessionkey']
     account = sessionkey.split("::")[0]
-    if account.isdigit():
-        grplst = await bot.get_group_list()
-        for grp in grplst:
-            try:
-                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=account)
-            except ActionFailed:
-                continue
-            if info.get('group_id') == grp['group_id']:
-                grpid = str(info['group_id'])
+    # if account.isdigit():
+    #     grplst = await bot.get_group_list()
+    #     for grp in grplst:
+    #         try:
+    #             info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=account)
+    #         except ActionFailed:
+    #             continue
+    #         if info.get('group_id') == grp['group_id']:
+    #             grpid = str(info['group_id'])
+    grpid = '1'
     ret = {}
     if sessionkey and ssmgr.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
         ret['status'] = 'success'
