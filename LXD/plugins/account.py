@@ -139,14 +139,39 @@ async def kickbeggar(HWID):
 async def replyaccountinfo():
     data = await request.form
     sessionkey = data['sessionkey']
+    account = sessionkey.split("::")[0]
+    if account.isdigit():
+        grplst = await bot.get_group_list()
+        for grp in grplst:
+            try:
+                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=account)
+            except ActionFailed:
+                continue
+            if info.get('group_id') == grp['group_id']:
+                grpid = str(info['group_id'])
     ret = {}
     if sessionkey and ssmgr.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
-        account = sessionkey.split("::")[0]
         ret['status'] = 'success'
-        ret['payload'] = {
-            'balance': float(db.getbalance(account)) / 100 if account.isdigit() else 0.0,
-            'isBeggar': not account.isdigit()
-        }
+        if account.isdigit():
+            ret['payload'] = {
+                'balance': float(db.getbalance(account)) / 100 if account.isdigit() else 0.0,
+                'isBeggar': False,
+                'prices': {
+                    'megalodon': float(db.getprice('megalodon_' + grpid)),
+                    'whale': float(db.getprice('whale_' + grpid)),
+                    'greatwhite': float(db.getprice('greatwhite_' + grpid)),
+                    'bullshark': float(db.getprice('bullshark_' + grpid)),
+                    'tigershark': float(db.getprice('tigershark_' + grpid)),
+                    'redshark': float(db.getprice('redshark_' + grpid)),
+                    'level': float(db.getprice('level_' + grpid)),
+                    'unlock': float(db.getprice('unlock_' + grpid)),
+                }
+            }
+        else:
+            ret['payload'] = {
+                'balance': float(db.getbalance(account)) / 100 if account.isdigit() else 0.0,
+                'isBeggar': True,
+            }
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'

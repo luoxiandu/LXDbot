@@ -115,3 +115,59 @@ async def finishGameService():
     id = data['id']
     db.finishGameAccountService(id)
     return json.dumps({'status': 'success'})
+
+
+@bot.server_app.route('/gameservice/order', methods=['POST'])
+async def makeorder():
+    data = await request.form
+    # noinspection PyBroadException
+    try:
+        acc = data['username']
+        grplst = await bot.get_group_list()
+        for grp in grplst:
+            try:
+                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
+            except ActionFailed:
+                continue
+            if info.get('group_id') == grp['group_id']:
+                grpid = str(info['group_id'])
+        megalodon = data['megalodon']
+        whale = data['whale']
+        greatwhite = data['greatwhite']
+        bullshark = data['bullshark']
+        tigershark = data['tigershark']
+        redshark = data['redshark']
+        level = data['level']
+        unlock_str = data['unlock']
+        total = 0
+        total += megalodon * int(db.getprice('megalodon_' + grpid))
+        total += whale * int(db.getprice('whale_' + grpid))
+        total += greatwhite * int(db.getprice('greatwhite_' + grpid))
+        total += bullshark * int(db.getprice('bullshark_' + grpid))
+        total += tigershark * int(db.getprice('tigershark_' + grpid))
+        total += redshark * int(db.getprice('redshark_' + grpid))
+        if level != '0':
+            total += int(db.getprice('level_' + grpid))
+        if unlock_str:
+            unlock = True
+            total += int(db.getprice('unlock_' + grpid))
+        else:
+            unlock = False
+        if db.cost(acc, total):
+            msg = acc + '购买了账号服务：'
+            msg += "\n巨齿鲨卡800w：" + str(megalodon) + '张'
+            msg += "\n鲸鲨卡350w：" + str(whale) + '张'
+            msg += "\n大白鲨卡125w：" + str(greatwhite) + '张'
+            msg += "\n牛鲨卡50w：" + str(bullshark) + '张'
+            msg += "\n虎鲨卡20w：" + str(tigershark) + '张'
+            msg += "\n红鲨卡10w：" + str(redshark) + '张'
+            msg += "\n刷级：" + level
+            msg += "\n解锁：" + repr(unlock)
+            await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
+            db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
+            return "下单成功！猫哥正在火速帮你进行账号服务，请留意他的私聊。"
+        else:
+            return "下单失败，您的余额不足，请充值。"
+    except Exception:
+        return "下单失败，请检查您的各项输入是否有误！"
+
