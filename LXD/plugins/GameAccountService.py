@@ -159,7 +159,7 @@ async def makeorder():
             msg += "\n牛鲨卡50w：" + str(bullshark) + '张'
             msg += "\n虎鲨卡20w：" + str(tigershark) + '张'
             msg += "\n红鲨卡10w：" + str(redshark) + '张'
-            msg += "\n刷级：" + level
+            msg += "\n刷级：" + str(level)
             msg += "\n解锁：" + repr(unlock)
             # await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
