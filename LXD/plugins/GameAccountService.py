@@ -139,8 +139,7 @@ async def makeorder():
         tigershark = data['tigershark']
         redshark = data['redshark']
         level = data['level']
-        unlock_str = data['unlock']
-        return unlock_str
+        unlock = bool(data['unlock'])
         total = 0
         total += megalodon * int(db.getprice('megalodon_' + grpid))
         total += whale * int(db.getprice('whale_' + grpid))
@@ -150,11 +149,8 @@ async def makeorder():
         total += redshark * int(db.getprice('redshark_' + grpid))
         if level != '0':
             total += int(db.getprice('level_' + grpid))
-        if unlock_str:
-            unlock = True
+        if unlock:
             total += int(db.getprice('unlock_' + grpid))
-        else:
-            unlock = False
         if db.cost(acc, total):
             msg = acc + '购买了账号服务：'
             msg += "\n巨齿鲨卡800w：" + str(megalodon) + '张'
@@ -165,7 +161,7 @@ async def makeorder():
             msg += "\n红鲨卡10w：" + str(redshark) + '张'
             msg += "\n刷级：" + level
             msg += "\n解锁：" + repr(unlock)
-            await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
+            # await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
             return "下单成功！猫哥正在火速帮你进行账号服务，请留意他的私聊。"
         else:

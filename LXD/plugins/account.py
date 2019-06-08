@@ -158,14 +158,14 @@ async def replyaccountinfo():
                 'balance': float(db.getbalance(account)) / 100 if account.isdigit() else 0.0,
                 'isBeggar': False,
                 'prices': {
-                    'megalodon': float(db.getprice('megalodon_' + grpid)),
-                    'whale': float(db.getprice('whale_' + grpid)),
-                    'greatwhite': float(db.getprice('greatwhite_' + grpid)),
-                    'bullshark': float(db.getprice('bullshark_' + grpid)),
-                    'tigershark': float(db.getprice('tigershark_' + grpid)),
-                    'redshark': float(db.getprice('redshark_' + grpid)),
-                    'level': float(db.getprice('level_' + grpid)),
-                    'unlock': float(db.getprice('unlock_' + grpid)),
+                    'megalodon': float(db.getprice('megalodon_' + grpid) / 100.0),
+                    'whale': float(db.getprice('whale_' + grpid) / 100.0),
+                    'greatwhite': float(db.getprice('greatwhite_' + grpid) / 100.0),
+                    'bullshark': float(db.getprice('bullshark_' + grpid) / 100.0),
+                    'tigershark': float(db.getprice('tigershark_' + grpid) / 100.0),
+                    'redshark': float(db.getprice('redshark_' + grpid) / 100.0),
+                    'level': float(db.getprice('level_' + grpid) / 100.0),
+                    'unlock': float(db.getprice('unlock_' + grpid) / 100.0),
                 }
             }
         else:
