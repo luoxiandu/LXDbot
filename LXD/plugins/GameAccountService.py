@@ -104,7 +104,7 @@ async def getGameService():
     return json.dumps(db.getGameAccountService())
 
 
-@bot.server_app.route('gameservice/getunfinished', methods=['GET'])
+@bot.server_app.route('/gameservice/getunfinished', methods=['GET'])
 async def getGameServiceUnfinished():
     return json.dumps(db.getGameAccountServiceUnfinished())
 
