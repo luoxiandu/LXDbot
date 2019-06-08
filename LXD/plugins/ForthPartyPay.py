@@ -121,3 +121,17 @@ async def notify_handler_020():
         return success_str
     else:
         return 'Token Validation Failed.'
+
+
+@bot.server_app.route('/020pay_getQRcode', methods=['POST'])
+async def LXDClientGetQRcode():
+    data = await request.form
+    price = int(eval(data['price']) * 100)
+    if data['paytype'] == '支付宝':
+        paytype = '2'
+    elif data['paytype'] == '微信':
+        paytype = '1'
+    else:
+        return "<h1>支付方式选择错误</h1>"
+    uid = data['username']
+    return "<img src=\"data:image/png;base64," + await pay.getPayQRcode(price=repr(price), type=paytype, orderuid=uid, goodsname='客户端充值') + "\" />"
