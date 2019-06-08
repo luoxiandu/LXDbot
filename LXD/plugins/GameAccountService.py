@@ -139,6 +139,7 @@ async def makeorder():
         redshark = data['redshark']
         level = data['level']
         unlock_str = data['unlock']
+        return unlock_str
         total = 0
         total += megalodon * int(db.getprice('megalodon_' + grpid))
         total += whale * int(db.getprice('whale_' + grpid))
