@@ -97,3 +97,21 @@ async def buygameservice(session:CommandSession):
                 session.finish('已取消充值')
     else:
         session.finish('您的账号服务订单已取消！')
+
+
+@bot.server_app.route('/gameservice/getall', methods=['GET'])
+async def getGameService():
+    return json.dumps(db.getGameAccountService())
+
+
+@bot.server_app.route('gameservice/getunfinished', methods=['GET'])
+async def getGameServiceUnfinished():
+    return json.dumps(db.getGameAccountServiceUnfinished())
+
+
+@bot.server_app.route('/gameservice/setfinished', methods=['POST'])
+async def finishGameService():
+    data = await request.form
+    id = data['id']
+    db.finishGameAccountService(id)
+    return json.dumps({'status': 'success'})

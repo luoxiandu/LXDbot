@@ -161,7 +161,7 @@ async def chklogin(uid):
         while True:
             try:
                 sessionkey = await websocket.receive()
-                if sessionkey.split("::")[0] == uid and (ssmgr.checkSessionkey(sessionkey) or sessionkey == lastmsg):
+                if sessionkey.split("::")[0] == uid and ssmgr.checkSessionkey(sessionkey):
                     msg = ssmgr.newSessionkey(sessionkey.split("::")[0])
                     await websocket.send(msg)
                     lastmsg = msg

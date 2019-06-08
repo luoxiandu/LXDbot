@@ -386,6 +386,51 @@ class DB:
         self.conn.commit()
         return
 
+    def getGameAccountService(self):
+        cur = self.conn.cursor()
+        cur.execute('SELECT ROWID, QQ, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, paid, finished, total FROM GameServiceOrders')
+        return [{
+            'id': line[0],
+            'QQ': line[1],
+            'megalodon': line[2],
+            'whale': line[3],
+            'greatwhite': line[4],
+            'bullshark': line[5],
+            'tigershark': line[6],
+            'redshark': line[7],
+            'level': line[8],
+            'unlock': line[9],
+            'paid': line[10],
+            'finished': line[11],
+            'total': line[12],
+        } for line in cur.fetchall()]
+
+    def getGameAccountServiceUnfinished(self):
+        cur = self.conn.cursor()
+        cur.execute(
+            'SELECT ROWID, QQ, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, paid, finished, total FROM GameServiceOrders WHERE finished=0')
+        return [{
+            'id': line[0],
+            'QQ': line[1],
+            'megalodon': line[2],
+            'whale': line[3],
+            'greatwhite': line[4],
+            'bullshark': line[5],
+            'tigershark': line[6],
+            'redshark': line[7],
+            'level': line[8],
+            'unlock': line[9],
+            'paid': line[10],
+            'finished': line[11],
+            'total': line[12],
+        } for line in cur.fetchall()]
+
+    def finishGameAccountService(self, id):
+        cur = self.conn.cursor()
+        cur.execute('UPDATE GameServiceOrders SET finished=1 WHERE ROWID=?', (id,))
+        self.conn.commit()
+        return
+
 
 class SessionkeyManager:
 
