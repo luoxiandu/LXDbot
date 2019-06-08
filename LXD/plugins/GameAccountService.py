@@ -166,6 +166,6 @@ async def makeorder():
             return "下单成功！猫哥正在火速帮你进行账号服务，请留意他的私聊。"
         else:
             return "下单失败，您的余额不足，请充值。"
-    except Exception:
-        return "下单失败，请检查您的各项输入是否有误！"
+    except Exception as e:
+        return "下单失败，请检查您的各项输入是否有误！\n" + e
 
