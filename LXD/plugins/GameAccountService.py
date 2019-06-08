@@ -123,15 +123,14 @@ async def makeorder():
     # noinspection PyBroadException
     try:
         acc = data['username']
-        # grplst = await bot.get_group_list()
-        # for grp in grplst:
-        #     try:
-        #         info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
-        #     except ActionFailed:
-        #         continue
-        #     if info.get('group_id') == grp['group_id']:
-        #         grpid = str(info['group_id'])
-        grpid = '1'
+        grplst = await bot.get_group_list()
+        for grp in grplst:
+            try:
+                info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=acc)
+            except ActionFailed:
+                continue
+            if info.get('group_id') == grp['group_id']:
+                grpid = str(info['group_id'])
         megalodon = int(data['megalodon'])
         whale = int(data['whale'])
         greatwhite = int(data['greatwhite'])
@@ -166,6 +165,6 @@ async def makeorder():
             return "下单成功！猫哥正在火速帮你进行账号服务，请留意他的私聊。"
         else:
             return "下单失败，您的余额不足，请充值。"
-    except Exception as e:
-        return "下单失败，请检查您的各项输入是否有误！\n" + e
+    except Exception:
+        return "下单失败，请检查您的各项输入是否有误！\n"
 
