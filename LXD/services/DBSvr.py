@@ -79,7 +79,7 @@ class DB:
         if cur.fetchone():
             cur.execute('SELECT HWID FROM passkeys WHERE passkey=?', (passkey,))
             r = cur.fetchone()
-            if r:
+            if r and r[0]:
                 if r[0] == HWID:
                     cur.execute('SELECT outdatedtime FROM passkeys WHERE passkey=?', (passkey,))
                     r = cur.fetchone()
