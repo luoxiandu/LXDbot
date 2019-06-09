@@ -52,7 +52,7 @@ async def getdlllist():
 
 
 @bot.server_app.route('/passkeygetdll', methods=['POST'])
-async def getdll():
+async def passkeygetdll():
     data = await request.form
     passkey = data['passkey']
     HWID = data['HWID']
@@ -77,7 +77,7 @@ async def getdll():
 
 
 @bot.server_app.route('/passkeygetdlllist', methods=['POST'])
-async def getdlllist():
+async def passkeygetdlllist():
     data = await request.form
     passkey = data['passkey']
     HWID = data['HWID']
