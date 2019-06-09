@@ -54,6 +54,7 @@ async def getdlllist():
 @bot.server_app.route('/passkeygetdll', methods=['POST'])
 async def passkeygetdll():
     data = await request.form
+    dllid = data['id']
     passkey = data['passkey']
     HWID = data['HWID']
     ret = {}
@@ -61,7 +62,7 @@ async def passkeygetdll():
         db.varpp('dllcount')
         db.varpp('dllcountday')
         ret['status'] = 'success'
-        paths = db.getDLL(id)
+        paths = db.getDLL(dllid)
         with open(paths['dllpath'], 'rb') as dllfile:
             with open(paths['xprpath'], 'rb') as xprfile:
                     ret['payload'] = {
