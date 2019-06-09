@@ -106,6 +106,26 @@ async def loginhandler():
     return json.dumps(ret)
 
 
+@bot.server_app.route('/passkeylogin', methods=['POST'])
+async def passkeyloginhandler():
+    data = await request.form
+    passkey = data['passkey']
+    HWID = data['HWID']
+    ret = {}
+    if passkey and HWID and db.checkPassKey(passkey, HWID):
+        db.varpp('logincount')
+        db.varpp('logincountday')
+        ret['status'] = 'success'
+        ret['payload'] = {
+            'remaining': db.checkPassKeyRemainingTime(passkey)
+        }
+        logger.info('用户' + passkey + '已登录上线')
+    else:
+        ret['status'] = 'failed'
+    logger.info('login ret: ' + str(ret))
+    return json.dumps(ret)
+
+
 @bot.server_app.route('/requesttrial', methods=['POST'])
 async def triallogin():
     data = await request.form

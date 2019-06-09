@@ -73,6 +73,38 @@ class DB:
             'resourcepath': r[2]
         }
 
+    def checkPassKey(self, passkey, HWID):
+        cur = self.conn.cursor()
+        cur.execute('SELECT passkey FROM passkeys WHERE passkey=?', (passkey,))
+        if cur.fetchone():
+            cur.execute('SELECT HWID FROM passkeys WHERE passkey=?', (passkey,))
+            r = cur.fetchone()
+            if r:
+                if r[0] == HWID:
+                    cur.execute('SELECT outdatedtime FROM passkeys WHERE passkey=?', (passkey,))
+                    r = cur.fetchone()
+                    if r[0] > time.time():
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                cur.execute("UPDATE passkeys SET HWID=?, inittime=?, outdatedtime=(?+duration) WHERE passkey=?", (HWID, time.time(), time.time(), passkey))
+                self.conn.commit()
+                return True
+        else:
+            return False
+
+    def checkPassKeyRemainingTime(self, passkey):
+        cur = self.conn.cursor()
+        cur.execute("SELECT outdatedtime FROM passkeys WHERE passkey=?", (passkey,))
+        r = cur.fetchone()
+        if r:
+            return str((datetime.datetime.fromtimestamp(r[0]) - datetime.datetime.now()).days) + "天"
+        else:
+            return ''
+
     def checkSessionkey(self, sessionkey):
         DB.__onlinewritelock__ = True
         # cur = self.conn.cursor()

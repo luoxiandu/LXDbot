@@ -49,3 +49,43 @@ async def getdlllist():
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
+
+
+@bot.server_app.route('/passkeygetdll', methods=['POST'])
+async def getdll():
+    data = await request.form
+    passkey = data['passkey']
+    HWID = data['HWID']
+    ret = {}
+    if passkey and HWID and db.checkPassKey(passkey, HWID):
+        db.varpp('dllcount')
+        db.varpp('dllcountday')
+        ret['status'] = 'success'
+        paths = db.getDLL(id)
+        with open(paths['dllpath'], 'rb') as dllfile:
+            with open(paths['xprpath'], 'rb') as xprfile:
+                    ret['payload'] = {
+                            'dll': base64.b64encode(dllfile.read()).decode(),
+                            'xpr': base64.b64encode(xprfile.read()).decode(),
+                        }
+        if paths['resourcepath']:
+            with open(paths['resourcepath'], 'rb') as rcfile:
+                ret['payload']['resource'] = base64.b64encode(rcfile.read()).decode()
+    else:
+        ret['status'] = 'failed'
+    return json.dumps(ret)
+
+
+@bot.server_app.route('/passkeygetdlllist', methods=['POST'])
+async def getdlllist():
+    data = await request.form
+    passkey = data['passkey']
+    HWID = data['HWID']
+    ret = {}
+    if passkey and HWID and db.checkPassKey(passkey, HWID):
+        ret['status'] = 'success'
+        ret['payload'] = db.getDLLList()
+    else:
+        ret['status'] = 'failed'
+    return json.dumps(ret)
+
