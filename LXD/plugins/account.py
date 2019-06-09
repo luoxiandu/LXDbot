@@ -204,6 +204,7 @@ async def chklogin(uid):
     lastmsg = '无'
     try:
         while True:
+            # noinspection PyBroadException
             try:
                 sessionkey = await websocket.receive()
                 if (sessionkey.split("::")[0] == uid and ssmgr.checkSessionkey(sessionkey)) or (ssmgr.getSessionkey(uid) and sessionkey == lastmsg):
@@ -215,6 +216,9 @@ async def chklogin(uid):
                     await websocket.send(msg)
                     acc = sessionkey.split('::')[0]
                     logger.info('用户' + acc + '认证失败\n接收的sessionkey: ' + sessionkey + '\n正确的sessionkey: ' + str(ssmgr.getSessionkey(acc)) + '\n上次的返回: ' + lastmsg)
+            except Exception:
+                msg = '*failed*'
+                await websocket.send(msg)
             finally:
                 pass
     finally:
