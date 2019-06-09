@@ -500,7 +500,11 @@ class SessionkeyManager:
             return False
 
     def getSessionkey(self,acc):
-        return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()[0])
+        # noinspection PyBroadException
+        try:
+            return str(self.conn.execute('SELECT sessionkey FROM sessions WHERE acc=?', (acc,)).fetchone()[0])
+        except Exception:
+            return False
 
     def chkonline(self):
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5)).fetchall()
