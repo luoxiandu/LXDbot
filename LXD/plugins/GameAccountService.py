@@ -2,6 +2,7 @@ import nonebot
 from quart import request
 from nonebot import on_command, CommandSession
 from nonebot.command import call_command
+from nonebot.log import logger
 from nonebot.permission import SUPERUSER
 from aiocqhttp.exceptions import ActionFailed
 from LXD.services.DBSvr import DB
@@ -150,6 +151,8 @@ async def makeorder():
             total += int(db.getprice('level_' + grpid))
         if unlock:
             total += int(db.getprice('unlock_' + grpid))
+        logger.info(data)
+        logger.info(total)
         if db.cost(acc, total):
             msg = acc + '购买了账号服务：'
             msg += "\n巨齿鲨卡800w：" + str(megalodon) + '张'
