@@ -67,7 +67,7 @@ async def atonline(session:CommandSession):
     session.finish(msg)
 
 
-@on_command('compensateonline', aliases=('补偿在线', '奖励在线'), only_to_me=False, permission=SUPERUSER)
+@on_command('compensateonline', aliases=('补偿在线', '奖励在线'), only_to_me=False, permission=SUPERUSER, shell_like=True)
 async def compensateonline(session:CommandSession):
     msg = "已成功为 "
     for online in ssmgr.getVIPonline():
@@ -226,7 +226,7 @@ async def chklogin(uid):
                     await websocket.send(msg)
                     acc = sessionkey.split('::')[0]
                     logger.info('用户' + acc + '认证失败\n接收的sessionkey: ' + sessionkey + '\n正确的sessionkey: ' + str(ssmgr.getSessionkey(acc)) + '\n上次的返回: ' + lastmsg)
-            except [TypeError, IndexError, ValueError, KeyError]:
+            except (TypeError, IndexError, ValueError, KeyError):
                 msg = '*failed*'
                 await websocket.send(msg)
     finally:
