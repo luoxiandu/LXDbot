@@ -1,6 +1,7 @@
 import nonebot
 from quart import request, websocket
 from nonebot import on_command, CommandSession
+from nonebot.command import call_command
 from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 from aiocqhttp.exceptions import ActionFailed
@@ -62,7 +63,17 @@ async def chkonline(session:CommandSession):
 async def atonline(session:CommandSession):
     msg = ""
     for online in ssmgr.getVIPonline():
-        msg += "[CQ:at,qq=%s]" % online
+        msg += "[CQ:at,qq=%s] " % online
+    session.finish(msg)
+
+
+@on_command('compensateonline', aliases=('补偿在线', '奖励在线'), only_to_me=False, permission=SUPERUSER)
+async def compensateonline(session:CommandSession):
+    msg = "已成功为 "
+    for online in ssmgr.getVIPonline():
+        await call_command(session.bot, session.ctx, name='generalManualDeposit', current_arg=online + ' ' + session.argv[0], disable_interaction=True)
+        msg += online + ' '
+    msg += "补偿/奖励 " + session.argv[0] + " 元！"
     session.finish(msg)
 
 
