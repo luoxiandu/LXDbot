@@ -139,7 +139,7 @@ async def makeorder():
         tigershark = int(data['tigershark'])
         redshark = int(data['redshark'])
         level = int(data['level'])
-        unlock = bool(data['unlock'])
+        unlock = bool(int(data['unlock']))
         total = 0
         total += megalodon * int(db.getprice('megalodon_' + grpid))
         total += whale * int(db.getprice('whale_' + grpid))
@@ -164,10 +164,11 @@ async def makeorder():
             msg += "\n刷级：" + str(level)
             msg += "\n解锁：" + repr(unlock)
             await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
+            await bot.send_private_msg_rate_limited(user_id=acc, message="您已成功购买账号服务，扣款" + repr(total) + "元。")
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
             return "下单成功！猫哥正在火速帮你进行账号服务，请留意他的私聊。"
         else:
             return "下单失败，您的余额不足，请充值。"
     except Exception:
-        return "下单失败，请检查您的各项输入是否有误！\n"
+        return "下单失败，请检查您的各项输入是否有误！"
 
