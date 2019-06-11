@@ -90,9 +90,16 @@ class DB:
                 else:
                     return False
             else:
-                cur.execute("UPDATE passkeys SET HWID=?, inittime=?, outdatedtime=(?+duration) WHERE passkey=?", (HWID, time.time(), time.time(), passkey))
-                self.conn.commit()
-                return True
+                cur.execute('SELECT outdatedtime FROM passkeys WHERE passkey=?', (passkey,))
+                if cur.fetchone():
+                    cur.execute("UPDATE passkeys SET HWID=? WHERE passkey=?", (HWID,))
+                    self.conn.commit()
+                    return True
+                else:
+                    cur.execute("UPDATE passkeys SET HWID=?, inittime=?, outdatedtime=(?+duration) WHERE passkey=?",
+                                (HWID, time.time(), time.time(), passkey))
+                    self.conn.commit()
+                    return True
         else:
             return False
 
