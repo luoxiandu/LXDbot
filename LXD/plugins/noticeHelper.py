@@ -1,10 +1,11 @@
 from nonebot import on_notice, on_request, on_command, NoticeSession, RequestSession, CommandSession
 from nonebot.permission import SUPERUSER
 from nonebot.log import logger
-from LXD.services.DBSvr import DB
+from LXD.services.DBSvr import DB, SessionkeyManager
 
 __plugin_name__ = 'LXD.noticeHelper'
 db = DB()
+ssmgr = SessionkeyManager
 
 # @on_notice
 # async def onNotice(session: NoticeSession):
@@ -30,6 +31,7 @@ async def group_increase(session: NoticeSession):
 
 @on_notice('group_decrease')
 async def group_decrease(session: NoticeSession):
+    ssmgr.clearSessionkey(session.ctx['user_id'])
     db.deleteaccount(session.ctx['user_id'])
     decreasewarning = db.getvar('decrease_' + repr(session.ctx['group_id']))
     decreasewarning = decreasewarning.replace('#id#', repr(session.ctx['user_id']))
