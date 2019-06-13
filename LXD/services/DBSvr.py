@@ -108,7 +108,7 @@ class DB:
         cur.execute("SELECT outdatedtime FROM passkeys WHERE passkey=?", (passkey,))
         r = cur.fetchone()
         if r:
-            return str((datetime.datetime.fromtimestamp(r[0]) - datetime.datetime.now()).days) + "天"
+            return str((datetime.datetime.fromtimestamp(r[0]) - datetime.datetime.now()).days + 1) + "天"
         else:
             return ''
 
