@@ -476,6 +476,14 @@ class DB:
         self.conn.commit()
         return
 
+    def getAdvertisements(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT id, url FROM advertisements")
+        ret = {}
+        for i in cur.fetchall():
+            ret[i[0]] = ret[i[1]]
+        return ret
+
 
 class SessionkeyManager:
 
