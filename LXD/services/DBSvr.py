@@ -481,7 +481,7 @@ class DB:
         cur.execute("SELECT id, url FROM advertisements")
         ret = {}
         for i in cur.fetchall():
-            ret[i[0]] = ret[i[1]]
+            ret[i[0]] = i[1]
         return ret
 
 
