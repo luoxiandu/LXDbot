@@ -123,7 +123,7 @@ async def passkeyloginhandler():
     passkey = data['passkey']
     HWID = data['HWID']
     ret = {}
-    if passkey and HWID and db.checkPassKey(passkey, HWID):
+    if passkey and HWID and db.checkPassKey(passkey, HWID) and db.validHWID(HWID):
         db.varpp('logincount')
         db.varpp('logincountday')
         ret['status'] = 'success'
@@ -147,7 +147,7 @@ async def triallogin():
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         logger.info('用户' + HWID + '在试用时间限制内已重新上线')
-    elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True):
+    elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True) and db.validHWID(HWID):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')

@@ -184,6 +184,12 @@ class DB:
         else:
             return True
 
+    def validHWID(self, HWID):
+        if HWID.split('-')[4] == '806e6f6e6963}':
+            return True
+        else:
+            return False
+
     def isonline(self, HWID):
         return HWID in DB.__beggars__
 
