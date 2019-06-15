@@ -29,11 +29,11 @@ class ForthPaySvr:
         keystr = goodsname + config.pay_identification + config.pay_notify_url + orderid + orderuid + price + config.pay_return_url + config.pay_token + type
         postdata['key'] = hashlib.md5(keystr.encode('utf-8')).hexdigest()
         async with aiohttp.ClientSession() as session:
-            async with session.post('https://ppay.mmbbo.cn/index.php?s=/api/pp/index_show.html', data=postdata) as response:
+            async with session.post('https://data.020zf.com/index.php?s=/api/pp/index_show.html', data=postdata) as response:
                 r = await response.json()
                 if r['code'] == 200:
                     async with aiohttp.ClientSession() as QRsession:
-                        async with QRsession.get('https://ppay.mmbbo.cn/api.php/pp/scerweima2?url=' + r['data']['qrcode']) as resp:
+                        async with QRsession.get('https://data.020zf.com/api.php/pp/scerweima2?url=' + r['data']['qrcode']) as resp:
                             return base64.b64encode(await resp.read()).decode()
                 else:
                     try:
