@@ -5,7 +5,7 @@ from LXD.services.DBSvr import DB, SessionkeyManager
 
 __plugin_name__ = 'LXD.noticeHelper'
 db = DB()
-ssmgr = SessionkeyManager
+ssmgr = SessionkeyManager()
 
 # @on_notice
 # async def onNotice(session: NoticeSession):
