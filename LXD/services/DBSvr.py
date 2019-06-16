@@ -185,7 +185,8 @@ class DB:
             return True
 
     def validHWID(self, HWID):
-        if HWID.split('-')[4] == '806e6f6e6963}':
+        nonhexalphabets = "ghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRStUVWXYZ"
+        if HWID.split('-')[4] == '806e6f6e6963}' and not any(a in HWID for a in nonhexalphabets):
             return True
         else:
             return False
