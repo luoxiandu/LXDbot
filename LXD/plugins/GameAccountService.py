@@ -164,7 +164,7 @@ async def makeorder():
             msg += "\n刷级：" + str(level)
             msg += "\n解锁：" + repr(unlock)
             await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
-            await bot.send_private_msg_rate_limited(user_id=acc, message="您已成功购买账号服务，扣款" + repr(total) + "元。")
+            await bot.send_private_msg_rate_limited(user_id=acc, message="您已成功购买账号服务，扣款" + repr(float(total) / 100) + "元。")
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
             return "下单成功！猫哥正在火速帮你进行账号服务，请留意他的私聊。"
         else:
