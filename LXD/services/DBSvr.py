@@ -518,7 +518,10 @@ class DB:
         else:
             cur.execute("SELECT banned FROM beggars WHERE HWID=?", (acc,))
             r = cur.fetchone()
-            return r[0] != 0
+            if r:
+                return r[0] != 0
+            else:
+                return False
 
     def ban(self, acc):
         cur = self.conn.cursor()
