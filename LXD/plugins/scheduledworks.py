@@ -16,6 +16,7 @@ async def resetvars():
     await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
     db.setvar('dllcountday', 0)
     db.setvar('logincountday', 0)
+    db.statistics_resetday()
     del db
     return
 
@@ -37,7 +38,7 @@ async def reportinjectorinfo():
     return
 
 
-# @nonebot.scheduler.scheduled_job('interval', seconds=5)
+@nonebot.scheduler.scheduled_job('interval', seconds=5)
 async def checkonline():
     ssmgr = SessionkeyManager()
     ssmgr.chkonline()

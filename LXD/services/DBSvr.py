@@ -49,9 +49,9 @@ class DB:
         self.conn.commit()
         return
 
-    def getDLLList(self):
+    def getDLLList(self, level):
         cur = self.conn.cursor()
-        cur.execute("SELECT id,name,memo FROM cheats")
+        cur.execute("SELECT id,name,memo FROM cheats WHERE level<?", (level,))
         r = cur.fetchall()
         ret = []
         for row in r:
@@ -486,6 +486,48 @@ class DB:
             ret[i[0]] = i[1]
         return ret
 
+    def statistics_loginpp(self, acc):
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM injection_statistics WHERE account=?", (acc,))
+        r = cur.fetchone()
+        if not r:
+            cur.execute("INSERT INTO injection_statistics(account, logincount, injectcount, logincountday, injectcountday) VALUES (?, 1, 0, 1, 0)")
+        else:
+            cur.execute("UPDATE injection_statistics SET logincount=logincount+1, logincountday=logincountday+1 WHERE account=?", (acc,))
+        self.conn.commit()
+        return
+
+    def statistics_injectpp(self, acc):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE injection_statistics SET injectcount=injectcount+1, injectcountday=injectcountday+1 WHERE account=?", (acc,))
+        self.conn.commit()
+        return
+
+    def statistics_resetday(self):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE injection_statistics SET injectcountday=0, logincountday=0")
+        self.conn.commit()
+        return
+
+    def isbanned(self, acc):
+        cur = self.conn.cursor()
+        if acc.isdigit():
+            cur.execute("SELECT banned FROM account WHERE QQ=?", (acc,))
+            r = cur.fetchone()
+            return r[0] != 0
+        else:
+            cur.execute("SELECT banned FROM beggars WHERE HWID=?", (acc,))
+            r = cur.fetchone()
+            return r[0] != 0
+
+    def ban(self, acc):
+        cur = self.conn.cursor()
+        if acc.isdigit():
+            cur.execute("UPDATE account SET banned=1 WHERE QQ=?", (acc,))
+        else:
+            cur.execute("UPDATE beggars SET banned=1 WHERE HWID=?", (acc,))
+        self.conn.commit()
+        return
 
 class SessionkeyManager:
 
@@ -530,9 +572,12 @@ class SessionkeyManager:
             return False
 
     def chkonline(self):
-        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 5)).fetchall()
+        db = DB()
+        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 20)).fetchall()
         for acc in accs:
-            logger.info(str(acc[0]) + '已离线')
+            logger.info(str(acc[0]) + '出现数据异常')
+            db.ban(acc)
+        del db
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
 

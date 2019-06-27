@@ -17,9 +17,13 @@ async def getdll():
     id = data['id']
     sessionkey = data['sessionkey']
     ret = {}
+    if db.isbanned(sessionkey.split('::')[0]):
+        ret['status'] = 'banned'
+        return json.dumps(ret)
     if id and sessionkey and ssmgr.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
         db.varpp('dllcount')
         db.varpp('dllcountday')
+        db.statistics_injectpp(sessionkey.split('::')[0])
         ret['status'] = 'success'
         paths = db.getDLL(id)
         with open(paths['dllpath'], 'rb') as dllfile:
@@ -42,9 +46,12 @@ async def getdlllist():
     data = await request.form
     sessionkey = data['sessionkey']
     ret = {}
+    if db.isbanned(sessionkey.split('::')[0]):
+        ret['status'] = 'banned'
+        return json.dumps(ret)
     if sessionkey and ssmgr.checkSessionkey(sessionkey) and data['version'] == db.getvar('current_version'):
         ret['status'] = 'success'
-        ret['payload'] = db.getDLLList()
+        ret['payload'] = db.getDLLList(2) if sessionkey.split('::')[0].isdigit() else db.getDLLList(1)
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'
@@ -85,7 +92,7 @@ async def passkeygetdlllist():
     ret = {}
     if passkey and HWID and db.checkPassKey(passkey, HWID):
         ret['status'] = 'success'
-        ret['payload'] = db.getDLLList()
+        ret['payload'] = db.getDLLList(2)
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)

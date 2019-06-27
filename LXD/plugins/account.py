@@ -105,9 +105,13 @@ async def loginhandler():
     acc = data['username']
     pwd = data['password']
     ret = {}
+    if db.isbanned(acc):
+        ret['status'] = 'banned'
+        return json.dumps(ret)
     if acc and pwd and db.chkpassword(acc, pwd) and data['version'] == db.getvar('current_version'):
         db.varpp('logincount')
         db.varpp('logincountday')
+        db.statistics_loginpp(acc)
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(acc)
         logger.info('用户' + acc + '已登录上线')
@@ -126,6 +130,7 @@ async def passkeyloginhandler():
     if passkey and HWID and db.checkPassKey(passkey, HWID) and db.validHWID(HWID):
         db.varpp('logincount')
         db.varpp('logincountday')
+        db.statistics_loginpp(HWID)
         ret['status'] = 'success'
         ret['payload'] = {
             'remaining': db.checkPassKeyRemainingTime(passkey)
@@ -143,7 +148,10 @@ async def triallogin():
     IP = request.remote_addr
     HWID = data['HWID']
     ret = {}
-    if ssmgr.isonline(HWID) and data['version'] == '1.21':
+    if db.isbanned(HWID):
+        ret['status'] = 'banned'
+        return json.dumps(ret)
+    if ssmgr.isonline(HWID) and data['version'] == db.getvar('current_version'):
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         logger.info('用户' + HWID + '在试用时间限制内已重新上线')
@@ -151,6 +159,7 @@ async def triallogin():
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
+        db.statistics_loginpp(HWID)
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         nonebot.scheduler.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
