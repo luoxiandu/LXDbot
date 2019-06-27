@@ -4,6 +4,8 @@ import time
 import datetime
 import random
 from nonebot.log import logger
+import nonebot
+bot = nonebot.get_bot()
 
 
 class DB:
@@ -579,7 +581,8 @@ class SessionkeyManager:
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 20)).fetchall()
         for acc in accs:
             logger.info(str(acc[0]) + '出现数据异常')
-            db.ban(acc)
+            db.ban(acc[0])
+            bot.send_group_msg_rate_limited(group_id=869494996, message=str(acc[0]) + '出现数据异常')
         del db
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
