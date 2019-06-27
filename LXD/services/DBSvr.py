@@ -520,7 +520,7 @@ class DB:
         else:
             cur.execute("SELECT banned FROM beggars WHERE HWID=?", (acc,))
             r = cur.fetchone()
-            if r:
+            if r and r[0]:
                 return r[0] != 0
             else:
                 return False
