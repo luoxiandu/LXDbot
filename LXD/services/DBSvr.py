@@ -491,7 +491,7 @@ class DB:
         cur.execute("SELECT * FROM injection_statistics WHERE account=?", (acc,))
         r = cur.fetchone()
         if not r:
-            cur.execute("INSERT INTO injection_statistics(account, logincount, injectcount, logincountday, injectcountday) VALUES (?, 1, 0, 1, 0)")
+            cur.execute("INSERT INTO injection_statistics(account, logincount, injectcount, logincountday, injectcountday) VALUES (?, 1, 0, 1, 0)", (acc,))
         else:
             cur.execute("UPDATE injection_statistics SET logincount=logincount+1, logincountday=logincountday+1 WHERE account=?", (acc,))
         self.conn.commit()
