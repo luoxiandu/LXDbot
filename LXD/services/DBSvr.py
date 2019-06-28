@@ -576,13 +576,13 @@ class SessionkeyManager:
         except Exception:
             return False
 
-    def chkonline(self):
+    async def chkonline(self):
         db = DB()
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 20)).fetchall()
         for acc in accs:
             logger.info(str(acc[0]) + '出现数据异常')
             db.ban(acc[0])
-            bot.send_group_msg_rate_limited(group_id=869494996, message=str(acc[0]) + '出现数据异常')
+            await bot.send_group_msg_rate_limited(group_id=869494996, message=str(acc[0]) + '出现数据异常')
         del db
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()
