@@ -534,6 +534,15 @@ class DB:
         self.conn.commit()
         return
 
+    def unban(self, acc):
+        cur = self.conn.cursor()
+        if acc.isdigit():
+            cur.execute("UPDATE account SET banned=0 WHERE QQ=?", (acc,))
+        else:
+            cur.execute("UPDATE beggars SET banned=0 WHERE HWID=?", (acc,))
+        self.conn.commit()
+        return
+
 class SessionkeyManager:
 
     def __init__(self):

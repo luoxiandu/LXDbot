@@ -88,6 +88,20 @@ async def kickhandler(session:CommandSession):
     session.finish(msg)
 
 
+@on_command('ban', aliases=('封禁', ), only_to_me=False, permission=SUPERUSER, shell_like=True)
+async def ban(session:CommandSession):
+    account = session.argv[0]
+    db.ban(account)
+    session.finish('已提交封禁请求')
+
+
+@on_command('unban', aliases=('解封', ), only_to_me=False, permission=SUPERUSER, shell_like=True)
+async def unban(session:CommandSession):
+    account = session.argv[0]
+    db.unban(account)
+    session.finish('已提交解封请求')
+
+
 @on_command('getversion', aliases=('查询版本',), only_to_me=False, permission=SUPERUSER)
 async def getversion(session:CommandSession):
     session.finish('当前版本为：' + db.getvar('current_version'))
