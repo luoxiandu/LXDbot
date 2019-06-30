@@ -39,7 +39,7 @@ async def setPassword(session:CommandSession):
                     session.state['grpid'] = str(info['group_id'])
         if session.state['grpid'] not in ['105976356']:
             session.finish('您没有权限使用洛仙都客户端，请加入主群：105976356')
-    if not db.cost(account, int(db.getprice('fee'))):
+    if session.is_first_run and not db.cost(account, int(db.getprice('fee'))):
         want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
         if want_to_recharge in ('支付宝', '微信'):
             await session.finish('请充值之后重新发送设置密码指令')
