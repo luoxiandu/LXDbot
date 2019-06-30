@@ -39,6 +39,14 @@ async def setPassword(session:CommandSession):
                     session.state['grpid'] = str(info['group_id'])
         if session.state['grpid'] not in ['105976356']:
             session.finish('您没有权限使用洛仙都客户端，请加入主群：105976356')
+    if not db.cost(account, int(db.getprice('fee'))):
+        want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
+        if want_to_recharge in ('支付宝', '微信'):
+            await session.send('请充值之后重新发送设置密码指令')
+            await call_command(session.bot, session.ctx, name='generalDeposit',
+                               current_arg=want_to_recharge + ' ' + str(float(db.getprice('fee')) / 100))
+        else:
+            session.finish('已取消充值')
     ensure = session.get('ensure', prompt='您确定要设置密码吗？')
     if ensure in ['确定', '确认', '是', '嗯', '对', '好', '恩恩', '嗯嗯', '好的', '可以', 'OK', '设置']:
         password = session.get('password', prompt='请输入密码：')
@@ -50,6 +58,13 @@ async def setPassword(session:CommandSession):
             session.finish('密码设置成功！')
     else:
         session.finish('已取消设置密码')
+
+
+@on_command('setFee', aliases=('设置群费',), only_to_me=False, permission=SUPERUSER)
+async def setfee(session:CommandSession):
+    price = eval(session.current_arg_text.strip())
+    db.setprice('fee', int(price * 100))
+    session.finish('设置成功完成')
 
 
 @on_command('chkonline', aliases=('查询在线',), only_to_me=False, permission=SUPERUSER)
