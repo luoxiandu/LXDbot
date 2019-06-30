@@ -590,8 +590,8 @@ class SessionkeyManager:
         accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 20)).fetchall()
         for acc in accs:
             logger.info(str(acc[0]) + '出现数据异常')
-            # if not acc[0].isdigit():
-            #     db.ban(acc[0])
+            if not acc[0].isdigit():
+                db.ban(acc[0])
             await bot.send_group_msg_rate_limited(group_id=869494996, message=str(acc[0]) + '出现数据异常')
         del db
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
