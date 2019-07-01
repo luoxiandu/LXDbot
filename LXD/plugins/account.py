@@ -42,7 +42,7 @@ async def setPassword(session:CommandSession):
     if session.is_first_run and not db.cost(account, int(db.getprice('fee'))):
         want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
         if want_to_recharge in ('支付宝', '微信'):
-            await session.finish('请充值之后重新发送设置密码指令')
+            await session.send('请充值之后重新发送设置密码指令')
             await call_command(session.bot, session.ctx, name='generalDeposit',
                                current_arg=want_to_recharge + ' ' + str(float(db.getprice('fee')) / 100))
         else:
