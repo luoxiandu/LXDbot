@@ -516,7 +516,10 @@ class DB:
         if acc.isdigit():
             cur.execute("SELECT banned FROM account WHERE QQ=?", (acc,))
             r = cur.fetchone()
-            return r[0] != 0
+            if r and r[0]:
+                return r[0] != 0
+            else:
+                return False
         else:
             cur.execute("SELECT banned FROM beggars WHERE HWID=?", (acc,))
             r = cur.fetchone()

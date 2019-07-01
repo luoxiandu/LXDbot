@@ -37,7 +37,7 @@ async def setPassword(session:CommandSession):
                     continue
                 if info.get('group_id') == grp['group_id']:
                     session.state['grpid'] = str(info['group_id'])
-        if session.state['grpid'] not in ['105976356']:
+        if session.state['grpid'] not in ['105976356', '869494996']:
             session.finish('您没有权限使用洛仙都客户端，请加入主群：105976356')
     if session.is_first_run and not db.cost(account, int(db.getprice('fee'))):
         want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
@@ -47,17 +47,18 @@ async def setPassword(session:CommandSession):
                                current_arg=want_to_recharge + ' ' + str(float(db.getprice('fee')) / 100))
         else:
             session.finish('已取消充值')
-    ensure = session.get('ensure', prompt='您确定要设置密码吗？')
-    if ensure in ['确定', '确认', '是', '嗯', '对', '好', '恩恩', '嗯嗯', '好的', '可以', 'OK', '设置']:
-        password = session.get('password', prompt='请输入密码：')
-        confirm = session.get('confirm', prompt='请确认密码：')
-        if password != confirm:
-            session.finish('两次输入的密码不一致，已取消设置密码。如需设置请重新发送“设置密码”')
-        else:
-            db.setpassword(account, password)
-            session.finish('密码设置成功！')
     else:
-        session.finish('已取消设置密码')
+        ensure = session.get('ensure', prompt='您确定要设置密码吗？')
+        if ensure in ['确定', '确认', '是', '嗯', '对', '好', '恩恩', '嗯嗯', '好的', '可以', 'OK', '设置']:
+            password = session.get('password', prompt='请输入密码：')
+            confirm = session.get('confirm', prompt='请确认密码：')
+            if password != confirm:
+                session.finish('两次输入的密码不一致，已取消设置密码。如需设置请重新发送“设置密码”')
+            else:
+                db.setpassword(account, password)
+                session.finish('密码设置成功！')
+        else:
+            session.finish('已取消设置密码')
 
 
 @on_command('setFee', aliases=('设置群费',), only_to_me=False, permission=SUPERUSER)
