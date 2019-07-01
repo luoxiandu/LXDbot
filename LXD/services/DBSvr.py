@@ -590,7 +590,7 @@ class SessionkeyManager:
 
     async def chkonline(self):
         db = DB()
-        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 20)).fetchall()
+        accs = self.conn.execute('SELECT acc FROM sessions WHERE ? - lastcheck > ?', (time.time(), 40)).fetchall()
         for acc in accs:
             logger.info(str(acc[0]) + '出现数据异常')
             if not acc[0].isdigit():
