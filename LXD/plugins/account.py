@@ -254,6 +254,7 @@ async def replyaccountinfo():
 @bot.server_app.websocket('/chklogin/<uid>')
 async def chklogin(uid):
     lastmsg = '无'
+    blockthis = True
     try:
         while True:
             try:
@@ -262,15 +263,23 @@ async def chklogin(uid):
                     msg = ssmgr.newSessionkey(sessionkey.split("::")[0])
                     await websocket.send(msg)
                     lastmsg = msg
+                elif sessionkey == 'bye':
+                    blockthis = False
+                    await websocket.send('bye')
                 else:
                     msg = '*failed*'
                     await websocket.send(msg)
+                    blockthis = False
                     acc = sessionkey.split('::')[0]
                     logger.info('用户' + acc + '认证失败\n接收的sessionkey: ' + sessionkey + '\n正确的sessionkey: ' + str(ssmgr.getSessionkey(acc)) + '\n上次的返回: ' + lastmsg)
             except (TypeError, IndexError, ValueError, KeyError):
                 msg = '*failed*'
                 await websocket.send(msg)
     finally:
+        if blockthis:
+            db.ban(uid)
+            logger.info(str(uid) + '出现数据异常-退出时未道别')
+            await bot.send_group_msg_rate_limited(group_id=869494996, message=str(uid) + '出现数据异常-退出时未道别')
         ssmgr.clearSessionkey(uid)
         logger.info('用户' + uid + '断开连接')
 
