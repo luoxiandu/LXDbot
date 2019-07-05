@@ -139,6 +139,7 @@ async def loginhandler():
     ret = {}
     if db.isbanned(acc):
         ret['status'] = 'banned'
+        logger.info('login ret: ' + str(ret))
         return json.dumps(ret)
     if acc and pwd and db.chkpassword(acc, pwd) and data['version'] == db.getvar('current_version'):
         db.varpp('logincount')
@@ -146,7 +147,7 @@ async def loginhandler():
         db.statistics_loginpp(acc)
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(acc)
-        logger.info('用户' + acc + '已登录上线')
+        logger.info('用户' + acc + '已登录上线 IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
     logger.info('login ret: ' + str(ret))
@@ -167,7 +168,7 @@ async def passkeyloginhandler():
         ret['payload'] = {
             'remaining': db.checkPassKeyRemainingTime(passkey)
         }
-        logger.info('用户' + passkey + '已登录上线')
+        logger.info('用户' + passkey + '已登录上线 IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
     logger.info('login ret: ' + str(ret))
@@ -278,7 +279,7 @@ async def chklogin(uid):
     finally:
         if blockthis:
             db.ban(uid)
-            logger.info(str(uid) + '出现数据异常-退出时未道别')
+            logger.info(str(uid) + '出现数据异常-退出时未道别 IP：' + request.remote_addr)
             await bot.send_group_msg_rate_limited(group_id=869494996, message=str(uid) + '出现数据异常-退出时未道别')
         ssmgr.clearSessionkey(uid)
         logger.info('用户' + uid + '断开连接')
