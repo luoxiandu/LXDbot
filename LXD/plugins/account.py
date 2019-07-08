@@ -278,7 +278,7 @@ async def chklogin(uid):
                 await websocket.send(msg)
     finally:
         if blockthis:
-            db.ban(uid)
+            # db.ban(uid)
             logger.info(str(uid) + '出现数据异常-退出时未道别 IP：' + request.remote_addr)
             await bot.send_group_msg_rate_limited(group_id=869494996, message=str(uid) + '出现数据异常-退出时未道别')
         ssmgr.clearSessionkey(uid)
