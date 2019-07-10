@@ -26,20 +26,20 @@ async def checkBalance(session:CommandSession):
 async def setPassword(session:CommandSession):
     account = session.ctx['user_id']
     if session.is_first_run:
-        if not session.state.get('grpid'):
-            try:
-                session.state['grpid'] = str(session.ctx['group_id'])
-            except KeyError:
-                grplst = await bot.get_group_list()
-                for grp in grplst:
-                    try:
-                        info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=account)
-                    except ActionFailed:
-                        continue
-                    if info.get('group_id') == grp['group_id']:
-                        session.state['grpid'] = str(info['group_id'])
-            if session.state['grpid'] not in ['105976356', '869494996']:
-                session.finish('您没有权限使用洛仙都客户端，请加入主群：105976356')
+        # if not session.state.get('grpid'):
+        #     try:
+        #         session.state['grpid'] = str(session.ctx['group_id'])
+        #     except KeyError:
+        #         grplst = await bot.get_group_list()
+        #         for grp in grplst:
+        #             try:
+        #                 info = await bot.get_group_member_info(group_id=grp['group_id'], user_id=account)
+        #             except ActionFailed:
+        #                 continue
+        #             if info.get('group_id') == grp['group_id']:
+        #                 session.state['grpid'] = str(info['group_id'])
+        #     if session.state['grpid'] not in ['105976356', '869494996']:
+        #         session.finish('您没有权限使用洛仙都客户端，请加入主群：105976356')
         session.state['paid'] = db.cost(account, int(db.getprice('fee')))
     if not session.state['paid']:
         want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
@@ -279,8 +279,8 @@ async def chklogin(uid):
     finally:
         if blockthis:
             # db.ban(uid)
-            logger.info(str(uid) + '出现数据异常-退出时未道别 IP：' + request.remote_addr)
-            await bot.send_group_msg_rate_limited(group_id=869494996, message=str(uid) + '出现数据异常-退出时未道别')
+            logger.info(str(uid) + '出现数据异常-退出时未道别 IP：' + websocket.remote_addr)
+            await bot.send_group_msg_rate_limited(group_id=869494996, message=str(uid) + '出现数据异常-退出时未道别 IP：' + websocket.remote_addr)
         ssmgr.clearSessionkey(uid)
         logger.info('用户' + uid + '断开连接')
 
