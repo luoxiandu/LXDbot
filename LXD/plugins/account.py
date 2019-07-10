@@ -15,7 +15,7 @@ ssmgr = SessionkeyManager()
 bot = nonebot.get_bot()
 
 
-@on_command('checkBalance', aliases=('查询余额', '查询账户余额', '余额查询', '余额'))
+@on_command('checkBalance', aliases=('查询余额', '查询账户余额', '余额查询', '余额', '老子还剩多少钱'))
 async def checkBalance(session:CommandSession):
     account = session.ctx['user_id']
     balance = db.getbalance(account)
