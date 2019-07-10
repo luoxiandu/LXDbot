@@ -22,7 +22,7 @@ async def addStatement(session:CommandSession):
         session.finish('用法：记账 金额（带正负） 账目名称')
 
 
-@on_command('checkBank', aliases=('查询群费',), permission=SUPERUSER, only_to_me=False)
+@on_command('checkBank', aliases=('查询群费', '查群费余额', '查询群费余额', '群费余额', '群费'), permission=SUPERUSER, only_to_me=False)
 async def checkBank(session:CommandSession):
     session.finish('当前群费余额为：' + repr(float(db.getvar('Bank')) / 100) + '元')
 
