@@ -51,7 +51,7 @@ async def setPassword(session:CommandSession):
             session.finish('已取消充值')
     else:
         ensure = session.get('ensure', prompt='您确定要设置密码吗？')
-        if ensure in ['确定', '确认', '是', '嗯', '对', '好', '恩恩', '嗯嗯', '好的', '可以', 'OK', '设置']:
+        if ensure in ['确定', '确认', '是', '嗯', '对', '好', '恩恩', '嗯嗯', '好的', '可以', 'OK', '设置', '是的']:
             password = session.get('password', prompt='请输入密码：')
             confirm = session.get('confirm', prompt='请确认密码：')
             if password != confirm:
