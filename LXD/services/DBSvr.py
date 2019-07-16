@@ -413,9 +413,15 @@ class DB:
         r = cur.execute("SELECT ROWID, amount, memo, time FROM Bankstatement WHERE time BETWEEN ? AND ?", (start, end))
         banks = r.fetchall()
         total_amount = 0
+        total_in = 0
+        total_out = 0
         details = []
         for line in banks:
             total_amount += line[1]
+            if line[1] > 0:
+                total_in += line[1]
+            else:
+                total_out += line[1]
             details.append({
                 'rowid': repr(line[0]),
                 'amount': repr(float(line[1]) / 100),
@@ -423,6 +429,8 @@ class DB:
                 'time': time.ctime(line[3])
             })
         return {
+            'total_in': total_in,
+            'total_out': total_out,
             'total_amount': total_amount,
             'details': details
         }

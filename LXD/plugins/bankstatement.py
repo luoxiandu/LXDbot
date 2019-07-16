@@ -37,5 +37,7 @@ async def getBankStatementByInterval(session:CommandSession):
     r = db.getStatementByInterval(start, end)
     for line in r['details']:
         msg += '\n|序号：' + line['rowid'] + ' | ' + line['time'] + ' | ' + line['amount'] + '元 | ' + line['memo']
+    msg += '\n区间总收入：' + repr(float(r['total_in']) / 100) + '元'
+    msg += '\n区间总支出：' + repr(float(r['total_out']) / 100) + '元'
     msg += '\n区间净收入：' + repr(float(r['total_amount']) / 100) + '元'
     session.finish(msg)
