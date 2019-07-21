@@ -67,12 +67,13 @@ class DB:
 
     def getDLL(self, id):
         cur = self.conn.cursor()
-        cur.execute("SELECT dll,xpr,resource FROM cheats WHERE id=?", (id,))
+        cur.execute("SELECT dll,xpr,resource, keyfile FROM cheats WHERE id=?", (id,))
         r = cur.fetchone()
         return {
             'dllpath': r[0],
              'xprpath': r[1],
-            'resourcepath': r[2]
+            'resourcepath': r[2],
+            'keypath': r[3]
         }
 
     def checkPassKey(self, passkey, HWID):
