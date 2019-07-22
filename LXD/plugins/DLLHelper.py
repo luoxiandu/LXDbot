@@ -38,6 +38,7 @@ async def getdll():
         if paths['keypath']:
             with open(paths['keypath'], 'rb') as rcfile:
                 ret['payload']['keyfile'] = base64.b64encode(rcfile.read()).decode()
+                ret['payload']['keyfilename'] = paths['keypath'].split('/')[-1]
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
     else:
         ret['status'] = 'failed'
