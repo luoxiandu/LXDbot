@@ -86,7 +86,7 @@ async def buygameservice(session:CommandSession):
             msg += "\n解锁：" + repr(unlock)
             await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
-            session.finish('已成功下单！猫哥正在火速帮你进行账号服务，请留意他的私聊')
+            session.finish('已成功下单！请留意客服的私聊')
         else:
             want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
             if want_to_recharge in ('支付宝', '微信'):
@@ -166,7 +166,7 @@ async def makeorder():
             await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
             await bot.send_private_msg_rate_limited(user_id=acc, message="您已成功购买账号服务，扣款" + repr(float(total) / 100) + "元。")
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
-            return "下单成功！猫哥正在火速帮你进行账号服务，请留意他的私聊。"
+            return "下单成功！请留意客服的私聊。"
         else:
             return "下单失败，您的余额不足，请充值。"
     except Exception:
