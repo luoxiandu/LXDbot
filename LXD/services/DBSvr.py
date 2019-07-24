@@ -312,6 +312,15 @@ class DB:
         self.conn.commit()
         return
 
+    def exist_account(self, acc):
+        cur = self.conn.cursor()
+        cur.execute("SELECT password FROM account WHERE QQ=?", (acc,))
+        r = cur.fetchone()
+        if r and r[0]:
+            return True
+        else:
+            return False
+
     # amo以分为单位的整数，切记切记
     def deposit(self, acc, amo):
         cur = self.conn.cursor()

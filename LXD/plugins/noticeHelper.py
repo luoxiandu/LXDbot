@@ -2,9 +2,13 @@ from nonebot import on_notice, on_request, on_command, NoticeSession, RequestSes
 from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 from LXD.services.DBSvr import DB, SessionkeyManager
+from nonebot import scheduler
+import nonebot
+import datetime
 
 __plugin_name__ = 'LXD.noticeHelper'
 db = DB()
+bot = nonebot.get_bot()
 ssmgr = SessionkeyManager()
 
 # @on_notice
@@ -25,8 +29,17 @@ async def group_increase(session: NoticeSession):
     warning = db.getvar('warning_' + grpid)
     await session.send(welcome)
     await session.send(warning)
+    if grpid == '105976356':
+        scheduler.add_job(kick25boy, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=360), args=[session.ctx['user_id']], id=session.ctx['user_id'], replace_existing=True)
     # await session.send('欢迎新朋友！洛仙都商店随时恭候您的光临~请私聊我设置密码，在群文件下载注入器，开始您的仙境之旅吧！有问题及需要帮助请回复“主菜单”查看更多功能和提示。')
     # await session.send('警告：如果有人加您的好友并向您兜售游戏账号或游戏服务，基本都是来路不正，任何保证都没有的，本群对于这种私下兜售产生的纠纷概不负责！也请萌新明辨是非，不要惹上这种纠纷。')
+
+
+async def kick25boy(acc):
+    if not db.exist_account(acc):
+        bot.set_group_kick(group_id='105976356', user_id=acc, reject_add_request=True)
+        bot.send_group_msg_rate_limited(group_id=869494996, message=acc + '超时未付费已被自动踢出群')
+        logger.info(acc + '超时未付费已被自动踢出群')
 
 
 @on_notice('group_decrease')
