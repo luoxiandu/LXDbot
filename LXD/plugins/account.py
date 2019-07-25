@@ -133,6 +133,21 @@ async def setversion(session:CommandSession):
     session.finish('设置成功！当前版本为：' + db.getvar('current_version'))
 
 
+@on_command('query25boy', aliases=('查询二五仔', '查询未注册'), only_to_me=False, permission=SUPERUSER)
+async def query25boy(session:CommandSession):
+    r = await bot.get_group_member_list(group_id=105976356)
+    boys = []
+    for qq in r['data']:
+        if not db.exist_account(qq['user_id']):
+            boys.append(qq['user_id'])
+    await session.send('未注册列表：\n' + '\n'.join(boys))
+    kick = session.get('kick', prompt='要踢出这些人吗？')
+    if kick in ['要', '踢', '是']:
+        for qq in boys:
+            await bot.set_group_kick(group_id='105976356', user_id=qq, reject_add_request=False)
+    session.finish('已完成')
+
+
 @bot.server_app.route('/login', methods=['POST'])
 async def loginhandler():
     data = await request.form
@@ -170,6 +185,7 @@ async def passkeyloginhandler():
         ret['payload'] = {
             'remaining': db.checkPassKeyRemainingTime(passkey)
         }
+        await bot.send_group_msg_rate_limited(group_id=869494996, message='用户' + passkey + '已登录上线 IP：' + request.remote_addr)
         logger.info('用户' + passkey + '已登录上线 IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
@@ -189,7 +205,8 @@ async def triallogin():
     if ssmgr.isonline(HWID) and data['version'] == db.getvar('current_version'):
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
-        logger.info('用户' + HWID + '在试用时间限制内已重新上线')
+        await bot.send_group_msg_rate_limited(group_id=869494996, message='用户' + HWID + '在试用时间限制内已重新上线 IP：' + request.remote_addr)
+        logger.info('用户' + HWID + '在试用时间限制内已重新上线 IP：' + request.remote_addr)
     elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True) and db.validHWID(HWID):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
@@ -198,7 +215,8 @@ async def triallogin():
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         nonebot.scheduler.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
-        logger.info('用户' + HWID + '已获取新的试用时间并登录')
+        await bot.send_group_msg_rate_limited(group_id=869494996, message='用户' + HWID + '已获取新的试用时间并登录 IP：' + request.remote_addr)
+        logger.info('用户' + HWID + '已获取新的试用时间并登录 IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
     logger.info('requesttrial ret: ' + str(ret))
