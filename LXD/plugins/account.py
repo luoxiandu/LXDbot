@@ -140,7 +140,7 @@ async def query25boy(session:CommandSession):
     for qq in r:
         if not db.exist_account(qq['user_id']):
             boys.append(qq['user_id'])
-    await session.send('未注册列表：\n' + '\n'.join(boys))
+    await session.send('未注册列表：\n' + '\n'.join(str(boys)))
     kick = session.get('kick', prompt='要踢出这些人吗？')
     if kick in ['要', '踢', '是']:
         for qq in boys:
