@@ -146,7 +146,7 @@ async def query25boy(session:CommandSession):
     kick = session.get('kick', prompt='要踢出这些人吗？')
     if kick in ['要', '踢', '是']:
         for qq in session.state['boys']:
-            await bot.set_group_kick(group_id='105976356', user_id=qq, reject_add_request=False)
+            await bot.set_group_kick_rate_limited(group_id='105976356', user_id=qq, reject_add_request=False)
         session.finish('已完成')
     else:
         session.finish('未踢出')
