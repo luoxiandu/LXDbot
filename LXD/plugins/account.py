@@ -136,16 +136,20 @@ async def setversion(session:CommandSession):
 @on_command('query25boy', aliases=('查询二五仔', '查询未注册'), only_to_me=False, permission=SUPERUSER)
 async def query25boy(session:CommandSession):
     r = await bot.get_group_member_list(group_id=105976356)
-    boys = []
-    for qq in r:
-        if not db.exist_account(qq['user_id']):
-            boys.append(str(qq['user_id']))
-    await session.send('未注册列表：\n' + '\n'.join(boys))
+    if session.is_first_run:
+        boys = []
+        for qq in r:
+            if not db.exist_account(qq['user_id']):
+                boys.append(str(qq['user_id']))
+        await session.send('未注册列表：\n' + '\n'.join(boys))
+        session.state['boys'] = boys
     kick = session.get('kick', prompt='要踢出这些人吗？')
     if kick in ['要', '踢', '是']:
-        for qq in boys:
+        for qq in session.state['boys']:
             await bot.set_group_kick(group_id='105976356', user_id=qq, reject_add_request=False)
-    session.finish('已完成')
+        session.finish('已完成')
+    else:
+        session.finish('未踢出')
 
 
 @bot.server_app.route('/login', methods=['POST'])
