@@ -152,6 +152,12 @@ async def query25boy(session:CommandSession):
         session.finish('未踢出')
 
 
+@on_command('groupKick', aliases=('群踢', '移除'), shell_like=True, permission=SUPERUSER, only_to_me=False)
+async def groupKick(session:CommandSession):
+    await bot.set_group_kick_rate_limited(group_id='105976356', user_id=session.argv[0], reject_add_request=False)
+    session.finish('已踢出')
+
+
 @bot.server_app.route('/login', methods=['POST'])
 async def loginhandler():
     data = await request.form
