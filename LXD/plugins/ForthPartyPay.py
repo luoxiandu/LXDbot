@@ -2,6 +2,7 @@ import nonebot
 import config
 from quart import request
 from nonebot import on_command, CommandSession
+from nonebot.log import logger
 from aiocqhttp.exceptions import ActionFailed
 from LXD.services.ForthPartyPaySvr import ForthPaySvr
 from LXD.services.DBSvr import DB
@@ -39,6 +40,8 @@ async def generalDeposit(session:CommandSession):
                         'file': 'base64://' + qrcode
                     }
                 }
+                await bot.send_group_msg_rate_limited(group_id=869494996, message=str(session.ctx['user_id']) + '获取了' + session.argv[0] + repr(price) + '元二维码')
+                logger.info(str(session.ctx['user_id']) + '获取了' + session.argv[0] + repr(price) + '元二维码')
             else:
                 msg = '获取微信二维码错误，请重试或联系群主。'
         else:

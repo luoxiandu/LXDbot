@@ -1,10 +1,13 @@
 from nonebot import on_command, CommandSession
 from nonebot.command import call_command
 from nonebot.permission import SUPERUSER
+from nonebot.log import logger
 from LXD.services.DBSvr import DB
+import nonebot
 
 __plugin_name__ = 'LXD.GamePass'
 db = DB()
+bot = nonebot.get_bot()
 
 
 @on_command('getGamePass', aliases=('购买账号', '账号购买', '购买黑号', '黑号购买'), only_to_me=False)
@@ -27,6 +30,8 @@ async def getGamePass(session:CommandSession):
         strgp += '\nSteam密码：' + gp['steampassword']
         strgp += '\n序列号：' + gp['key']
         await session.send(db.getvar('GamePassHelp'), ensure_private=True)
+        await bot.send_group_msg_rate_limited(group_id=869494996, message=str(account) + '购买了黑号' + gp['key'])
+        logger.info(str(account) + '购买了黑号' + gp['key'])
         session.finish(strgp, ensure_private=True)
     else:
         want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
