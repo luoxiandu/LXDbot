@@ -40,8 +40,8 @@ async def generalDeposit(session:CommandSession):
                         'file': 'base64://' + qrcode
                     }
                 }
-                await bot.send_group_msg_rate_limited(group_id=869494996, message=str(session.ctx['user_id']) + '获取了' + session.argv[0] + repr(price) + '元二维码')
-                logger.info(str(session.ctx['user_id']) + '获取了' + session.argv[0] + repr(price) + '元二维码')
+                await bot.send_group_msg_rate_limited(group_id=869494996, message=str(session.ctx['user_id']) + '获取了' + session.argv[0] + session.argv[1] + '元二维码')
+                logger.info(str(session.ctx['user_id']) + '获取了' + session.argv[0] + session.argv[1] + '元二维码')
             else:
                 msg = '获取微信二维码错误，请重试或联系群主。'
         else:
@@ -140,4 +140,6 @@ async def LXDClientGetQRcode():
     else:
         return "<h1>支付方式选择错误</h1>"
     uid = data['username']
+    await bot.send_group_msg_rate_limited(group_id=869494996, message=uid + '获取了' + data['paytype'] + data['price'] + '元二维码')
+    logger.info(uid + '获取了' + data['paytype'] + data['price'] + '元二维码')
     return "<img src=\"data:image/png;base64," + await pay.getPayQRcode(price=repr(price), type=paytype, orderuid=uid, goodsname='客户端充值') + "\" />"
