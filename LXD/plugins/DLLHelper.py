@@ -43,8 +43,8 @@ async def getdll():
                 ret['payload']['keyfilename'] = paths['keypath'].split('/')[-1]
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
         await bot.send_group_msg_rate_limited(group_id=config.notice_group,
-                                              message='用户' + sessionkey.split('::')[0] + '已注入DLL IP：' + request.remote_addr)
-        logger.info('用户' + sessionkey.split('::')[0] + '已注入DLL IP：' + request.remote_addr)
+                                              message='用户' + sessionkey.split('::')[0] + '注入DLL ' + id + ' IP：' + request.remote_addr)
+        logger.info('用户' + sessionkey.split('::')[0] + '注入DLL ' + id + ' IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)

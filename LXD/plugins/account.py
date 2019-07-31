@@ -305,6 +305,7 @@ async def chklogin(uid):
                     blockthis = False
                     acc = sessionkey.split('::')[0]
                     logger.info('用户' + acc + '认证失败\n接收的sessionkey: ' + sessionkey + '\n正确的sessionkey: ' + str(ssmgr.getSessionkey(acc)) + '\n上次的返回: ' + lastmsg)
+                    await bot.send_group_msg_rate_limited(group_id=config.notice_group, message='用户' + acc + '认证失败\n接收的sessionkey: ' + sessionkey + '\n正确的sessionkey: ' + str(ssmgr.getSessionkey(acc)) + '\n上次的返回: ' + lastmsg)
             except (TypeError, IndexError, ValueError, KeyError):
                 msg = '*failed*'
                 await websocket.send(msg)
