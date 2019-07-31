@@ -4,6 +4,7 @@ from nonebot.log import logger
 from LXD.services.DBSvr import DB, SessionkeyManager
 from nonebot import scheduler
 import nonebot
+import config
 import datetime
 
 __plugin_name__ = 'LXD.noticeHelper'
@@ -38,7 +39,7 @@ async def group_increase(session: NoticeSession):
 async def kick25boy(acc):
     if not db.exist_account(acc):
         await bot.set_group_kick_rate_limited(group_id='105976356', user_id=acc, reject_add_request=True)
-        await bot.send_group_msg_rate_limited(group_id=869494996, message=acc + '超时未付费已被自动踢出群')
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group, message=acc + '超时未付费已被自动踢出群')
         logger.info(acc + '超时未付费已被自动踢出群')
 
 

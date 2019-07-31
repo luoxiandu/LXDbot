@@ -1,4 +1,5 @@
 import nonebot
+import config
 from quart import request
 from nonebot import on_command, CommandSession
 from nonebot.command import call_command
@@ -84,7 +85,7 @@ async def buygameservice(session:CommandSession):
             msg += "\n红鲨卡10w：" + str(redshark) + '张'
             msg += "\n刷级：" + level
             msg += "\n解锁：" + repr(unlock)
-            await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
+            await bot.send_group_msg_rate_limited(group_id=config.manage_group, message=msg)
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
             session.finish('已成功下单！请留意客服的私聊')
         else:
@@ -163,7 +164,7 @@ async def makeorder():
             msg += "\n红鲨卡10w：" + str(redshark) + '张'
             msg += "\n刷级：" + str(level)
             msg += "\n解锁：" + repr(unlock)
-            await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
+            await bot.send_group_msg_rate_limited(group_id=config.manage_group, message=msg)
             await bot.send_private_msg_rate_limited(user_id=acc, message="您已成功购买账号服务，扣款" + repr(float(total) / 100) + "元。")
             db.orderGameAccountService(acc, megalodon, whale, greatwhite, bullshark, tigershark, redshark, level, unlock, total)
             return "下单成功！请留意客服的私聊。"

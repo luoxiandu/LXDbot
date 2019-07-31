@@ -1,4 +1,5 @@
 import nonebot
+import config
 from quart import request, websocket
 from nonebot import on_command, CommandSession
 from nonebot.command import call_command
@@ -174,6 +175,7 @@ async def loginhandler():
         db.statistics_loginpp(acc)
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(acc)
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group,message='用户' + acc + '已登录上线 IP：' + request.remote_addr)
         logger.info('用户' + acc + '已登录上线 IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
@@ -195,7 +197,7 @@ async def passkeyloginhandler():
         ret['payload'] = {
             'remaining': db.checkPassKeyRemainingTime(passkey)
         }
-        await bot.send_group_msg_rate_limited(group_id=869494996, message='用户' + passkey + '已登录上线 IP：' + request.remote_addr)
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group, message='用户' + passkey + '已登录上线 IP：' + request.remote_addr)
         logger.info('用户' + passkey + '已登录上线 IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
@@ -215,7 +217,7 @@ async def triallogin():
     if ssmgr.isonline(HWID) and data['version'] == db.getvar('current_version'):
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
-        await bot.send_group_msg_rate_limited(group_id=869494996, message='用户' + HWID + '在试用时间限制内已重新上线 IP：' + request.remote_addr)
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group, message='用户' + HWID + '在试用时间限制内已重新上线 IP：' + request.remote_addr)
         logger.info('用户' + HWID + '在试用时间限制内已重新上线 IP：' + request.remote_addr)
     elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True) and db.validHWID(HWID):
         db.newtrial(HWID, IP)
@@ -225,7 +227,7 @@ async def triallogin():
         ret['status'] = 'success'
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         nonebot.scheduler.add_job(kickbeggar, 'date', run_date=datetime.datetime.now() + datetime.timedelta(minutes=60), args=[HWID], id=HWID, replace_existing=True)
-        await bot.send_group_msg_rate_limited(group_id=869494996, message='用户' + HWID + '已获取新的试用时间并登录 IP：' + request.remote_addr)
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group, message='用户' + HWID + '已获取新的试用时间并登录 IP：' + request.remote_addr)
         logger.info('用户' + HWID + '已获取新的试用时间并登录 IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
@@ -310,7 +312,7 @@ async def chklogin(uid):
         if blockthis:
             # db.ban(uid)
             logger.info(str(uid) + '出现数据异常-退出时未道别 IP：' + websocket.remote_addr)
-            await bot.send_group_msg_rate_limited(group_id=869494996, message=str(uid) + '出现数据异常-退出时未道别 IP：' + websocket.remote_addr)
+            await bot.send_group_msg_rate_limited(group_id=config.notice_group, message=str(uid) + '出现数据异常-退出时未道别 IP：' + websocket.remote_addr)
         ssmgr.clearSessionkey(uid)
         logger.info('用户' + uid + '断开连接')
 

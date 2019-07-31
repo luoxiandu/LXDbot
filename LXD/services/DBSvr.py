@@ -5,6 +5,7 @@ import datetime
 import random
 from nonebot.log import logger
 import nonebot
+import config
 bot = nonebot.get_bot()
 
 
@@ -613,7 +614,7 @@ class SessionkeyManager:
             logger.info(str(acc[0]) + '出现数据异常-超时无心跳')
             # if not acc[0].isdigit():
             #     db.ban(acc[0])
-            await bot.send_group_msg_rate_limited(group_id=869494996, message=str(acc[0]) + '出现数据异常-超时无心跳')
+            await bot.send_group_msg_rate_limited(group_id=config.notice_group, message=str(acc[0]) + '出现数据异常-超时无心跳')
         del db
         self.conn.executemany('DELETE FROM sessions WHERE acc=?', accs)
         self.conn.commit()

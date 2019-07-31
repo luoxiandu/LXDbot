@@ -9,3 +9,6 @@ pay_identification = '9B8XY9K6MB16527K'
 pay_token = 'NIF7DTRGQ7O389T8YP46RSHQODZ886O9'
 pay_notify_url = 'http://39.106.74.7:5730/020pay_notice'
 pay_return_url = 'about:blank'
+
+notice_group = 660669756
+manage_group = 869494996

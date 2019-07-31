@@ -4,6 +4,7 @@ from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 from LXD.services.DBSvr import DB
 import nonebot
+import config
 
 __plugin_name__ = 'LXD.GamePass'
 db = DB()
@@ -30,7 +31,7 @@ async def getGamePass(session:CommandSession):
         strgp += '\nSteam密码：' + gp['steampassword']
         strgp += '\n序列号：' + gp['key']
         await session.send(db.getvar('GamePassHelp'), ensure_private=True)
-        await bot.send_group_msg_rate_limited(group_id=869494996, message=str(account) + '购买了黑号' + gp['key'])
+        await bot.send_group_msg_rate_limited(group_id=config.manage_group, message=str(account) + '购买了黑号' + gp['key'])
         logger.info(str(account) + '购买了黑号' + gp['key'])
         session.finish(strgp, ensure_private=True)
     else:

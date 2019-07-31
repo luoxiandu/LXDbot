@@ -1,7 +1,9 @@
 import nonebot
+import config
 from quart import request
 from nonebot import on_command, CommandSession
 from nonebot.permission import SUPERUSER
+from nonebot.log import logger
 from LXD.services.DBSvr import DB, SessionkeyManager
 import json
 import base64
@@ -40,6 +42,9 @@ async def getdll():
                 ret['payload']['keyfile'] = base64.b64encode(rcfile.read()).decode()
                 ret['payload']['keyfilename'] = paths['keypath'].split('/')[-1]
         ret['sessionkey'] = sessionkey # db.newSessionkey(sessionkey.split("::")[0])
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group,
+                                              message='用户' + sessionkey.split('::')[0] + '已注入DLL IP：' + request.remote_addr)
+        logger.info('用户' + sessionkey.split('::')[0] + '已注入DLL IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
@@ -83,6 +88,9 @@ async def passkeygetdll():
         if paths['resourcepath']:
             with open(paths['resourcepath'], 'rb') as rcfile:
                 ret['payload']['resource'] = base64.b64encode(rcfile.read()).decode()
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group,
+                                              message='用户' + passkey + '已注入DLL IP：' + request.remote_addr)
+        logger.info('用户' + passkey + '已注入DLL IP：' + request.remote_addr)
     else:
         ret['status'] = 'failed'
     return json.dumps(ret)
