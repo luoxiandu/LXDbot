@@ -136,7 +136,7 @@ async def setversion(session:CommandSession):
 
 @on_command('query25boy', aliases=('查询二五仔', '查询未注册'), only_to_me=False, permission=SUPERUSER)
 async def query25boy(session:CommandSession):
-    r = await bot.get_group_member_list(group_id=105976356)
+    r = await bot.get_group_member_list(group_id=105976356, no_cache=True)
     if session.is_first_run:
         boys = []
         for qq in r:
@@ -155,7 +155,7 @@ async def query25boy(session:CommandSession):
 
 @on_command('groupKick', aliases=('群踢', '移除'), shell_like=True, permission=SUPERUSER, only_to_me=False)
 async def groupKick(session:CommandSession):
-    await bot.set_group_kick_rate_limited(group_id='105976356', user_id=session.argv[0], reject_add_request=False)
+    await bot.set_group_kick_rate_limited(group_id='105976356', user_id=session.argv[0], reject_add_request=True)
     session.finish('已踢出')
 
 
