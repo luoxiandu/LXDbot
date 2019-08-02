@@ -245,6 +245,7 @@ async def replyaccountinfo():
     data = await request.form
     sessionkey = data['sessionkey']
     account = sessionkey.split("::")[0]
+    grpid = None
     if account.isdigit():
         grplst = await bot.get_group_list()
         for grp in grplst:
@@ -262,14 +263,14 @@ async def replyaccountinfo():
                 'balance': float(db.getbalance(account)) / 100 if account.isdigit() else 0.0,
                 'isBeggar': False,
                 'prices': {
-                    'megalodon': float(db.getprice('megalodon_' + grpid) / 100.0),
-                    'whale': float(db.getprice('whale_' + grpid) / 100.0),
-                    'greatwhite': float(db.getprice('greatwhite_' + grpid) / 100.0),
-                    'bullshark': float(db.getprice('bullshark_' + grpid) / 100.0),
-                    'tigershark': float(db.getprice('tigershark_' + grpid) / 100.0),
-                    'redshark': float(db.getprice('redshark_' + grpid) / 100.0),
-                    'level': float(db.getprice('level_' + grpid) / 100.0),
-                    'unlock': float(db.getprice('unlock_' + grpid) / 100.0),
+                    'megalodon': float(db.getprice('megalodon_' + grpid) / 100.0) if grpid else 41000,
+                    'whale': float(db.getprice('whale_' + grpid) / 100.0) if grpid else 22100,
+                    'greatwhite': float(db.getprice('greatwhite_' + grpid) / 100.0) if grpid else 8500,
+                    'bullshark': float(db.getprice('bullshark_' + grpid) / 100.0) if grpid else 4400,
+                    'tigershark': float(db.getprice('tigershark_' + grpid) / 100.0) if grpid else 2200,
+                    'redshark': float(db.getprice('redshark_' + grpid) / 100.0) if grpid else 13000,
+                    'level': float(db.getprice('level_' + grpid) / 100.0) if grpid else 10000,
+                    'unlock': float(db.getprice('unlock_' + grpid) / 100.0) if grpid else 10000,
                 }
             }
         else:
@@ -316,5 +317,6 @@ async def chklogin(uid):
             await bot.send_group_msg_rate_limited(group_id=config.notice_group, message=str(uid) + '出现数据异常-退出时未道别 IP：' + websocket.remote_addr)
         ssmgr.clearSessionkey(uid)
         logger.info('用户' + uid + '断开连接')
+        await bot.send_group_msg_rate_limited(group_id=config.notice_group, message='用户' + uid + '断开连接')
 
 
