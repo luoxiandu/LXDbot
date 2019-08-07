@@ -219,7 +219,7 @@ async def triallogin():
         ret['sessionkey'] = ssmgr.newSessionkey(HWID)
         await bot.send_group_msg_rate_limited(group_id=config.notice_group, message='用户' + HWID + '在试用时间限制内已重新上线 IP：' + request.remote_addr)
         logger.info('用户' + HWID + '在试用时间限制内已重新上线 IP：' + request.remote_addr)
-    elif HWID and IP and data['version'] == db.getvar('current_version') and (db.chktrialonce(HWID) or True) and db.validHWID(HWID):
+    elif HWID and IP and data['version'] == db.getvar('current_version') and db.chktrialonce(HWID) and db.validHWID(HWID):
         db.newtrial(HWID, IP)
         db.varpp('logincount')
         db.varpp('logincountday')
