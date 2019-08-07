@@ -13,7 +13,7 @@ async def resetvars():
     msg += "\n今日登录：" + db.getvar('logincountday') + '次'
     msg += "\n今日注入：" + db.getvar('dllcountday') + '次'
     # await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
-    await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
+    await bot.send_group_msg_rate_limited(group_id=667556362, message=msg)
     db.setvar('dllcountday', 0)
     db.setvar('logincountday', 0)
     db.statistics_resetday()
@@ -32,7 +32,7 @@ async def reportinjectorinfo():
     msg += "\n今日注入：" + db.getvar('dllcountday') + '次'
     msg += "\n当前总在线人数：" + str(ssmgr.getonline())
     await bot.send_group_msg_rate_limited(group_id=869494996, message=msg)
-    # await bot.send_group_msg_rate_limited(group_id=105976356, message=msg)
+    # await bot.send_group_msg_rate_limited(group_id=667556362, message=msg)
     del db
     del ssmgr
     return

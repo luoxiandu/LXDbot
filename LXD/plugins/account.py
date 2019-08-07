@@ -39,8 +39,8 @@ async def setPassword(session:CommandSession):
         #                 continue
         #             if info.get('group_id') == grp['group_id']:
         #                 session.state['grpid'] = str(info['group_id'])
-        #     if session.state['grpid'] not in ['105976356', '869494996']:
-        #         session.finish('您没有权限使用洛仙都客户端，请加入主群：105976356')
+        #     if session.state['grpid'] not in ['667556362', '869494996']:
+        #         session.finish('您没有权限使用洛仙都客户端，请加入主群：667556362')
         session.state['paid'] = db.cost(account, int(db.getprice('fee')))
     if not session.state['paid']:
         want_to_recharge = session.get('want_to_recharge', prompt='您的余额不足，您想马上充值吗？\n请回复“微信”或“支付宝”，或其它内容取消充值')
@@ -136,7 +136,7 @@ async def setversion(session:CommandSession):
 
 @on_command('query25boy', aliases=('查询二五仔', '查询未注册'), only_to_me=False, permission=SUPERUSER)
 async def query25boy(session:CommandSession):
-    r = await bot.get_group_member_list(group_id=105976356, no_cache=True)
+    r = await bot.get_group_member_list(group_id=667556362, no_cache=True)
     if session.is_first_run:
         boys = []
         for qq in r:
@@ -147,7 +147,7 @@ async def query25boy(session:CommandSession):
     kick = session.get('kick', prompt='要踢出这些人吗？')
     if kick in ['要', '踢', '是']:
         for qq in session.state['boys']:
-            await bot.set_group_kick_rate_limited(group_id='105976356', user_id=qq, reject_add_request=False)
+            await bot.set_group_kick_rate_limited(group_id='667556362', user_id=qq, reject_add_request=False)
         session.finish('已完成')
     else:
         session.finish('未踢出')
@@ -155,7 +155,7 @@ async def query25boy(session:CommandSession):
 
 @on_command('groupKick', aliases=('群踢', '移除'), shell_like=True, permission=SUPERUSER, only_to_me=False)
 async def groupKick(session:CommandSession):
-    await bot.set_group_kick_rate_limited(group_id='105976356', user_id=session.argv[0], reject_add_request=True)
+    await bot.set_group_kick_rate_limited(group_id='667556362', user_id=session.argv[0], reject_add_request=True)
     session.finish('已踢出')
 
 
